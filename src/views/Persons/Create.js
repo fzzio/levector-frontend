@@ -45,7 +45,13 @@ function GenderRadioOption(props){
   const gender = props.gender;
   return(
     <FormGroup check inline>
-      <Input className="form-check-input" type="radio" id={`lvtGender_` + gender.idgender} name="lvtGender" value={gender.idgender} />
+      <Input
+        className="form-check-input"
+        type="radio"
+        id={`lvtGender_` + gender.idgender}
+        name="lvtGender"
+        value={gender.idgender}
+      />
       <Label className="form-check-label" check htmlFor={`lvtGender_` + gender.idgender}>{gender.name}</Label>
     </FormGroup>
   );
@@ -53,37 +59,46 @@ function GenderRadioOption(props){
 function CustomFieldsItems(props){
   const customField = props.customField;
   switch (customField.idfieldtype) {
-    case 1: // Checkbox
-      return(
-        <FormGroup row>
-          <Col md="3"><Label>{customField.value}</Label></Col>
-          <Col md="9">
-            { ( customField.hasOwnProperty('values') ) 
-              ? customField.values.map((value, index) => {
-                  return (
-                    <FormGroup check className="checkbox">
-                      <Input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="checkbox1"
-                        name="checkbox1"
-                        value={value}
-                        idfieldcastp = {customField.idfieldcastp}
-                      />
-                      <Label check className="form-check-label" htmlFor="checkbox1">Option 1</Label>
-                    </FormGroup>
-                  )
-                })
-              : <Col xs="12" md="9">
-                <p className="form-control-static">No existen opciones</p>
-              </Col>
-            }
-          </Col>
-        </FormGroup>
-      );
-      break;
+    // case defines.CUSTOM_FIELD_CHECKBOX:
+    //   return(
+    //     <FormGroup row>
+    //       <Col md="3"><Label>{customField.value}</Label></Col>
+    //       <Col md="9">
+    //         {/* { ( customField.hasOwnProperty('values') ) 
+    //           ? customField.values.map((value, index) => {
+    //               return (
+    //                 <FormGroup check className="checkbox">
+    //                   <Input
+    //                     className="form-check-input"
+    //                     type="checkbox"
+    //                     id="checkbox1"
+    //                     name="checkbox1"
+    //                     value={value}
+    //                     idfieldcastp = {customField.idfieldcastp}
+    //                   />
+    //                   <Label check className="form-check-label" htmlFor="checkbox1">Option 1</Label>
+    //                 </FormGroup>
+    //               )
+    //             })
+    //           : <Col xs="12" md="9">
+    //             <p className="form-control-static">No existen opciones</p>
+    //           </Col>
+    //         } */}
+    //           <FormGroup check className="checkbox">
+    //             <Input
+    //               className="form-check-input"
+    //               type="checkbox"
+    //               id="checkbox1"
+    //               name="checkbox1"
+    //             />
+    //             <Label check className="form-check-label" htmlFor="checkbox1">Option 1</Label>
+    //           </FormGroup>
+    //       </Col>
+    //     </FormGroup>
+    //   );
+    //   break;
 
-    case 2: // textarea
+    case defines.CUSTOM_FIELD_TEXTAREA:
       return(
         <FormGroup row>
           <Col md="3">
@@ -103,55 +118,54 @@ function CustomFieldsItems(props){
       );
       break;
 
-    case 3: // list
-      return(
-        <FormGroup row>
-        <Col md="3">
-          <Label htmlFor={`lvtCustomField_` + customField.idfieldcastp}>{customField.value}</Label>
-        </Col>
-        <Col md="9">
-          <Input
-            type="select" 
-            name={`lvtCustomField_` + customField.idfieldcastp}
-            id={`lvtCustomField_` + customField.idfieldcastp}
-            idfieldcastp = {customField.idfieldcastp}
-            multiple >
-            <option value="1">Option #1</option>
-            <option value="2">Option #2</option>
-            <option value="3">Option #3</option>
-            <option value="4">Option #4</option>
-            <option value="5">Option #5</option>
-          </Input>
-        </Col>
-        </FormGroup>
-      );
-      break;
+    // case defines.CUSTOM_FIELD_LIST:
+    //   return(
+    //     <FormGroup row>
+    //     <Col md="3">
+    //       <Label htmlFor={`lvtCustomField_` + customField.idfieldcastp}>{customField.value}</Label>
+    //     </Col>
+    //     <Col md="9">
+    //       <Input
+    //         type="select" 
+    //         name={`lvtCustomField_` + customField.idfieldcastp}
+    //         id={`lvtCustomField_` + customField.idfieldcastp}
+    //         idfieldcastp = {customField.idfieldcastp}
+    //         multiple >
+    //         <option value="1">Option #1</option>
+    //         <option value="2">Option #2</option>
+    //         <option value="3">Option #3</option>
+    //         <option value="4">Option #4</option>
+    //         <option value="5">Option #5</option>
+    //       </Input>
+    //     </Col>
+    //     </FormGroup>
+    //   );
+    //   break;
 
-    case 4: // combo box
-      return(
-        <FormGroup row>
-        <Col md="3">
-          <Label htmlFor={`lvtCustomField_` + customField.idfieldcastp}>{customField.value}</Label>
-        </Col>
-        <Col md="9">
-          <Input
-            type="select" 
-            name={`lvtCustomField_` + customField.idfieldcastp}
-            id={`lvtCustomField_` + customField.idfieldcastp}
-            idfieldcastp = {customField.idfieldcastp} >
-            <option value="1">Option #1</option>
-            <option value="2">Option #2</option>
-            <option value="3">Option #3</option>
-            <option value="4">Option #4</option>
-            <option value="5">Option #5</option>
-          </Input>
-        </Col>
-        </FormGroup>
-      );
-      break;
+    // case defines.CUSTOM_FIELD_COMBOBOX:
+    //   return(
+    //     <FormGroup row>
+    //     <Col md="3">
+    //       <Label htmlFor={`lvtCustomField_` + customField.idfieldcastp}>{customField.value}</Label>
+    //     </Col>
+    //     <Col md="9">
+    //       <Input
+    //         type="select" 
+    //         name={`lvtCustomField_` + customField.idfieldcastp}
+    //         id={`lvtCustomField_` + customField.idfieldcastp}
+    //         idfieldcastp = {customField.idfieldcastp} >
+    //         <option value="1">Option #1</option>
+    //         <option value="2">Option #2</option>
+    //         <option value="3">Option #3</option>
+    //         <option value="4">Option #4</option>
+    //         <option value="5">Option #5</option>
+    //       </Input>
+    //     </Col>
+    //     </FormGroup>
+    //   );
+    //   break;
 
-    case 5: // text
-    default:
+    case defines.CUSTOM_FIELD_TEXT:
       return(
         <FormGroup row>
           <Col md="3">
@@ -169,6 +183,10 @@ function CustomFieldsItems(props){
         </FormGroup>
       );
       break;
+    
+    default:
+      return (null);
+      break;
   }
 }
 
@@ -185,7 +203,6 @@ class Create extends Component {
         lvtDateOfBirth : '',
         lvtCellphone : '',
         lvtPhone : '',
-        lvtGender : '',
         lvtImages : '',
         lvtVideo : ''
       },
@@ -247,12 +264,20 @@ class Create extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    alert("submit");
-  }
-
-  handleClickSubmit(event){
-    event.preventDefault();
-
+    
+    const formcastp = this.state.customFields.filter(function(customField) {
+      if( customField.idfieldtype !== defines.CUSTOM_FIELD_TEXTAREA && customField.idfieldtype !== defines.CUSTOM_FIELD_TEXT ){
+        return false; // skip
+      }
+      return true;
+    }).map(function(customField) { 
+      return {
+        idfieldcastp: customField.idfieldcastp,
+        idfieldopcastp: '',
+        value: event.target[`lvtCustomField_`+ customField.idfieldcastp].value
+      }
+    });
+    
     const personData = {
       passport: this.state.formFields.lvtDNI,
       firstname: this.state.formFields.lvtFirstname,
@@ -261,32 +286,18 @@ class Create extends Component {
       dob: this.state.formFields.lvtDateOfBirth,
       phone1: this.state.formFields.lvtCellphone,
       phone2: this.state.formFields.lvtPhone,
+      gender: parseInt(event.target[`lvtGender`].value),
       // unused
-      //gender: this.state.formFields.lvtGender,
       //images: this.state.formFields.lvtImages,
       //video: this.state.formFields.lvtVideo 
       // temporal
       createdby: 1,
       ruc: this.state.formFields.lvtDNI,
-      // formcastp: [
-      //   {
-      //     idfieldcastp: 1,
-      //     idfieldopcastp: 1,
-      //     value: ''
-      //   },{
-      //     idfieldcastp: 1,
-      //     idfieldopcastp: '',
-      //     value: '30KG'
-      //   },{
-      //     idfieldcastp: 2,
-      //     idfieldopcastp: 1,
-      //     value: ''
-      //   }
-      // ]
+      formcastp: formcastp
     };
 
     this.setState({ loading: true });
-
+    
     axios.post(defines.API_DOMAIN + '/person/', personData )
     .then( (response) => {
       if(response.status === 200 ) {
@@ -299,6 +310,10 @@ class Create extends Component {
       console.log(err);
       this.setState({ loading: false, error: true });
     });
+  }
+
+  handleClickSubmit(event){
+    event.preventDefault();
   }
 
   render() {
@@ -495,6 +510,8 @@ class Create extends Component {
                   {customFieldList.map((customField, index) =>
                     <CustomFieldsItems key={index} customField={customField}/>
                   )}
+
+                  <Button type="submit" size="sm" color="primary"><i className="fa fa-dot-circle-o"></i> Submit</Button>
                 </Form>
               </CardBody>
               <CardFooter>

@@ -18,7 +18,7 @@ function PersonItem(props) {
 
   return (
     <Col xs="12" sm="4" md="3">
-      <Card id={person.idperson.toString()}>
+      <Card id={person.ID}>
         <CardBody>
           <Row>
             <Col>

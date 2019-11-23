@@ -65,9 +65,9 @@ export default {
       icon: '',
     },
     {
-      name: 'Usuarios',
+      name: 'Campos adicionales',
       url: '',
-      icon: '',
+      icon: 'icon-layers',
     },
     /* 
     {

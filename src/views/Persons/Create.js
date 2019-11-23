@@ -11,6 +11,7 @@ import {
   CardHeader,
   Col,
   Collapse,
+  Container,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
@@ -339,14 +340,14 @@ class Create extends Component {
     // }
     return (
       <div className="animated fadeIn">
-        <Row>
-          <Col xs="12" md="12">
-            <Card>
-              <CardHeader>
-                <strong>Registro</strong> Persona
-              </CardHeader>
-              <CardBody>
-                <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-person" onSubmit={this.handleSubmit} >
+        <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-person" onSubmit={this.handleSubmit} >
+          <Row>
+            <Col xs="12" md="6">
+              <Card>
+                <CardHeader>
+                  <strong>Información</strong> Datos personales
+                </CardHeader>
+                <CardBody>
                   <FormGroup row>
                     <Col md="3">
                       <Label htmlFor="lvtDNI">Cédula</Label>
@@ -363,6 +364,7 @@ class Create extends Component {
                       <FormText color="muted">Cédula/DNI/Pasaporte </FormText>
                     </Col>
                   </FormGroup>
+
                   <FormGroup row>
                     <Col md="3">
                       <Label htmlFor="lvtFirstname">Nombre</Label>
@@ -395,23 +397,7 @@ class Create extends Component {
                       <FormText color="muted">Apellido paterno</FormText>
                     </Col>
                   </FormGroup>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtEmail">Email</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <Input
-                        type="email"
-                        id="lvtEmail"
-                        name="lvtEmail"
-                        placeholder="Ingrese email"
-                        autoComplete="email"
-                        value={this.state.formFields.lvtEmail}
-                        onChange={(e) => this.inputChangeHandler.call(this, e)}
-                      />
-                      <FormText className="help-block">Ingrese correo electrónico</FormText>
-                    </Col>
-                  </FormGroup>
+
                   <FormGroup row>
                     <Col md="3">
                       <Label htmlFor="lvtDateOfBirth">Fecha de nacimiento </Label>
@@ -434,6 +420,45 @@ class Create extends Component {
                       </InputGroup>
                     </Col>
                   </FormGroup>
+
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label>Género</Label>
+                    </Col>
+                    <Col md="9">
+                      {gendersList.map((gender, index) =>
+                        <GenderRadioOption key={index} gender={gender}/>
+                      )}
+                    </Col>
+                  </FormGroup>
+                </CardBody>
+              </Card>
+            </Col>
+
+            <Col xs="12" md="6">
+              <Card>
+                <CardHeader>
+                  <strong>Contacto</strong> Datos de contacto
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtEmail">Email</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <Input
+                        type="email"
+                        id="lvtEmail"
+                        name="lvtEmail"
+                        placeholder="Ingrese email"
+                        autoComplete="email"
+                        value={this.state.formFields.lvtEmail}
+                        onChange={(e) => this.inputChangeHandler.call(this, e)}
+                      />
+                      <FormText className="help-block">Ingrese correo electrónico</FormText>
+                    </Col>
+                  </FormGroup>
+                  
                   <FormGroup row>
                     <Col md="3">
                       <Label htmlFor="lvtCellphone">Celular</Label>
@@ -457,6 +482,7 @@ class Create extends Component {
                       <FormText color="muted">Teléfono celular</FormText>
                     </Col>
                   </FormGroup>
+                  
                   <FormGroup row>
                     <Col md="3">
                       <Label htmlFor="lvtPhone">Teléfono</Label>
@@ -480,16 +506,29 @@ class Create extends Component {
                       <FormText color="muted">Teléfono fijo</FormText>
                     </Col>
                   </FormGroup>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label>Género</Label>
-                    </Col>
-                    <Col md="9">
-                      {gendersList.map((gender, index) =>
-                        <GenderRadioOption key={index} gender={gender}/>
-                      )}
-                    </Col>
-                  </FormGroup>
+                </CardBody>
+              </Card>
+            </Col>
+            
+            <Col xs="12" md="6">
+              <Card>
+                <CardHeader>
+                  <strong>Otros</strong> Datos adicionales
+                </CardHeader>
+                <CardBody>
+                  {customFieldList.map((customField, index) =>
+                    <CustomFieldsItems key={index} customField={customField}/>
+                  )}
+                </CardBody>
+              </Card>
+            </Col>
+            
+            <Col xs="12" md="6">
+              <Card>
+                <CardHeader>
+                  <strong>Multimedia</strong> Imágenes y video
+                </CardHeader>
+                <CardBody>
                   <FormGroup row>
                     <Col md="3">
                       <Label htmlFor="lvtImages">Imágenes</Label>
@@ -506,21 +545,17 @@ class Create extends Component {
                       <Input type="file" id="lvtVideo" name="lvtVideo" />
                     </Col>
                   </FormGroup>
-                  <hr />
-                  {customFieldList.map((customField, index) =>
-                    <CustomFieldsItems key={index} customField={customField}/>
-                  )}
-
-                  <Button type="submit" size="sm" color="primary"><i className="fa fa-dot-circle-o"></i> Submit</Button>
-                </Form>
-              </CardBody>
-              <CardFooter>
-                <Button type="submit" size="sm" color="primary" onClick={this.handleClickSubmit} ><i className="fa fa-dot-circle-o"></i> Submit</Button>
-                <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Reset</Button>
-              </CardFooter>
-            </Card>
-          </Col>
-        </Row>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+          <Card>
+            <CardFooter>
+              <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-dot-circle-o"></i> Submit</Button>
+              <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Reset</Button>
+            </CardFooter>
+          </Card>
+        </Form>
       </div>
     );
   }

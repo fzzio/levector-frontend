@@ -112,13 +112,6 @@ class Create extends Component {
       }
 
       if(responseCustomFields.status === 200 ) {
-        // let customFieldElements = responseCustomFields.data.data.map( ( responseCustomField ) => {
-        //   let customFieldElement = {};
-        //   customFieldElement[ defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfieldcastp ] = '';
-        //   return customFieldElement;
-        // } );
-        // console.log( customFieldElements );
-
         let customFieldElements = responseCustomFields.data.data.map( ( responseCustomField ) => {
           let customFieldElement = {
             name: defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfieldcastp,
@@ -128,17 +121,10 @@ class Create extends Component {
           return customFieldElement;
         } );
 
-        // let customFieldElements = responseCustomFields.data.data.reduce( ( result, {index, idfieldcastp} ) => {
-        //   result[defines.CUSTOM_FIELD_PREFIX + idfieldcastp] = '';
-        //   return result;
-        // }, {});
-
         this.setState({ 
           customFields: responseCustomFields.data.data,
           customFieldsData: customFieldElements
         });
-        
-        //console.log(this.state);
       }else{
         throw new Error("Invalid status code for responseCustomFields");
       }
@@ -171,35 +157,19 @@ class Create extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    
-    //console.log(this.state.customFieldsData);
-    // let customFieldsData = this.state.customFieldsData;
-    // const formcastp = this.state.customFields.filter(function(customField) {
-    // if( customField.idfieldtype !== defines.CUSTOM_FIELD_TEXTAREA && customField.idfieldtype !== defines.CUSTOM_FIELD_TEXT ){
-    //     return true; // skip
-    //   }
-    //   return false;
-    // }).map(function(customField) { 
-    //   let inputName = defines.CUSTOM_FIELD_PREFIX + customField.idfieldcastp;
-    //   return {
-    //     idfieldcastp: customField.idfieldcastp,
-    //     idfieldopcastp: '',
-    //     value: customFieldsData[inputName],
-    //   }
-    // });
 
-    const formcastp = this.state.customFieldsData.filter(function(customFieldData) {
+    let formcastp = this.state.customFieldsData.filter(function(customFieldData) {
       if( customFieldData.value === null || customFieldData.value === undefined || customFieldData.value === '' ){
         return false; // skip
       }
       return true;
-    }).map(function(customFieldData) { 
+    }).map(function(customFieldData) {
       return {
         idfieldcastp: customFieldData.idfieldcastp,
         idfieldopcastp: '',
         value: customFieldData.value,
       }
-    });
+    })
     
     const personData = {
       passport: this.state.formFields.lvtDNI,
@@ -218,24 +188,24 @@ class Create extends Component {
       //video: this.state.formFields.lvtVideo 
       // temporal
       createdby: 1,
-      formcastp: formcastp
+      formcastp: JSON.stringify(formcastp)
     };
 
-    console.log(personData)
+    console.log(personData);
     // this.setState({ loading: true });
-    
-    // axios.post(defines.API_DOMAIN + '/person/', personData )
-    // .then( (response) => {
-    //   if(response.status === 200 ) {
-    //     this.setState({ loading: false, redirect: true });
-    //   }else{
-    //     throw new Error("Invalid status code");
-    //   }
-    // })
-    // .catch( (err) => {
-    //   console.log(err);
-    //   this.setState({ loading: false, error: true });
-    // });
+    axios.post(defines.API_DOMAIN + '/person/', personData )
+    .then( (response) => {
+      if(response.status === 200 ) {
+        //this.setState({ loading: false, redirect: true });
+      }else{
+        console.log(response);
+        throw new Error("Invalid status code");
+      }
+    })
+    .catch( (err) => {
+      console.log(err);
+      //this.setState({ loading: false, error: true });
+    });
   }
 
   handleClickSubmit(event){

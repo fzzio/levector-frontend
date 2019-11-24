@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router'
 import axios from 'axios';
 import defines from '../../defines'
+import CustomField from './CustomField/CustomField';
 import {
   Badge,
   Button,
@@ -42,154 +43,24 @@ const inputParsers = {
   },
 };
 
-function GenderRadioOption(props){
-  const gender = props.gender;
-  return(
-    <FormGroup check inline>
-      <Input
-        className="form-check-input"
-        type="radio"
-        id={`lvtGender_` + gender.idgender}
-        name="lvtGender"
-        value={gender.idgender}
-      />
-      <Label className="form-check-label" check htmlFor={`lvtGender_` + gender.idgender}>{gender.name}</Label>
-    </FormGroup>
-  );
-}
-function CustomFieldsItems(props){
-  const customField = props.customField;
-  switch (customField.idfieldtype) {
-    // case defines.CUSTOM_FIELD_CHECKBOX:
-    //   return(
-    //     <FormGroup row>
-    //       <Col md="3"><Label>{customField.value}</Label></Col>
-    //       <Col md="9">
-    //         {/* { ( customField.hasOwnProperty('values') ) 
-    //           ? customField.values.map((value, index) => {
-    //               return (
-    //                 <FormGroup check className="checkbox">
-    //                   <Input
-    //                     className="form-check-input"
-    //                     type="checkbox"
-    //                     id="checkbox1"
-    //                     name="checkbox1"
-    //                     value={value}
-    //                     idfieldcastp = {customField.idfieldcastp}
-    //                   />
-    //                   <Label check className="form-check-label" htmlFor="checkbox1">Option 1</Label>
-    //                 </FormGroup>
-    //               )
-    //             })
-    //           : <Col xs="12" md="9">
-    //             <p className="form-control-static">No existen opciones</p>
-    //           </Col>
-    //         } */}
-    //           <FormGroup check className="checkbox">
-    //             <Input
-    //               className="form-check-input"
-    //               type="checkbox"
-    //               id="checkbox1"
-    //               name="checkbox1"
-    //             />
-    //             <Label check className="form-check-label" htmlFor="checkbox1">Option 1</Label>
-    //           </FormGroup>
-    //       </Col>
-    //     </FormGroup>
-    //   );
-    //   break;
-
-    case defines.CUSTOM_FIELD_TEXTAREA:
-      return(
-        <FormGroup row>
-          <Col md="3">
-            <Label htmlFor={`lvtCustomField_` + customField.idfieldcastp}>{customField.value}</Label>
-          </Col>
-          <Col xs="12" md="9">
-            <Input
-              type="textarea"
-              name={`lvtCustomField_` + customField.idfieldcastp}
-              id={`lvtCustomField_` + customField.idfieldcastp}
-              rows="5"
-              placeholder="..."
-              idfieldcastp = {customField.idfieldcastp}
-            />
-          </Col>
-        </FormGroup>
-      );
-      break;
-
-    // case defines.CUSTOM_FIELD_LIST:
-    //   return(
-    //     <FormGroup row>
-    //     <Col md="3">
-    //       <Label htmlFor={`lvtCustomField_` + customField.idfieldcastp}>{customField.value}</Label>
-    //     </Col>
-    //     <Col md="9">
-    //       <Input
-    //         type="select" 
-    //         name={`lvtCustomField_` + customField.idfieldcastp}
-    //         id={`lvtCustomField_` + customField.idfieldcastp}
-    //         idfieldcastp = {customField.idfieldcastp}
-    //         multiple >
-    //         <option value="1">Option #1</option>
-    //         <option value="2">Option #2</option>
-    //         <option value="3">Option #3</option>
-    //         <option value="4">Option #4</option>
-    //         <option value="5">Option #5</option>
-    //       </Input>
-    //     </Col>
-    //     </FormGroup>
-    //   );
-    //   break;
-
-    // case defines.CUSTOM_FIELD_COMBOBOX:
-    //   return(
-    //     <FormGroup row>
-    //     <Col md="3">
-    //       <Label htmlFor={`lvtCustomField_` + customField.idfieldcastp}>{customField.value}</Label>
-    //     </Col>
-    //     <Col md="9">
-    //       <Input
-    //         type="select" 
-    //         name={`lvtCustomField_` + customField.idfieldcastp}
-    //         id={`lvtCustomField_` + customField.idfieldcastp}
-    //         idfieldcastp = {customField.idfieldcastp} >
-    //         <option value="1">Option #1</option>
-    //         <option value="2">Option #2</option>
-    //         <option value="3">Option #3</option>
-    //         <option value="4">Option #4</option>
-    //         <option value="5">Option #5</option>
-    //       </Input>
-    //     </Col>
-    //     </FormGroup>
-    //   );
-    //   break;
-
-    case defines.CUSTOM_FIELD_TEXT:
-      return(
-        <FormGroup row>
-          <Col md="3">
-            <Label htmlFor={`lvtCustomField_` + customField.idfieldcastp}>{customField.value}</Label>
-          </Col>
-          <Col xs="12" md="9">
-            <Input
-              type="text"
-              id={`lvtCustomField_` + customField.idfieldcastp}
-              name={`lvtCustomField_` + customField.idfieldcastp}
-              placeholder="Text"
-              idfieldcastp = {customField.idfieldcastp} />
-            <FormText color="muted">{customField.value}</FormText>
-          </Col>
-        </FormGroup>
-      );
-      break;
-    
-    default:
-      return (null);
-      break;
-  }
-}
+// function GenderRadioOption(props){
+//   const gender = props.gender;
+//   console.log(props.parent);
+//   return(
+//     <FormGroup check inline>
+//       <Input
+//         className="form-check-input"
+//         type="radio"
+//         id={"lvtGender_" + gender.idgender}
+//         name="lvtGender"
+//         value={gender.idgender}
+//         //checked={this.state.formFields.lvtGender === gender.idgender}
+//         //onChange={(e) => this.inputRadioChangeHandler.call(this, e)}
+//       />
+//       <Label className="form-check-label" check htmlFor={`lvtGender_` + gender.idgender}>{gender.name}</Label>
+//     </FormGroup>
+//   );
+// }
 
 class Create extends Component {
   constructor(props) {
@@ -200,43 +71,36 @@ class Create extends Component {
         lvtDNI : '',
         lvtFirstname : '',
         lvtLastname : '',
-        lvtEmail : '',
         lvtDateOfBirth : '',
+        lvtGender : '',
+        lvtRUC : '',
+        lvtEmail : '',
         lvtCellphone : '',
         lvtPhone : '',
+        lvtAddress : '',
         lvtImages : '',
-        lvtVideo : ''
+        lvtVideo : '',
+        lvtObservations : '',
       },
       loading: false,
       error: false,
       redirect: false,
-      genders: [],
+      genders: {},
       customFields: [],
+      customFieldsData: [],
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.inputChangeHandler = this.inputChangeHandler.bind(this);
+    this.inputRadioChangeHandler = this.inputRadioChangeHandler.bind(this);
     this.handleClickSubmit = this.handleClickSubmit.bind(this);
   }
 
   componentDidMount() {
-    axios.get(
-      defines.API_DOMAIN + '/gender'
-    )
-    .then( (response) => {
-      if(response.status === 200 ) {
-        this.setState({ genders: response.data.data })
-      }else{
-        throw new Error("Invalid status code");
-      }
-    })
-    .catch( (err) => {
-      console.log(err)
-    });
 
     // fetch all API data
     const requestGender = axios.get( defines.API_DOMAIN + '/gender' );
-    const requestCustomFields = axios.get( defines.API_DOMAIN + '/fieldcastp' );
+    const requestCustomFields = axios.get( defines.API_DOMAIN + '/allfieldcastopp' );
     axios.all([requestGender, requestCustomFields]).then(axios.spread((...responses) => {
       const responseGender = responses[0];
       const responseCustomFields = responses[1];
@@ -248,7 +112,33 @@ class Create extends Component {
       }
 
       if(responseCustomFields.status === 200 ) {
-        this.setState({ customFields: responseCustomFields.data.data })
+        // let customFieldElements = responseCustomFields.data.data.map( ( responseCustomField ) => {
+        //   let customFieldElement = {};
+        //   customFieldElement[ defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfieldcastp ] = '';
+        //   return customFieldElement;
+        // } );
+        // console.log( customFieldElements );
+
+        let customFieldElements = responseCustomFields.data.data.map( ( responseCustomField ) => {
+          let customFieldElement = {
+            name: defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfieldcastp,
+            value: '',
+            idfieldcastp: responseCustomField.idfieldcastp,
+          };
+          return customFieldElement;
+        } );
+
+        // let customFieldElements = responseCustomFields.data.data.reduce( ( result, {index, idfieldcastp} ) => {
+        //   result[defines.CUSTOM_FIELD_PREFIX + idfieldcastp] = '';
+        //   return result;
+        // }, {});
+
+        this.setState({ 
+          customFields: responseCustomFields.data.data,
+          customFieldsData: customFieldElements
+        });
+        
+        //console.log(this.state);
       }else{
         throw new Error("Invalid status code for responseCustomFields");
       }
@@ -263,19 +153,51 @@ class Create extends Component {
     this.setState({ formFields });
   }
 
+  customInputChangeHandler(e) {
+    let customFieldsData = this.state.customFieldsData;
+    const index = customFieldsData.findIndex(item => (item.name === e.target.name));
+    if( index >= 0 ){
+      customFieldsData[index].value = e.target.value;
+    }
+  }
+
+  inputRadioChangeHandler=(event)=> {
+    console.log(event.target.value);
+    /*this.setState({
+      ...this.state,
+      selectedValue: event.target.value
+    });*/
+  };
+
   handleSubmit(event) {
     event.preventDefault();
     
-    const formcastp = this.state.customFields.filter(function(customField) {
-      if( customField.idfieldtype !== defines.CUSTOM_FIELD_TEXTAREA && customField.idfieldtype !== defines.CUSTOM_FIELD_TEXT ){
+    //console.log(this.state.customFieldsData);
+    // let customFieldsData = this.state.customFieldsData;
+    // const formcastp = this.state.customFields.filter(function(customField) {
+    // if( customField.idfieldtype !== defines.CUSTOM_FIELD_TEXTAREA && customField.idfieldtype !== defines.CUSTOM_FIELD_TEXT ){
+    //     return true; // skip
+    //   }
+    //   return false;
+    // }).map(function(customField) { 
+    //   let inputName = defines.CUSTOM_FIELD_PREFIX + customField.idfieldcastp;
+    //   return {
+    //     idfieldcastp: customField.idfieldcastp,
+    //     idfieldopcastp: '',
+    //     value: customFieldsData[inputName],
+    //   }
+    // });
+
+    const formcastp = this.state.customFieldsData.filter(function(customFieldData) {
+      if( customFieldData.value === null || customFieldData.value === undefined || customFieldData.value === '' ){
         return false; // skip
       }
       return true;
-    }).map(function(customField) { 
+    }).map(function(customFieldData) { 
       return {
-        idfieldcastp: customField.idfieldcastp,
+        idfieldcastp: customFieldData.idfieldcastp,
         idfieldopcastp: '',
-        value: event.target[`lvtCustomField_`+ customField.idfieldcastp].value
+        value: customFieldData.value,
       }
     });
     
@@ -283,34 +205,37 @@ class Create extends Component {
       passport: this.state.formFields.lvtDNI,
       firstname: this.state.formFields.lvtFirstname,
       lastname: this.state.formFields.lvtLastname,
-      email: this.state.formFields.lvtEmail,
       dob: this.state.formFields.lvtDateOfBirth,
+      gender: this.state.formFields.lvtGender,
+      ruc: this.state.formFields.lvtRUC,
+      email: this.state.formFields.lvtEmail,
       phone1: this.state.formFields.lvtCellphone,
       phone2: this.state.formFields.lvtPhone,
-      gender: parseInt(event.target[`lvtGender`].value),
+      address: this.state.formFields.lvtAddress,
+      observations: this.state.formFields.lvtObservations,
       // unused
       //images: this.state.formFields.lvtImages,
       //video: this.state.formFields.lvtVideo 
       // temporal
       createdby: 1,
-      ruc: this.state.formFields.lvtDNI,
       formcastp: formcastp
     };
 
-    this.setState({ loading: true });
+    console.log(personData)
+    // this.setState({ loading: true });
     
-    axios.post(defines.API_DOMAIN + '/person/', personData )
-    .then( (response) => {
-      if(response.status === 200 ) {
-        this.setState({ loading: false, redirect: true });
-      }else{
-        throw new Error("Invalid status code");
-      }
-    })
-    .catch( (err) => {
-      console.log(err);
-      this.setState({ loading: false, error: true });
-    });
+    // axios.post(defines.API_DOMAIN + '/person/', personData )
+    // .then( (response) => {
+    //   if(response.status === 200 ) {
+    //     this.setState({ loading: false, redirect: true });
+    //   }else{
+    //     throw new Error("Invalid status code");
+    //   }
+    // })
+    // .catch( (err) => {
+    //   console.log(err);
+    //   this.setState({ loading: false, error: true });
+    // });
   }
 
   handleClickSubmit(event){
@@ -318,7 +243,7 @@ class Create extends Component {
   }
 
   render() {
-    const gendersList = this.state.genders;
+    ///const gendersList = this.state.genders;
     const customFieldList = this.state.customFields; 
 
     if (this.state.redirect) {
@@ -367,7 +292,7 @@ class Create extends Component {
 
                   <FormGroup row>
                     <Col md="3">
-                      <Label htmlFor="lvtFirstname">Nombre</Label>
+                      <Label htmlFor="lvtFirstname">Nombres</Label>
                     </Col>
                     <Col xs="12" md="9">
                       <Input
@@ -378,12 +303,12 @@ class Create extends Component {
                         value={this.state.formFields.lvtFirstname}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                       />
-                      <FormText color="muted">Primer nombre</FormText>
+                      <FormText color="muted">Nombres de la persona</FormText>
                     </Col>
                   </FormGroup>
                   <FormGroup row>
                     <Col md="3">
-                      <Label htmlFor="lvtLastname">Apellido</Label>
+                      <Label htmlFor="lvtLastname">Apellidos</Label>
                     </Col>
                     <Col xs="12" md="9">
                       <Input 
@@ -394,7 +319,7 @@ class Create extends Component {
                         value={this.state.formFields.lvtLastname}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                       />
-                      <FormText color="muted">Apellido paterno</FormText>
+                      <FormText color="muted">Apellidos de la persona</FormText>
                     </Col>
                   </FormGroup>
 
@@ -426,9 +351,26 @@ class Create extends Component {
                       <Label>Género</Label>
                     </Col>
                     <Col md="9">
-                      {gendersList.map((gender, index) =>
+                      {/* {gendersList.map((gender, index) =>
                         <GenderRadioOption key={index} gender={gender}/>
-                      )}
+                      )} */}
+                    </Col>
+                  </FormGroup>
+
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtRUC">RUC</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <Input
+                        type="text"
+                        id="lvtRUC"
+                        name="lvtRUC"
+                        placeholder="09999999999001"
+                        value={this.state.formFields.lvtRUC}
+                        onChange={(e) => this.inputChangeHandler.call(this, e)}
+                      />
+                      <FormText color="muted">Dato para facturación</FormText>
                     </Col>
                   </FormGroup>
                 </CardBody>
@@ -503,7 +445,23 @@ class Create extends Component {
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
                         />
                       </InputGroup>
-                      <FormText color="muted">Teléfono fijo</FormText>
+                      <FormText color="muted">Teléfono fijo principal</FormText>
+                    </Col>
+                  </FormGroup>
+
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtAddress">Dirección</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <Input
+                        type="textarea"
+                        name="lvtAddress"
+                        id="lvtAddress"
+                        rows="3"
+                        placeholder="Urdesa Central, Cedros 215 y Victor Emilio Estrada"
+                      />
+                      <FormText color="muted">Dirección de domicilio o de contacto principal</FormText>
                     </Col>
                   </FormGroup>
                 </CardBody>
@@ -516,8 +474,13 @@ class Create extends Component {
                   <strong>Otros</strong> Datos adicionales
                 </CardHeader>
                 <CardBody>
-                  {customFieldList.map((customField, index) =>
-                    <CustomFieldsItems key={index} customField={customField}/>
+                  {( customFieldList || []).map((customFieldObj, index) =>
+                    <CustomField 
+                      key={index}
+                      customFieldObj={customFieldObj}
+                      customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
+                      onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
+                    />
                   )}
                 </CardBody>
               </Card>
@@ -535,6 +498,7 @@ class Create extends Component {
                     </Col>
                     <Col xs="12" md="9">
                       <Input type="file" id="lvtImages" name="lvtImages" multiple />
+                      <FormText color="muted">Imágenes de la persona</FormText>
                     </Col>
                   </FormGroup>
                   <FormGroup row>
@@ -543,6 +507,34 @@ class Create extends Component {
                     </Col>
                     <Col xs="12" md="9">
                       <Input type="file" id="lvtVideo" name="lvtVideo" />
+                      <FormText color="muted">Vídeo a mostrar</FormText>
+                    </Col>
+                  </FormGroup>
+                </CardBody>
+              </Card>
+            </Col>
+
+          </Row>
+          <Row>
+            <Col xs="12" md="12">
+              <Card>
+                <CardHeader>
+                  <strong>Complementarios</strong> Datos adicionales
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtObservations">Observaciones</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <Input
+                        type="textarea"
+                        name="lvtObservations"
+                        id="lvtObservations"
+                        rows="4"
+                        placeholder="Igrese texto..."
+                      />
+                      <FormText color="muted">Comentarios y observaciones referentes a la ficha ingresada</FormText>
                     </Col>
                   </FormGroup>
                 </CardBody>
@@ -551,8 +543,8 @@ class Create extends Component {
           </Row>
           <Card>
             <CardFooter>
-              <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-dot-circle-o"></i> Submit</Button>
-              <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Reset</Button>
+              <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-dot-circle-o"></i> Guardar</Button>
+              <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Limpiar</Button>
             </CardFooter>
           </Card>
         </Form>

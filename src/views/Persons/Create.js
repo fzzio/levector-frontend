@@ -188,15 +188,21 @@ class Create extends Component {
       //video: this.state.formFields.lvtVideo 
       // temporal
       createdby: 1,
-      formcastp: JSON.stringify(formcastp)
+      formcastp: formcastp
     };
 
-    console.log(personData);
+    console.log( JSON.stringify(personData) );
+
     // this.setState({ loading: true });
-    axios.post(defines.API_DOMAIN + '/person/', personData )
+    axios.post(
+      defines.API_DOMAIN + '/person/', 
+      JSON.stringify(personData), 
+      defines.GL_HEAD
+    )
     .then( (response) => {
       if(response.status === 200 ) {
         //this.setState({ loading: false, redirect: true });
+        console.log(response)
       }else{
         console.log(response);
         throw new Error("Invalid status code");

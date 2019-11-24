@@ -8,3 +8,8 @@ exports.CUSTOM_FIELD_LIST = 3;
 exports.CUSTOM_FIELD_COMBOBOX = 4;
 exports.CUSTOM_FIELD_TEXT = 5;
 exports.CUSTOM_FIELD_PREFIX = 'lvtCustomField_'
+exports.GL_HEAD = {
+    headers: {
+        "Content-Type": "application/json",
+    }
+}

@@ -107,7 +107,7 @@ class Create extends Component {
       if(responseGender.status === 200 ) {
         this.setState({ genders: responseGender.data.data })
       }else{
-        throw new Error("Invalid status code for responseGender");
+        throw new Error( JSON.stringify( {status: responseCustomFields.status, error: responseCustomFields.data.data.msg} ) );
       }
 
       if(responseCustomFields.status === 200 ) {
@@ -125,11 +125,18 @@ class Create extends Component {
           customFieldsData: customFieldElements
         });
       }else{
-        throw new Error("Invalid status code for responseCustomFields");
+        throw new Error( JSON.stringify( {status: responseCustomFields.status, error: responseCustomFields.data.data.msg} ) );
       }
-    })).catch( (err) => {
-      console.log( JSON.stringify(err) );
-    })
+    }))
+    .catch( (error) => {
+      if (error.response) { 
+        console.log(error.response.data);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+    });
   }
 
   inputChangeHandler(e) {
@@ -197,16 +204,19 @@ class Create extends Component {
     )
     .then( (response) => {
       if(response.status === 200 ) {
-        //this.setState({ loading: false, redirect: true });
-        console.log("todo bien");
-        console.log(response)
+        this.setState({ loading: false, redirect: true });
       }else{
-        console.log("algo pasó");
-        throw new Error(response);
+        throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
       }
     })
-    .catch( (err) => {
-      console.log( JSON.stringify(err) );
+    .catch( (error) => {
+      if (error.response) { 
+        console.log(error.response.data);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
       //this.setState({ loading: false, error: true });
     });
   }

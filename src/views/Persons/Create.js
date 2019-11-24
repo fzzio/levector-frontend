@@ -104,7 +104,6 @@ class Create extends Component {
     axios.all([requestGender, requestCustomFields]).then(axios.spread((...responses) => {
       const responseGender = responses[0];
       const responseCustomFields = responses[1];
-
       if(responseGender.status === 200 ) {
         this.setState({ genders: responseGender.data.data })
       }else{
@@ -129,7 +128,7 @@ class Create extends Component {
         throw new Error("Invalid status code for responseCustomFields");
       }
     })).catch( (err) => {
-      console.log(err);
+      console.log( JSON.stringify(err) );
     })
   }
 
@@ -191,25 +190,23 @@ class Create extends Component {
       formcastp: formcastp
     };
 
-    console.log( JSON.stringify(personData) );
-
     // this.setState({ loading: true });
     axios.post(
       defines.API_DOMAIN + '/person/', 
-      JSON.stringify(personData), 
-      defines.GL_HEAD
+      personData
     )
     .then( (response) => {
       if(response.status === 200 ) {
         //this.setState({ loading: false, redirect: true });
+        console.log("todo bien");
         console.log(response)
       }else{
-        console.log(response);
-        throw new Error("Invalid status code");
+        console.log("algo pasó");
+        throw new Error(response);
       }
     })
     .catch( (err) => {
-      console.log(err);
+      console.log( JSON.stringify(err) );
       //this.setState({ loading: false, error: true });
     });
   }

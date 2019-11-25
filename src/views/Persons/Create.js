@@ -43,24 +43,30 @@ const inputParsers = {
   },
 };
 
-// function GenderRadioOption(props){
-//   const gender = props.gender;
-//   console.log(props.parent);
-//   return(
-//     <FormGroup check inline>
-//       <Input
-//         className="form-check-input"
-//         type="radio"
-//         id={"lvtGender_" + gender.idgender}
-//         name="lvtGender"
-//         value={gender.idgender}
-//         //checked={this.state.formFields.lvtGender === gender.idgender}
-//         //onChange={(e) => this.inputRadioChangeHandler.call(this, e)}
-//       />
-//       <Label className="form-check-label" check htmlFor={`lvtGender_` + gender.idgender}>{gender.name}</Label>
-//     </FormGroup>
-//   );
-// }
+function GenderRadioOption(props){
+  const gender = props.gender;
+
+  //const genderValue = props.genderValue;
+  //const genderValue = props.genderValue;
+  //const onGenderFieldChange = ((event) => {
+    //this.props.onCustomFieldChange(e);
+    //return gender.props.onCustomFieldChange(event);
+  //});
+  return(
+    <FormGroup check inline>
+      <Input
+        className="form-check-input"
+        type="radio"
+        id={"lvtGender_" + gender.idgender}
+        name="lvtGender"
+        value={gender.idgender}
+        checked={gender.idgender === props.genderValue}
+        onChange={props.onGenderFieldChange}
+      />
+      <Label className="form-check-label" check htmlFor={`lvtGender_` + gender.idgender}>{gender.name}</Label>
+    </FormGroup>
+  );
+}
 
 class Create extends Component {
   constructor(props) {
@@ -85,15 +91,15 @@ class Create extends Component {
       loading: false,
       error: false,
       redirect: false,
-      genders: {},
+      genders: [],
       customFields: [],
       customFieldsData: [],
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.inputChangeHandler = this.inputChangeHandler.bind(this);
-    this.inputRadioChangeHandler = this.inputRadioChangeHandler.bind(this);
-    this.handleClickSubmit = this.handleClickSubmit.bind(this);
+    this.customInputRadioHandler = this.customInputRadioHandler.bind(this);
+    this.customInputChangeHandler = this.customInputChangeHandler.bind(this);
   }
 
   componentDidMount() {
@@ -145,6 +151,12 @@ class Create extends Component {
     this.setState({ formFields });
   }
 
+  customInputRadioHandler(e){
+    let formFields = this.state.formFields;
+    formFields[e.target.name] = parseInt(e.target.value);
+    this.setState({ formFields });
+  }
+
   customInputChangeHandler(e) {
     let customFieldsData = this.state.customFieldsData;
     const index = customFieldsData.findIndex(item => (item.name === e.target.name));
@@ -152,14 +164,6 @@ class Create extends Component {
       customFieldsData[index].value = e.target.value;
     }
   }
-
-  inputRadioChangeHandler=(event)=> {
-    console.log(event.target.value);
-    /*this.setState({
-      ...this.state,
-      selectedValue: event.target.value
-    });*/
-  };
 
   handleSubmit(event) {
     event.preventDefault();
@@ -197,6 +201,8 @@ class Create extends Component {
       formcastp: formcastp
     };
 
+    // console.log(personData);
+
     // this.setState({ loading: true });
     axios.post(
       defines.API_DOMAIN + '/person/', 
@@ -220,13 +226,9 @@ class Create extends Component {
       //this.setState({ loading: false, error: true });
     });
   }
-
-  handleClickSubmit(event){
-    event.preventDefault();
-  }
-
+  
   render() {
-    ///const gendersList = this.state.genders;
+    const gendersList = this.state.genders;
     const customFieldList = this.state.customFields; 
 
     if (this.state.redirect) {
@@ -334,9 +336,14 @@ class Create extends Component {
                       <Label>Género</Label>
                     </Col>
                     <Col md="9">
-                      {/* {gendersList.map((gender, index) =>
-                        <GenderRadioOption key={index} gender={gender}/>
-                      )} */}
+                      {gendersList.map((gender, index) =>
+                        <GenderRadioOption 
+                          key={index} 
+                          gender={gender}
+                          genderValue = {this.state.formFields.lvtGender}
+                          onGenderFieldChange = {(e) => this.customInputRadioHandler.call(this, e)}
+                        />
+                      )}
                     </Col>
                   </FormGroup>
 

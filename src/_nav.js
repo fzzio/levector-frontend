@@ -1,13 +1,13 @@
 export default {
   items: [
-    {
-      name: 'Dashboard',
-      url: '/dashboard',
-      icon: 'icon-speedometer',
-    },
-    {
-      divider: true,
-    },
+    // {
+    //   name: 'Dashboard',
+    //   url: '/dashboard',
+    //   icon: 'icon-speedometer',
+    // },
+    // {
+    //   divider: true,
+    // },
     {
       title: true,
       name: 'Levector',

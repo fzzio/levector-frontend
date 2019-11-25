@@ -3,6 +3,9 @@ import { Redirect } from 'react-router'
 import axios from 'axios';
 import defines from '../../defines'
 import CustomField from './CustomField/CustomField';
+import RUG, { DragArea, DropArea} from 'react-upload-gallery'
+import 'react-upload-gallery/dist/style.css'
+
 import {
   Badge,
   Button,
@@ -84,7 +87,6 @@ class Create extends Component {
         lvtCellphone : '',
         lvtPhone : '',
         lvtAddress : '',
-        lvtImages : '',
         lvtVideo : '',
         lvtObservations : '',
       },
@@ -94,6 +96,7 @@ class Create extends Component {
       genders: [],
       customFields: [],
       customFieldsData: [],
+      lvtImages: []
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -479,36 +482,6 @@ class Create extends Component {
             <Col xs="12" md="6">
               <Card>
                 <CardHeader>
-                  <strong>Multimedia</strong> Imágenes y video
-                </CardHeader>
-                <CardBody>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtImages">Imágenes</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <Input type="file" id="lvtImages" name="lvtImages" multiple />
-                      <FormText color="muted">Imágenes de la persona</FormText>
-                    </Col>
-                  </FormGroup>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtVideo">Vídeo</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <Input type="file" id="lvtVideo" name="lvtVideo" />
-                      <FormText color="muted">Vídeo a mostrar</FormText>
-                    </Col>
-                  </FormGroup>
-                </CardBody>
-              </Card>
-            </Col>
-
-          </Row>
-          <Row>
-            <Col xs="12" md="12">
-              <Card>
-                <CardHeader>
                   <strong>Complementarios</strong> Datos adicionales
                 </CardHeader>
                 <CardBody>
@@ -530,7 +503,86 @@ class Create extends Component {
                 </CardBody>
               </Card>
             </Col>
+
+            <Col xs="12" md="6">
+              <Card>
+                <CardHeader>
+                  <strong>Multimedia</strong> Video
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtVideo">Vídeo</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <Input type="file" id="lvtVideo" name="lvtVideo" />
+                      <FormText color="muted">Vídeo a mostrar</FormText>
+                    </Col>
+                  </FormGroup>
+                </CardBody>
+              </Card>
+            </Col>
           </Row>
+
+          <Row>
+            <Col xs="12" md="12">
+              <Card>
+                <CardHeader>
+                  <strong>Multimedia</strong> Imágenes
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col xs="12" md="12">
+                        <RUG
+                          rules={{
+                            limit: 10,
+                            size: 5000
+                          }}
+                          accept={['jpg', 'jpeg', 'png']}
+
+                          onWarning={(type, rules) => {
+                            switch(type) {
+                              case 'accept':
+                                console.log(`Only ${rules.accept.join(', ')}`)
+                                break;
+                        
+                              case 'limit':
+                                console.log('limit <= ', rules.limit)
+                                break;
+
+                              case 'size':
+                                console.log('max size <= ', rules.size)
+                                break;
+                        
+                              case 'minWidth': case 'minHeight':
+                                console.log('Dimensions > ', `${rules.width.min}x${rules.height.min}`)
+                                break;
+                        
+                              case 'maxWidth': case 'maxHeight':
+                                console.log('Dimensions < ', `${rules.width.max}x${rules.height.max}`)
+                                break;
+                        
+                              default:
+                                break;
+                            }
+                          }}
+                          onChange={(lvtImages) => {
+                            this.setState({ lvtImages }) // save current component
+                          }}
+                          onConfirmDelete={(currentImage, images) => {
+                            return window.confirm('¿Seguro que desea eliminar?')
+                          }}
+                          //action="/api/uploadimages" // upload route
+                          action = {defines.API_DOMAIN + '/uploadimages'} // upload route
+                          source={response => response.source} // response image source
+                        />
+                    </Col>
+                  </FormGroup>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+
           <Card>
             <CardFooter>
               <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-dot-circle-o"></i> Guardar</Button>

@@ -42,6 +42,9 @@ class CustomField extends Component {
         const customFieldObj = this.props.customFieldObj;
         const customFieldValue = this.props.customFieldValue;
         let helpText = null;
+        if( customFieldObj.helptext !== "" || customFieldObj.helptext !== null ){
+            helpText = <FormText color="muted">{customFieldObj.helptext}</FormText>;
+        }
         switch (customFieldObj.idfieldtype) {
             // case defines.CUSTOM_FIELD_CHECKBOX:
             //   return(
@@ -83,10 +86,6 @@ class CustomField extends Component {
             //   break;
     
         case defines.CUSTOM_FIELD_TEXTAREA:
-            helpText = null;
-            if( customFieldObj.helptext !== "" || customFieldObj.helptext !== null ){
-                helpText = <FormText color="muted">{customFieldObj.helptext}</FormText>;
-            }
             return(
                 <FormGroup row>
                     <Col md="3">
@@ -157,7 +156,6 @@ class CustomField extends Component {
             //   break;
     
         case defines.CUSTOM_FIELD_TEXT:
-            helpText = null;
             let appendInput = null;
             let inputCustomText = <Input
                                     type="text"
@@ -168,10 +166,6 @@ class CustomField extends Component {
                                     value = {customFieldValue}
                                     onChange = {this.handleChange}
                                 />;
-            if( customFieldObj.helptext !== "" && customFieldObj.helptext !== null ){
-                helpText = <FormText color="muted">{customFieldObj.helptext}</FormText>;
-            }
-
             if( customFieldObj.appendtext !== "" && customFieldObj.appendtext !== null ){
                 appendInput =    <InputGroup>
                                     { inputCustomText }
@@ -182,7 +176,7 @@ class CustomField extends Component {
             }else{
                 appendInput = inputCustomText
             }
-            
+
             return(
                 <FormGroup row>
                 <Col md="3">

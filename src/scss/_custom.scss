@@ -1,3 +1,25 @@
 // Here you can add other styles
 $lv-orange: #ED4E03;
 $lv-gray: #212121;
+.rug .rug-handle{
+    height: 200px !important;
+}
+.rug .rug-handle svg.rug-handle-icon{
+    width: 25px !important;
+}
+.rug .rug-handle .rug-handle-info .rug-handle-drop-text {
+    font-size: 15px !important;
+}
+.rug .rug-handle .rug-handle-info span {
+    padding: 6px 0 !important;
+    font-size: 15px !important;
+}
+.rug .rug-handle:before{
+    border: 1px solid $lv-gray !important;
+}
+.rug .rug-handle-button{
+    background-color: $lv-gray !important;
+}
+.rug .rug-handle-button:hover{
+    background-color: $lv-orange !important;
+}

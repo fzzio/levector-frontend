@@ -26,6 +26,7 @@ import {
     Label,
     Row,
   } from 'reactstrap';
+import { isNull } from 'util';
 
 class CustomField extends Component {
     constructor(props) {
@@ -40,6 +41,7 @@ class CustomField extends Component {
     render(){
         const customFieldObj = this.props.customFieldObj;
         const customFieldValue = this.props.customFieldValue;
+        let helpText = null;
         switch (customFieldObj.idfieldtype) {
             // case defines.CUSTOM_FIELD_CHECKBOX:
             //   return(
@@ -81,6 +83,10 @@ class CustomField extends Component {
             //   break;
     
         case defines.CUSTOM_FIELD_TEXTAREA:
+            helpText = null;
+            if( customFieldObj.helptext !== "" || customFieldObj.helptext !== null ){
+                helpText = <FormText color="muted">{customFieldObj.helptext}</FormText>;
+            }
             return(
                 <FormGroup row>
                     <Col md="3">
@@ -97,7 +103,7 @@ class CustomField extends Component {
                             value = {customFieldValue}
                             onChange = {this.handleChange}
                         />
-                        <FormText color="muted">{customFieldObj.fieldoption}</FormText>
+                        {helpText}
                     </Col>
                 </FormGroup>
             );
@@ -151,22 +157,40 @@ class CustomField extends Component {
             //   break;
     
         case defines.CUSTOM_FIELD_TEXT:
+            helpText = null;
+            let appendInput = null;
+            let inputCustomText = <Input
+                                    type="text"
+                                    id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
+                                    name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
+                                    placeholder={customFieldValue}
+                                    idfieldcastp = {customFieldObj.idfieldcastp}
+                                    value = {customFieldValue}
+                                    onChange = {this.handleChange}
+                                />;
+            if( customFieldObj.helptext !== "" && customFieldObj.helptext !== null ){
+                helpText = <FormText color="muted">{customFieldObj.helptext}</FormText>;
+            }
+
+            if( customFieldObj.appendtext !== "" && customFieldObj.appendtext !== null ){
+                appendInput =    <InputGroup>
+                                    { inputCustomText }
+                                    <InputGroupAddon addonType="append">
+                                        <InputGroupText>{ customFieldObj.appendtext }</InputGroupText>
+                                    </InputGroupAddon>
+                                </InputGroup>
+            }else{
+                appendInput = inputCustomText
+            }
+            
             return(
                 <FormGroup row>
                 <Col md="3">
                     <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}>{customFieldObj.fieldoption}</Label>
                 </Col>
                 <Col xs="12" md="9">
-                    <Input
-                        type="text"
-                        id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-                        name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-                        placeholder="Text"
-                        idfieldcastp = {customFieldObj.idfieldcastp}
-                        value = {customFieldValue}
-                        onChange = {this.handleChange}
-                    />
-                    <FormText color="muted">{customFieldObj.fieldoption}</FormText>
+                    {appendInput}
+                    {helpText}
                 </Col>
                 </FormGroup>
             );

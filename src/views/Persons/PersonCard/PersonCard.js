@@ -85,7 +85,7 @@ class PersonCard extends Component {
                             </Row>;
         }
         return (
-            <Col xs="12" sm="4" md="3">
+            <Col xs="12" sm="3" md="3">
                 <Card id={person.ID} className="person-card">
                     <CardBody>
                         <Row>
@@ -106,19 +106,19 @@ class PersonCard extends Component {
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
-                                    <Col xs="4" md="4">
+                                    <Col sm="6" md="6" lg="4">
                                         <p className="person-data-value">
                                             { person.ID }
                                         </p>
                                         <FormText className="person-data-field">ID</FormText>
                                     </Col>
-                                    <Col xs="3" md="3">
+                                    <Col sm="6" md="6" lg="3">
                                         <p className="person-data-value">
                                             { person.age } 
                                         </p>
                                         <FormText className="person-data-field">Edad</FormText>
                                     </Col>
-                                    <Col xs="5" md="5">
+                                    <Col sm="6" md="6" lg="5">
                                         <p className="person-data-value">
                                             { person.gender }
                                         </p>

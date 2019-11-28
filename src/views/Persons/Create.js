@@ -166,6 +166,7 @@ class Create extends Component {
     if( index >= 0 ){
       customFieldsData[index].value = e.target.value;
     }
+    console.log( this.state );
   }
 
   handleSubmit(event) {
@@ -186,7 +187,13 @@ class Create extends Component {
     })
 
     // Get images uploaded
-    let imagesPerson = null;
+    let imagesPerson = this.state.lvtImages.map(function(imagePerson) {
+      return {
+        uid: imagePerson.uid,
+        path: 'https://placeimg.com/480/480/people',
+        idperson: imagePerson.idperson,
+      }
+    });
     
     // Setting data to request
     const personData = {
@@ -236,7 +243,7 @@ class Create extends Component {
   
   render() {
     const gendersList = this.state.genders;
-    const customFieldList = this.state.customFields; 
+    const customFieldList = this.state.customFields;
 
     if (this.state.redirect) {
       return <Redirect to='/person/list'/>;

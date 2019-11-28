@@ -27,6 +27,8 @@ import {
     Row,
   } from 'reactstrap';
 import { isNull } from 'util';
+import CustomText from './CustomText';
+import CustomTextArea from './CustomTextArea';
 
 class CustomField extends Component {
     constructor(props) {
@@ -87,24 +89,11 @@ class CustomField extends Component {
     
         case defines.CUSTOM_FIELD_TEXTAREA:
             return(
-                <FormGroup row>
-                    <Col md="3">
-                        <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}>{customFieldObj.fieldoption}</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                        <Input
-                            type="textarea"
-                            name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-                            id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-                            rows="3"
-                            placeholder="..."
-                            idfieldcastp = {customFieldObj.idfieldcastp}
-                            value = {customFieldValue}
-                            onChange = {this.handleChange}
-                        />
-                        {helpText}
-                    </Col>
-                </FormGroup>
+                <CustomTextArea 
+                    customFieldObj = { customFieldObj }
+                    customFieldValue = { customFieldValue }
+                    onCustomFieldChange = {this.handleChange}
+                />
             );
             break;
     
@@ -156,37 +145,12 @@ class CustomField extends Component {
             //   break;
     
         case defines.CUSTOM_FIELD_TEXT:
-            let appendInput = null;
-            let inputCustomText = <Input
-                                    type="text"
-                                    id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-                                    name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-                                    placeholder={customFieldValue}
-                                    idfieldcastp = {customFieldObj.idfieldcastp}
-                                    value = {customFieldValue}
-                                    onChange = {this.handleChange}
-                                />;
-            if( customFieldObj.appendtext !== "" && customFieldObj.appendtext !== null ){
-                appendInput =    <InputGroup>
-                                    { inputCustomText }
-                                    <InputGroupAddon addonType="append">
-                                        <InputGroupText>{ customFieldObj.appendtext }</InputGroupText>
-                                    </InputGroupAddon>
-                                </InputGroup>
-            }else{
-                appendInput = inputCustomText
-            }
-
             return(
-                <FormGroup row>
-                <Col md="3">
-                    <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}>{customFieldObj.fieldoption}</Label>
-                </Col>
-                <Col xs="12" md="9">
-                    {appendInput}
-                    {helpText}
-                </Col>
-                </FormGroup>
+                <CustomText 
+                    customFieldObj = { customFieldObj }
+                    customFieldValue = { customFieldValue }
+                    onCustomFieldChange = {this.handleChange}
+                />
             );
             break;
             

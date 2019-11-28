@@ -16,3 +16,6 @@ exports.GL_HEAD = {
 exports.PERSON_ID_DIGITS = 5;
 exports.PERSON_PAD_CHARACTER = 0;
 exports.PERSON_DATA_PATH = 'static/';
+exports.LVT_STATUS_ACTIVE = 1;
+exports.LVT_STATUS_INACTIVE = 0;
+exports.LVT_STATUS_REMOVED = -1;

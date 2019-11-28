@@ -3,47 +3,7 @@ import { Link } from 'react-router-dom';
 import { Badge, Card, CardBody, CardFooter, CardHeader, Col, Row, Table, Button} from 'reactstrap';
 import axios from 'axios';
 import defines from '../../defines'
-
-function PersonItem(props) {
-  const person = props.person
-  const personLink = `/users/${person.idperson}`
-
-  const getBadge = (status) => {
-    return status === 'Active' ? 'success' :
-      status === 'Inactive' ? 'secondary' :
-        status === 'Pending' ? 'warning' :
-          status === 'Banned' ? 'danger' :
-            'primary'
-  }
-
-  return (
-    <Col xs="12" sm="4" md="3">
-      <Card id={person.ID}>
-        <CardBody>
-          <Row>
-            <Col>
-            </Col>
-          </Row>
-          <div className="avatar">
-            <img src={'assets/img/avatars/1.jpg'} className="img-circle img-no-padding img-responsive" alt="admin@bootstrapmaster.com" />
-          </div>
-          <div className="text-center">
-            {person.firstname} {person.lastname}
-          </div>
-        </CardBody>
-        <CardFooter>
-          <div className="small text-muted">
-            <span>{person.idstatus}</span> | {person.created}
-            <Link className="btn btn-primary" color="primary" size="xs" to={personLink}>
-              Ver más
-            </Link>
-          </div>
-        </CardFooter>
-      </Card>
-    </Col>
-  )
-}
-
+import PersonCard from './PersonCard/PersonCard';
 class List extends Component {
   constructor(props) {
     super(props)
@@ -64,11 +24,17 @@ class List extends Component {
       if(response.status === 200 ) {
         this.setState({ persons: response.data.data })
       }else{
-        throw new Error("Invalid status code");
+        throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
       }
     })
-    .catch( (err) => {
-      console.log(err)
+    .catch( (error) => {
+      if (error.response) {
+        console.log(error.response.data);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
     });
   }
 
@@ -86,7 +52,7 @@ class List extends Component {
               <CardBody>
                 <Row>
                   {personList.map((person, index) =>
-                    <PersonItem key={index} person={person}/>
+                    <PersonCard key={index} person={person}/>
                   )}
                 </Row>
               </CardBody>

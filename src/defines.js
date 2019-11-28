@@ -13,3 +13,6 @@ exports.GL_HEAD = {
         "Content-Type": "application/json",
     }
 }
+exports.PERSON_ID_DIGITS = 5;
+exports.PERSON_PAD_CHARACTER = 0;
+exports.PERSON_DATA_PATH = 'static/';

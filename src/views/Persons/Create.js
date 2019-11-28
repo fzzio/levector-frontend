@@ -96,7 +96,7 @@ class Create extends Component {
       genders: [],
       customFields: [],
       customFieldsData: [],
-      lvtImages: []
+      lvtImages: [],
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -171,6 +171,7 @@ class Create extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
+    // Get data from Custom field
     let formcastp = this.state.customFieldsData.filter(function(customFieldData) {
       if( customFieldData.value === null || customFieldData.value === undefined || customFieldData.value === '' ){
         return false; // skip
@@ -183,9 +184,13 @@ class Create extends Component {
         value: customFieldData.value,
       }
     })
+
+    // Get images uploaded
+    let imagesPerson = null;
     
+    // Setting data to request
     const personData = {
-      passport: this.state.formFields.lvtDNI,
+      dni: this.state.formFields.lvtDNI,
       firstname: this.state.formFields.lvtFirstname,
       lastname: this.state.formFields.lvtLastname,
       dob: this.state.formFields.lvtDateOfBirth,
@@ -196,12 +201,11 @@ class Create extends Component {
       phone2: this.state.formFields.lvtPhone,
       address: this.state.formFields.lvtAddress,
       observations: this.state.formFields.lvtObservations,
+      formcastp: formcastp,
+      images: imagesPerson,
       // unused
-      //images: this.state.formFields.lvtImages,
       //video: this.state.formFields.lvtVideo 
-      // temporal
       createdby: 1,
-      formcastp: formcastp
     };
 
     // console.log(personData);

@@ -1,6 +1,6 @@
 // Here you can add other styles
-$lv-orange: #ED4E03;
-$lv-gray: #212121;
+$lvt-orange: #ED4E03;
+$lvt-gray: #212121;
 .rug .rug-handle{
     height: 200px !important;
 }
@@ -15,11 +15,25 @@ $lv-gray: #212121;
     font-size: 15px !important;
 }
 .rug .rug-handle:before{
-    border: 1px solid $lv-gray !important;
+    border: 1px solid $lvt-gray !important;
 }
 .rug .rug-handle-button{
-    background-color: $lv-gray !important;
+    background-color: $lvt-gray !important;
 }
 .rug .rug-handle-button:hover{
-    background-color: $lv-orange !important;
+    background-color: $lvt-orange !important;
+}
+.person-card .person-data-value{
+    margin-bottom: 0px;
+}
+.person-card .person-data-field{
+    margin-top: 0px;
+    color: $lvt-orange;
+}
+.person-card .lvt-img{
+    max-width: 100%;
+    height: auto;
+}
+.person-card .person-data-flag{
+    font-size: 10px;
 }

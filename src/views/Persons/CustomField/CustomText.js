@@ -41,6 +41,7 @@ class CustomText extends Component {
     render(){
         const customFieldObj = this.props.customFieldObj;
         const customFieldValue = this.props.customFieldValue;
+        const isSearch = this.props.isSearch;
         let helpText = null;
         if( customFieldObj.helptext !== "" || customFieldObj.helptext !== null ){
             helpText = <FormText color="muted">{customFieldObj.helptext}</FormText>;
@@ -56,7 +57,7 @@ class CustomText extends Component {
                                 value = {customFieldValue}
                                 onChange = {this.handleChange}
                             />;
-        if( customFieldObj.appendtext !== "" && customFieldObj.appendtext !== null ){
+        if( customFieldObj.appendtext !== "" && customFieldObj.appendtext !== null && !isSearch ){
             appendInput =    <InputGroup>
                                 { inputCustomText }
                                 <InputGroupAddon addonType="append">
@@ -75,8 +76,12 @@ class CustomText extends Component {
                     </Label>
                 </Col>
                 <Col xs="12" md="9">
-                    {appendInput}
-                    {helpText}
+                    { appendInput }
+                    {
+                        ( !isSearch )
+                        ? helpText
+                        : ''
+                    }
                 </Col>
             </FormGroup>
         );

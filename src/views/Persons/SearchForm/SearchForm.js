@@ -36,6 +36,20 @@ class SearchForm extends Component {
         super(props);
 
         this.state = {
+            formFields: {
+                lvtDNI : '',
+                lvtFirstname : '',
+                lvtLastname : '',
+                lvtDateOfBirth : '',
+                lvtGender : '',
+                lvtRUC : '',
+                lvtEmail : '',
+                lvtCellphone : '',
+                lvtPhone : '',
+                lvtAddress : '',
+                lvtVideo : '',
+                lvtObservations : '',
+            },
             genders: [],
             customFields: [],
             persons: [],
@@ -84,6 +98,15 @@ class SearchForm extends Component {
         });
     }
 
+    customInputChangeHandler(e) {
+        let customFieldsData = this.state.customFieldsData;
+        const index = customFieldsData.findIndex(item => (item.name === e.target.name));
+        if( index >= 0 ){
+          customFieldsData[index].value = e.target.value;
+        }
+        console.log( this.state );
+      }
+
     render() {
         const gendersList = this.state.genders;
         const customFieldList = this.state.customFields;
@@ -117,10 +140,11 @@ class SearchForm extends Component {
                             <Col md="3">
                                 {( customFieldList || []).map((customFieldObj, index) =>
                                     <CustomField 
-                                    key={index}
-                                    customFieldObj={customFieldObj}
-                                    customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
-                                    onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
+                                        key={index}
+                                        customFieldObj={customFieldObj}
+                                        customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
+                                        onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
+                                        isSearch = { true }
                                     />
                                 )}
                             </Col>

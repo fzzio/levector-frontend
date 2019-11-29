@@ -8,6 +8,7 @@ import {
     CardFooter,
     CardHeader,
     Col,
+    Badge,
     Container,
     DropdownItem,
     DropdownMenu,
@@ -29,11 +30,6 @@ import { isNull } from 'util';
 import moment from 'moment';
 import defines from '../../../defines'
 
-const getBadge = (status) => {
-    return status === defines.LVT_STATUS_ACTIVE ? 'success' :
-      status === defines.LVT_STATUS_INACTIVE ? 'secondary' :
-            'primary'
-}
 class PersonCard extends Component {
     constructor(props) {
         super(props)
@@ -42,9 +38,9 @@ class PersonCard extends Component {
                 ID: (this.props.person.ID).toString().padStart( defines.PERSON_ID_DIGITS, defines.PERSON_PAD_CHARACTER),
                 fullname: this.props.person.firstname + ' ' + this.props.person.lastname,
                 link: `/person/${this.props.person.ID}`,
-                age: this.props.person.age,
+                age: ( this.props.person.age > 0 ) ? this.props.person.age : 0,
                 photo: this.props.person.photo,
-                gender: this.props.person.gender,
+                gender: ( this.props.person.gender !== null ) ? this.props.person.gender : 0,
                 modified: moment(this.props.person.modified).format('YYYY-MM-DD'),
             },
             hasAlert: false,
@@ -114,13 +110,25 @@ class PersonCard extends Component {
                                     </Col>
                                     <Col sm="6" md="6" lg="3">
                                         <p className="person-data-value">
-                                            { person.age } 
+                                            { 
+                                                person.age
+                                                ?   person.age
+                                                :   <Badge color="warning">
+                                                        <i className="fa fa-question fa-lg"></i>
+                                                    </Badge>
+                                            }
                                         </p>
                                         <FormText className="person-data-field">Edad</FormText>
                                     </Col>
                                     <Col sm="6" md="6" lg="5">
                                         <p className="person-data-value">
-                                            { person.gender }
+                                            { 
+                                                person.gender
+                                                ?   person.gender
+                                                :   <Badge color="warning">
+                                                        <i className="fa fa-question fa-lg"></i>
+                                                    </Badge>
+                                            }
                                         </p>
                                         <FormText className="person-data-field">Género</FormText>
                                     </Col>
@@ -138,7 +146,7 @@ class PersonCard extends Component {
                                 <FormText className="person-data-field">Modificado</FormText>
                             </Col>
                             <Col xs="4">
-                                <Link to={ person.link } className="btn btn-dark btn-sm btn-block" color="primary" >
+                                <Link to={ person.link } className="btn btn-dark btn-md btn-block" color="primary" >
                                     Ver
                                 </Link>
                             </Col>

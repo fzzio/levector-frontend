@@ -33,7 +33,18 @@ import CustomTextArea from './CustomTextArea';
 class CustomField extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            isSearch: false,
+            loading: true,
+            error: false,
+        }
         this.handleChange = this.handleChange.bind(this);
+    }
+
+    componentDidMount() {
+        this.setState({ 
+            isSearch: this.props.isSearch,
+        });
     }
 
     handleChange(e) {
@@ -43,6 +54,8 @@ class CustomField extends Component {
     render(){
         const customFieldObj = this.props.customFieldObj;
         const customFieldValue = this.props.customFieldValue;
+        const isSearch = this.state.isSearch;
+
         let helpText = null;
         if( customFieldObj.helptext !== "" || customFieldObj.helptext !== null ){
             helpText = <FormText color="muted">{customFieldObj.helptext}</FormText>;
@@ -88,13 +101,24 @@ class CustomField extends Component {
             //   break;
     
         case defines.CUSTOM_FIELD_TEXTAREA:
-            return(
-                <CustomTextArea 
-                    customFieldObj = { customFieldObj }
-                    customFieldValue = { customFieldValue }
-                    onCustomFieldChange = {this.handleChange}
-                />
-            );
+            if ( !isSearch ) {
+                return(
+                    <CustomTextArea 
+                        customFieldObj = { customFieldObj }
+                        customFieldValue = { customFieldValue }
+                        onCustomFieldChange = {this.handleChange}
+                    />
+                );
+            }else{
+                return(
+                    <CustomText 
+                        customFieldObj = { customFieldObj }
+                        customFieldValue = { customFieldValue }
+                        onCustomFieldChange = {this.handleChange}
+                        isSearch = { isSearch }
+                    />
+                );
+            }
             break;
     
             // case defines.CUSTOM_FIELD_LIST:
@@ -150,6 +174,7 @@ class CustomField extends Component {
                     customFieldObj = { customFieldObj }
                     customFieldValue = { customFieldValue }
                     onCustomFieldChange = {this.handleChange}
+                    isSearch = { isSearch }
                 />
             );
             break;

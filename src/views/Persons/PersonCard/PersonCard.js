@@ -146,7 +146,7 @@ class PersonCard extends Component {
                                 <FormText className="person-data-field">Modificado</FormText>
                             </Col>
                             <Col xs="4">
-                                <Link to={ person.link } className="btn btn-dark btn-md btn-block" color="primary" >
+                                <Link to={ person.link } className="btn btn-dark btn-sm btn-block" color="primary" >
                                     Ver
                                 </Link>
                             </Col>

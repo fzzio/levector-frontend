@@ -48,13 +48,7 @@ const inputParsers = {
 
 function GenderRadioOption(props){
   const gender = props.gender;
-
-  //const genderValue = props.genderValue;
-  //const genderValue = props.genderValue;
-  //const onGenderFieldChange = ((event) => {
-    //this.props.onCustomFieldChange(e);
-    //return gender.props.onCustomFieldChange(event);
-  //});
+  
   return(
     <FormGroup check inline>
       <Input

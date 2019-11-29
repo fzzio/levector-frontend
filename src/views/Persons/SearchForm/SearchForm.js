@@ -31,6 +31,25 @@ import moment from 'moment';
 import defines from '../../../defines'
 import CustomField from '../CustomField/CustomField';
 
+function GenderRadioOption(props){
+    const gender = props.gender;
+    
+    return(
+      <FormGroup check>
+        <Input
+            className="form-check-input"
+            type="radio"
+            id={"lvtGender_" + gender.idgender}
+            name="lvtGender"
+            value={gender.idgender}
+            checked={gender.idgender === props.genderValue}
+            onChange={props.onGenderFieldChange}
+        />
+        <Label className="form-check-label" check htmlFor={`lvtGender_` + gender.idgender}>{gender.name}</Label>
+      </FormGroup>
+    );
+  }
+
 class SearchForm extends Component {
     constructor(props) {
         super(props);
@@ -102,10 +121,16 @@ class SearchForm extends Component {
         let customFieldsData = this.state.customFieldsData;
         const index = customFieldsData.findIndex(item => (item.name === e.target.name));
         if( index >= 0 ){
-          customFieldsData[index].value = e.target.value;
+            customFieldsData[index].value = e.target.value;
         }
+    }
+    
+    customInputRadioHandler(e){
+        let formFields = this.state.formFields;
+        formFields[e.target.name] = parseInt(e.target.value);
+        this.setState({ formFields });
         console.log( this.state );
-      }
+    }
 
     render() {
         const gendersList = this.state.genders;
@@ -120,24 +145,24 @@ class SearchForm extends Component {
                     <CardBody>
                         <Form action="" method="post" className="form-horizontal" id="lvt-form-search" >
                         <Row>
-                            <Col md="3">
-                            <FormGroup row>
-                                <Col md="3">
-                                <Label>Género</Label>
-                                </Col>
-                                <Col md="9">
-                                {/* {gendersList.map((gender, index) =>
-                                    <GenderRadioOption 
-                                        key={index} 
-                                        gender={gender}
-                                        genderValue = {this.state.formFields.lvtGender}
-                                        onGenderFieldChange = {(e) => this.customInputRadioHandler.call(this, e)}
-                                    />
-                                )} */}
-                                </Col>
-                            </FormGroup>
+                            <Col md="4">
+                                <FormGroup row>
+                                    <Col md="3">
+                                    <Label>Género</Label>
+                                    </Col>
+                                    <Col md="9">
+                                    {gendersList.map((gender, index) =>
+                                        <GenderRadioOption 
+                                            key={index} 
+                                            gender={gender}
+                                            genderValue = {this.state.formFields.lvtGender}
+                                            onGenderFieldChange = {(e) => this.customInputRadioHandler.call(this, e)}
+                                        />
+                                    )}
+                                    </Col>
+                                </FormGroup>
                             </Col>
-                            <Col md="3">
+                            <Col md="4">
                                 {( customFieldList || []).map((customFieldObj, index) =>
                                     <CustomField 
                                         key={index}
@@ -149,7 +174,7 @@ class SearchForm extends Component {
                                 )}
                             </Col>
                             <Col md="4">
-                            bebe
+                                
                             </Col>
                         </Row>
                         </Form>

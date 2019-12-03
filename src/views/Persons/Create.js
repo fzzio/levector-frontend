@@ -209,7 +209,7 @@ class Create extends Component {
 
     console.log(personData);
 
-    // this.setState({ loading: true });
+    this.setState({ loading: true });
     axios.post(
       defines.API_DOMAIN + '/person/', 
       personData
@@ -232,7 +232,7 @@ class Create extends Component {
       //this.setState({ loading: false, error: true });
     });
   }
-  
+
   render() {
     const gendersList = this.state.genders;
     const customFieldList = this.state.customFields;
@@ -549,9 +549,7 @@ class Create extends Component {
                           action = {defines.API_DOMAIN + '/uploadimages'} // upload route
 
                           source = {(response) => {
-                            console.log("--- RESPONSE ---")
-                            console.log(response)
-                            return response[0].path
+                            return (defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + response[0].filename)
                           }} // response image source
 
                           onWarning = {(type, rules) => {
@@ -582,25 +580,38 @@ class Create extends Component {
                           }}
 
                           onChange = {(lvtImages) => {
+                            // console.log(" --- lvtImages --- ")
+                            // console.log(lvtImages)
                             //this.setState({ lvtImages }) // save current component
-                            //console.log(lvtImages)
                           }}
 
                           onSuccess = {(imageUploaded) => {
-                            // console.log("--- imageUploaded ---")
-                            // console.log( imageUploaded )
+                            console.log(imageUploaded)
                             let arrImages = this.state.lvtImages
                             arrImages.push({
-                              // "uid": imageUploaded.uid,
+                              "uid": imageUploaded.uid,
                               "path": imageUploaded.source,
                             })
                             this.setState({ lvtImages: arrImages })
-                            console.log( this.state )
                           }}
                           
                           onConfirmDelete = {(currentImage, images) => {
-                            // console.log(currentImage)
                             return window.confirm('¿Seguro que desea eliminar?')
+                          }}
+
+
+                          onDeleted={(deletedImage, images) => {
+                            let arrImages = this.state.lvtImages.filter(function(item) {
+                              if(item.uid !== deletedImage.uid){
+                                return item
+                              }
+                            })
+                            
+                            this.setState({ lvtImages: arrImages })
+
+                            if ( deletedImage.selected && images.length ) {
+                                images[0].select()
+                            }
                           }}
 
                         />

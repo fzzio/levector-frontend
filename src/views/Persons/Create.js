@@ -160,7 +160,7 @@ class Create extends Component {
     if( index >= 0 ){
       customFieldsData[index].value = e.target.value;
     }
-    console.log( this.state );
+    //console.log( this.state );
   }
 
   handleSubmit(event) {
@@ -183,9 +183,7 @@ class Create extends Component {
     // Get images uploaded
     let imagesPerson = this.state.lvtImages.map(function(imagePerson) {
       return {
-        uid: imagePerson.uid,
-        path: 'https://placeimg.com/480/480/people',
-        idperson: imagePerson.idperson,
+        path: imagePerson.path,
       }
     });
     
@@ -209,7 +207,7 @@ class Create extends Component {
       createdby: 1,
     };
 
-    // console.log(personData);
+    console.log(personData);
 
     // this.setState({ loading: true });
     axios.post(
@@ -458,6 +456,8 @@ class Create extends Component {
                         id="lvtAddress"
                         rows="3"
                         placeholder="Urdesa Central, Cedros 215 y Victor Emilio Estrada"
+                        onChange={(e) => this.inputChangeHandler.call(this, e)}
+                        value={this.state.formFields.lvtAddress}
                       />
                       <FormText color="muted">Dirección de domicilio o de contacto principal</FormText>
                     </Col>
@@ -539,13 +539,22 @@ class Create extends Component {
                   <FormGroup row>
                     <Col xs="12" md="12">
                         <RUG
-                          rules={{
+                          rules = {{
                             limit: 10,
                             size: 5000
                           }}
-                          accept={['jpg', 'jpeg', 'png']}
 
-                          onWarning={(type, rules) => {
+                          accept = {['jpg', 'jpeg', 'png']}
+
+                          action = {defines.API_DOMAIN + '/uploadimages'} // upload route
+
+                          source = {(response) => {
+                            console.log("--- RESPONSE ---")
+                            console.log(response)
+                            return response[0].path
+                          }} // response image source
+
+                          onWarning = {(type, rules) => {
                             switch(type) {
                               case 'accept':
                                 console.log(`Only ${rules.accept.join(', ')}`)
@@ -571,18 +580,33 @@ class Create extends Component {
                                 break;
                             }
                           }}
-                          onChange={(lvtImages) => {
-                            this.setState({ lvtImages }) // save current component
+
+                          onChange = {(lvtImages) => {
+                            //this.setState({ lvtImages }) // save current component
+                            //console.log(lvtImages)
                           }}
-                          onConfirmDelete={(currentImage, images) => {
+
+                          onSuccess = {(imageUploaded) => {
+                            // console.log("--- imageUploaded ---")
+                            // console.log( imageUploaded )
+                            let arrImages = this.state.lvtImages
+                            arrImages.push({
+                              // "uid": imageUploaded.uid,
+                              "path": imageUploaded.source,
+                            })
+                            this.setState({ lvtImages: arrImages })
+                            console.log( this.state )
+                          }}
+                          
+                          onConfirmDelete = {(currentImage, images) => {
+                            // console.log(currentImage)
                             return window.confirm('¿Seguro que desea eliminar?')
                           }}
-                          //action="/api/uploadimages" // upload route
-                          action = {defines.API_DOMAIN + '/uploadimages'} // upload route
-                          source={response => response.source} // response image source
+
                         />
                     </Col>
                   </FormGroup>
+
                 </CardBody>
               </Card>
             </Col>

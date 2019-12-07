@@ -107,6 +107,7 @@ class CustomField extends Component {
                         customFieldObj = { customFieldObj }
                         customFieldValue = { customFieldValue }
                         onCustomFieldChange = {this.handleChange}
+                        isSearch = { isSearch }
                     />
                 );
             }else{

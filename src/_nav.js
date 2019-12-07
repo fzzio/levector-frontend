@@ -1,13 +1,13 @@
 export default {
   items: [
-    // {
-    //   name: 'Dashboard',
-    //   url: '/dashboard',
-    //   icon: 'icon-speedometer',
-    // },
-    // {
-    //   divider: true,
-    // },
+    {
+      name: 'Dashboard',
+      url: '/dashboard',
+      icon: 'icon-speedometer',
+    },
+    {
+      divider: true,
+    },
     {
       title: true,
       name: 'Levector',
@@ -65,9 +65,18 @@ export default {
       icon: '',
     },
     {
-      name: 'Campos adicionales',
-      url: '',
+      name: 'Campos dinámicos',
       icon: 'icon-layers',
+      children: [
+        {
+          name: 'Agregar',
+          url: '/customfield/create',
+        },
+        {
+          name: 'Ver todas',
+          url: '/customfield/list',
+        },
+      ],
     },
     /* 
     {

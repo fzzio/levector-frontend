@@ -75,6 +75,8 @@ class Create extends Component {
         lvtLastname : '',
         lvtDateOfBirth : '',
         lvtGender : '',
+        lvtHeight : '',
+        lvtWeight : '',
         lvtRUC : '',
         lvtEmail : '',
         lvtCellphone : '',
@@ -160,6 +162,8 @@ class Create extends Component {
       lastname: this.state.formFields.lvtLastname,
       dob: this.state.formFields.lvtDateOfBirth,
       gender: this.state.formFields.lvtGender,
+      height: parseInt( this.state.formFields.lvtHeight ),
+      weight: parseInt( this.state.formFields.lvtWeight ),
       ruc: this.state.formFields.lvtRUC,
       email: this.state.formFields.lvtEmail,
       phone1: this.state.formFields.lvtCellphone,
@@ -211,7 +215,7 @@ class Create extends Component {
       if(responseGender.status === 200 ) {
         this.setState({ genders: responseGender.data.data })
       }else{
-        throw new Error( JSON.stringify( {status: responseCustomFields.status, error: responseCustomFields.data.data.msg} ) );
+        throw new Error( JSON.stringify( {status: responseGender.status, error: responseGender.data.data.msg} ) );
       }
 
       if(responseCustomFields.status === 200 ) {
@@ -242,6 +246,8 @@ class Create extends Component {
       }
     });
   }
+
+  loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
     const gendersList = this.state.genders;
@@ -497,6 +503,52 @@ class Create extends Component {
                   <strong>Otros</strong> Características adicionales
                 </CardHeader>
                 <CardBody>
+                <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtHeight">Estatura</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <InputGroup>
+                        <Input
+                          type="number"
+                          id="lvtHeight"
+                          name="lvtHeight"
+                          placeholder="170"
+                          value={this.state.formFields.lvtHeight}
+                          onChange={(e) => this.inputChangeHandler.call(this, e)}
+                        />
+                        <InputGroupAddon addonType="append">
+                          <InputGroupText>
+                            {defines.LVT_HEIGHT_UNIT}
+                          </InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
+                      <FormText color="muted">Escribe cuánto mide la persona</FormText>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtWeight">Peso</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <InputGroup>
+                        <Input
+                          type="number"
+                          id="lvtWeight"
+                          name="lvtWeight"
+                          placeholder="63"
+                          value={this.state.formFields.lvtWeight}
+                          onChange={(e) => this.inputChangeHandler.call(this, e)}
+                        />
+                        <InputGroupAddon addonType="append">
+                          <InputGroupText>
+                            {defines.LVT_WEIGHT_UNIT}
+                          </InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
+                      <FormText color="muted">Escribe cuánto pesa la persona</FormText>
+                    </Col>
+                  </FormGroup>
                   {( customFieldList || []).map((customFieldObj, index) =>
                     <CustomField 
                       key={index}

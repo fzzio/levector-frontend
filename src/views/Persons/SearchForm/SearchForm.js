@@ -98,7 +98,7 @@ class SearchForm extends Component {
             if(responseGender.status === 200 ) {
                 this.setState({ genders: responseGender.data.data })
             }else{
-                throw new Error( JSON.stringify( {status: responseCustomFields.status, error: responseCustomFields.data.data.msg} ) );
+                throw new Error( JSON.stringify( {status: responseGender.status, error: responseGender.data.data.msg} ) );
             }
         
             if(responseCustomFields.status === 200 ) {
@@ -264,12 +264,10 @@ class SearchForm extends Component {
                                                     max={defines.LVT_AGE_MAX}
                                                     defaultValue={[18, 35]}
                                                     marks={{ 
-                                                        0: defines.LVT_AGE_MIN, 
-                                                        18: defines.LVT_AGE_ADULT, 
-                                                        65: defines.LVT_AGE_ELDER, 
+                                                        0: defines.LVT_AGE_MIN,
                                                         100: defines.LVT_AGE_MAX,
                                                     }}
-                                                    tipFormatter={value => `${value} años`}
+                                                    tipFormatter={value => `${value} ${defines.LVT_AGE_UNIT}s`}
                                                     onChange = {(e) => this.rangeAgeChangeHandler.call(this, e)}
                                                     allowCross = {false}
                                                 />
@@ -288,7 +286,7 @@ class SearchForm extends Component {
                                                         0: defines.LVT_HEIGHT_MIN,
                                                         240: defines.LVT_HEIGHT_MAX,
                                                     }}
-                                                    tipFormatter={value => `${value} cm`}
+                                                    tipFormatter={value => `${value} ${defines.LVT_HEIGHT_UNIT}`}
                                                     onChange = {(e) => this.rangeHeightChangeHandler.call(this, e)}
                                                     allowCross = {false}
                                                 />
@@ -307,7 +305,7 @@ class SearchForm extends Component {
                                                         0: defines.LVT_WEIGHT_MIN,
                                                         150: defines.LVT_WEIGHT_MAX,
                                                     }}
-                                                    tipFormatter={value => `${value} kg`}
+                                                    tipFormatter={value => `${value} ${defines.LVT_WEIGHT_UNIT}`}
                                                     onChange = {(e) => this.rangeWeightChangeHandler.call(this, e)}
                                                     allowCross = {false}
                                                 />

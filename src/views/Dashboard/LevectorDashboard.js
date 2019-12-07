@@ -1,4 +1,5 @@
 import React, { Component, lazy, Suspense } from 'react';
+import axios from 'axios';
 import { Bar, Line } from 'react-chartjs-2';
 import {
   Badge,
@@ -23,6 +24,7 @@ import {
 import Widget02 from '../Widgets/Widget02';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
+import defines from '../../defines'
 
 
 class LevectorDashboard extends Component {
@@ -33,6 +35,9 @@ class LevectorDashboard extends Component {
     this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
 
     this.state = {
+      persons: [],
+      limit: 2,
+      offset: 0,
       dropdownOpen: false,
       radioSelected: 2,
     };
@@ -50,10 +55,33 @@ class LevectorDashboard extends Component {
     });
   }
 
+  componentDidMount() {
+    // fetch all API data
+    const requestLastPersons = axios.get( defines.API_DOMAIN + '/person/' + this.state.limit + '/' + this.state.offset );
+    axios.all([requestLastPersons]).then(axios.spread((...responses) => {
+        const responseLastPersons = responses[0];
+        if(responseLastPersons.status === 200 ) {
+            this.setState({ persons: responseLastPersons.data.data })
+        }else{
+            throw new Error( JSON.stringify( {status: responseLastPersons.status, error: responseLastPersons.data.data.msg} ) );
+        }
+    }))
+    .catch( (error) => {
+        if (error.response) { 
+            console.log(error.response.data);
+        } else if (error.request) {
+            console.log(error.request);
+        } else {
+            console.log('Error', error.message);
+        }
+    });
+  }
+
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
-
+    const personList = this.state.persons
+    
     return (
       <div className="animated fadeIn">
         <Row>
@@ -119,43 +147,32 @@ class LevectorDashboard extends Component {
                         <tr>
                           <th className="text-center"><i className="icon-people"></i></th>
                           <th>Persona</th>
+                          <th className="text-center">Género</th>
                           <th className="text-center">País</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td className="text-center">
-                            <div className="avatar">
-                              <img src={'assets/img/avatars/1.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
-                            </div>
-                          </td>
-                          <td>
-                            <div>Andrea Cáceres</div>
-                            <div className="small text-muted">
-                              <span>30</span> | Femenino
-                            </div>
-                          </td>
-                          <td className="text-center">
-                            <i className="flag-icon flag-icon-ec h4 mb-0" title="ec" id="ec"></i>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="text-center">
-                            <div className="avatar">
-                              <img src={'assets/img/avatars/1.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
-                            </div>
-                          </td>
-                          <td>
-                            <div>Fabricio Orrala</div>
-                            <div className="small text-muted">
-                              <span>31</span> | masculino
-                            </div>
-                          </td>
-                          <td className="text-center">
-                            <i className="flag-icon flag-icon-ec h4 mb-0" title="ec" id="ec"></i>
-                          </td>
-                        </tr>
-                        
+                        {personList.map((person, index) =>
+                          <tr key={index}>
+                            <td className="text-center">
+                              <div className="avatar">
+                                <img src={person.photo} className="img-avatar" alt={person.firstname + ' ' + person.lastname} />
+                              </div>
+                            </td>
+                            <td>
+                              <div>{person.firstname + ' ' + person.lastname}</div>
+                              <div className="small text-muted">
+                                <span>{person.age}</span> | <span>{person.height + ' ' + defines.LVT_HEIGHT_UNIT}</span> | <span>{person.weight + ' ' + defines.LVT_WEIGHT_UNIT}</span>
+                              </div>
+                            </td>
+                            <td>
+                              <div>{person.gender}</div>
+                            </td>
+                            <td className="text-center">
+                              <i className={'flag-icon flag-icon-' + person.countrycode +' h4 mb-0'} title={person.countrycode} id={person.countrycode}></i>
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </Table>
                   </Col>

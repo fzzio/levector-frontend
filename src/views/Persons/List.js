@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Badge,
@@ -71,6 +71,8 @@ class List extends Component {
     });
   }
 
+  loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
+
   render() {
     const personList = this.state.persons
 
@@ -89,11 +91,13 @@ class List extends Component {
                 <i className="fa fa-align-justify"></i> Resultados <small className="text-muted"> Personas registradas en la plataforma</small>
               </CardHeader>
               <CardBody>
-                <Row>
-                  {personList.map((person, index) =>
-                    <PersonCard key={index} person={person}/>
-                  )}
-                </Row>
+                <Suspense fallback={this.loading()}>
+                  <Row>
+                    {personList.map((person, index) =>
+                      <PersonCard key={index} person={person}/>
+                    )}
+                  </Row>
+                </Suspense>
               </CardBody>
               <CardFooter>
                 <Row>

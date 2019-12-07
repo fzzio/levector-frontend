@@ -16,9 +16,7 @@ import {
   Col,
   Collapse,
   Container,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
+  DropdownItem, DropdownMenu, DropdownToggle,
   Fade,
   Form,
   FormGroup,
@@ -30,6 +28,7 @@ import {
   InputGroupButtonDropdown,
   InputGroupText,
   Label,
+  Modal, ModalBody, ModalFooter, ModalHeader,
   Row,
 } from 'reactstrap';
 
@@ -91,56 +90,22 @@ class Create extends Component {
       customFields: [],
       customFieldsData: [],
       lvtImages: [],
+      modalForm: false,
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.inputChangeHandler = this.inputChangeHandler.bind(this);
     this.customInputRadioHandler = this.customInputRadioHandler.bind(this);
     this.customInputChangeHandler = this.customInputChangeHandler.bind(this);
+    this.toggleModalForm = this.toggleModalForm.bind(this);
   }
 
-  componentDidMount() {
-
-    // fetch all API data
-    const requestGender = axios.get( defines.API_DOMAIN + '/gender' );
-    const requestCustomFields = axios.get( defines.API_DOMAIN + '/allfieldcastopp' );
-    axios.all([requestGender, requestCustomFields]).then(axios.spread((...responses) => {
-      const responseGender = responses[0];
-      const responseCustomFields = responses[1];
-      if(responseGender.status === 200 ) {
-        this.setState({ genders: responseGender.data.data })
-      }else{
-        throw new Error( JSON.stringify( {status: responseCustomFields.status, error: responseCustomFields.data.data.msg} ) );
-      }
-
-      if(responseCustomFields.status === 200 ) {
-        let customFieldElements = responseCustomFields.data.data.map( ( responseCustomField ) => {
-          let customFieldElement = {
-            name: defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfieldcastp,
-            value: '',
-            idfieldcastp: responseCustomField.idfieldcastp,
-          };
-          return customFieldElement;
-        } );
-
-        this.setState({ 
-          customFields: responseCustomFields.data.data,
-          customFieldsData: customFieldElements
-        });
-      }else{
-        throw new Error( JSON.stringify( {status: responseCustomFields.status, error: responseCustomFields.data.data.msg} ) );
-      }
-    }))
-    .catch( (error) => {
-      if (error.response) { 
-        console.log(error.response.data);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        console.log('Error', error.message);
-      }
+  toggleModalForm() {
+    this.setState({
+      modalForm: !this.state.modalForm,
     });
   }
+
 
   inputChangeHandler(e) {
     let formFields = {...this.state.formFields};
@@ -160,6 +125,7 @@ class Create extends Component {
     if( index >= 0 ){
       customFieldsData[index].value = e.target.value;
     }
+    this.setState({ customFieldsData });
     //console.log( this.state );
   }
 
@@ -233,6 +199,50 @@ class Create extends Component {
     });
   }
 
+
+  componentDidMount() {
+
+    // fetch all API data
+    const requestGender = axios.get( defines.API_DOMAIN + '/gender' );
+    const requestCustomFields = axios.get( defines.API_DOMAIN + '/allfieldcastopp' );
+    axios.all([requestGender, requestCustomFields]).then(axios.spread((...responses) => {
+      const responseGender = responses[0];
+      const responseCustomFields = responses[1];
+      if(responseGender.status === 200 ) {
+        this.setState({ genders: responseGender.data.data })
+      }else{
+        throw new Error( JSON.stringify( {status: responseCustomFields.status, error: responseCustomFields.data.data.msg} ) );
+      }
+
+      if(responseCustomFields.status === 200 ) {
+        let customFieldElements = responseCustomFields.data.data.map( ( responseCustomField ) => {
+          let customFieldElement = {
+            name: defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfieldcastp,
+            value: '',
+            idfieldcastp: responseCustomField.idfieldcastp,
+          };
+          return customFieldElement;
+        } );
+
+        this.setState({ 
+          customFields: responseCustomFields.data.data,
+          customFieldsData: customFieldElements
+        });
+      }else{
+        throw new Error( JSON.stringify( {status: responseCustomFields.status, error: responseCustomFields.data.data.msg} ) );
+      }
+    }))
+    .catch( (error) => {
+      if (error.response) { 
+        console.log(error.response.data);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+    });
+  }
+
   render() {
     const gendersList = this.state.genders;
     const customFieldList = this.state.customFields;
@@ -256,6 +266,21 @@ class Create extends Component {
     // }
     return (
       <div className="animated fadeIn">
+        {/* <Modal isOpen={this.state.modalForm} toggle={this.toggleModalForm} className={this.props.className}>
+          <ModalHeader toggle={this.toggleModalForm}>Modal title</ModalHeader>
+          <ModalBody>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
+            et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum.
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.toggleModalForm}>Do Something</Button>{' '}
+            <Button color="secondary" onClick={this.toggleModalForm}>Cancel</Button>
+          </ModalFooter>
+        </Modal> */}
+
         <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-person" onSubmit={this.handleSubmit} >
           <Row>
             <Col xs="12" md="6">
@@ -469,7 +494,7 @@ class Create extends Component {
             <Col xs="12" md="6">
               <Card>
                 <CardHeader>
-                  <strong>Otros</strong> Datos adicionales
+                  <strong>Otros</strong> Características adicionales
                 </CardHeader>
                 <CardBody>
                   {( customFieldList || []).map((customFieldObj, index) =>
@@ -599,7 +624,6 @@ class Create extends Component {
                             return window.confirm('¿Seguro que desea eliminar?')
                           }}
 
-
                           onDeleted={(deletedImage, images) => {
                             let arrImages = this.state.lvtImages.filter(function(item) {
                               if(item.uid !== deletedImage.uid){
@@ -610,10 +634,9 @@ class Create extends Component {
                             this.setState({ lvtImages: arrImages })
 
                             if ( deletedImage.selected && images.length ) {
-                                images[0].select()
+                              images[0].select()
                             }
                           }}
-
                         />
                     </Col>
                   </FormGroup>
@@ -626,7 +649,7 @@ class Create extends Component {
           <Card>
             <CardFooter>
               <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-dot-circle-o"></i> Guardar</Button>
-              <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Limpiar</Button>
+              {/* <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Limpiar</Button> */}
             </CardFooter>
           </Card>
         </Form>

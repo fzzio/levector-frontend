@@ -36,6 +36,8 @@ const Widgets = React.lazy(() => import('./views/Widgets/Widgets'));
 const Users = React.lazy(() => import('./views/Users/Users'));
 const User = React.lazy(() => import('./views/Users/User'));
 
+// Levector
+const LevectorDashboard = React.lazy(() => import('./views/Dashboard/LevectorDashboard'));
 // Persons
 const personList = React.lazy(() => import('./views/Persons/List'));
 const personCreate = React.lazy(() => import('./views/Persons/Create'));
@@ -43,7 +45,7 @@ const personCreate = React.lazy(() => import('./views/Persons/Create'));
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
+  { path: '/dashboardoriginal', name: 'Dashboard', component: Dashboard },
   { path: '/theme', exact: true, name: 'Theme', component: Colors },
   { path: '/theme/colors', name: 'Colors', component: Colors },
   { path: '/theme/typography', name: 'Typography', component: Typography },
@@ -84,6 +86,9 @@ const routes = [
   { path: '/users', exact: true,  name: 'Users', component: Users },
   { path: '/users/:id', exact: true, name: 'User Details', component: User },
   
+  // Levector
+  { path: '/dashboard', name: 'Dashboard', component: LevectorDashboard },
+
   // Person
   { path: '/person/list', exact: true, name: 'Personas', component: personList},
   { path: '/person/create', exact: true, name: 'Agregar Personas', component: personCreate},

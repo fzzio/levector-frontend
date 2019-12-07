@@ -31,38 +31,27 @@ import PersonCard from './PersonCard/PersonCard';
 import SearchForm from './SearchForm/SearchForm';
 
 
-function Search(props) {
-  const person = props.person
-  const [firstname, setName] = useState('')
-  const [lastname, setLastname] = useState('')
-  const [skill, setSkill] = useState('')
-  const [weight, setWeight] = useState('')
-  const [height, setHeight] = useState('')
-  const submit = e => {
-    e.preventDefault()
-    fetch(`http://localhost:3000/searchperson/`, {
-      method: 'POST',
-      body: JSON.stringify({ firstname, lastname }),
-      /**aqui van mas campos */
-    })
-  }
-}
-
 class List extends Component {
   constructor(props) {
     super(props)
     this.state = {
       persons: [],
+      limit: 8,
+      offset: 0,
       loading: true,
       error: false,
     }
+
+    this.handleResults = this.handleResults.bind(this);
+  }
+
+  handleResults = (personResults) => {
+    this.setState({persons: personResults})
   }
 
   componentDidMount() {
-    let limit = 8
-    let offset = 1
     axios.get(
-      defines.API_DOMAIN + '/person/' + offset + '/' + limit
+      defines.API_DOMAIN + '/person/' + this.state.limit + '/' + this.state.offset
     )
     .then( (response) => {
       if(response.status === 200 ) {
@@ -87,7 +76,12 @@ class List extends Component {
 
     return (
       <div className="animated fadeIn">
-        <SearchForm />
+        <SearchForm 
+          limit = {this.state.limit}
+          offset = {this.state.offset}
+          personList = {this.state.persons}
+          handleResults = { this.handleResults }
+        />
         <Row>
           <Col xl={12}>
             <Card>

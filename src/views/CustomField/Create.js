@@ -37,8 +37,7 @@ class Create extends Component {
             lvtCustomFieldType: '',
             fieldTypes: [],
             isEnableCustomFieldOptions: false,
-            lvtCusmtomFieldOptionsNames: [],
-            lvtCusmtomFieldOptionsData: [],
+            lvtCusmtomFieldOptions: [],
             loading: false,
             error: false,
             redirect: false,
@@ -56,9 +55,32 @@ class Create extends Component {
         this.setState({ state });
     }
 
+    appendInput() {
+        let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
+        lvtCusmtomFieldOptions.push({
+            name: `lvtCustomFieldOption_${this.state.lvtCusmtomFieldOptions.length}`,
+            value: ''
+        })
+        this.setState({
+            lvtCusmtomFieldOptions : lvtCusmtomFieldOptions
+        });
+    }
+
+    inputOptionChangeHandler(e) {
+        let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
+        let index = lvtCusmtomFieldOptions.findIndex(item => (item.name === e.target.name));
+        if( index >= 0 ){
+            lvtCusmtomFieldOptions[index].value = e.target.value;
+        }
+        this.setState({
+            lvtCusmtomFieldOptions: lvtCusmtomFieldOptions,
+        });
+    }
+
     inputTypeHandler(e) {
         let inputType = parseInt(e.target.value)
         let isEnableCustomFieldOptions = false
+        let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
         if( 
             inputType === defines.CUSTOM_FIELD_CHECKBOX ||  
             inputType === defines.CUSTOM_FIELD_COMBOBOX ||  
@@ -67,10 +89,12 @@ class Create extends Component {
             isEnableCustomFieldOptions = true
         }else{
             isEnableCustomFieldOptions = false
+            lvtCusmtomFieldOptions = []
         }
         this.setState({
             lvtCustomFieldType: inputType,
             isEnableCustomFieldOptions: isEnableCustomFieldOptions,
+            lvtCusmtomFieldOptions: lvtCusmtomFieldOptions,
         });
     }
     
@@ -101,11 +125,6 @@ class Create extends Component {
                 console.log('Error', error.message);
             }
         });
-    }
-
-    appendInput() {
-        var newInput = `lvtCustomFieldOption_${this.state.lvtCusmtomFieldOptionsNames.length}`;
-        this.setState(prevState => ({ lvtCusmtomFieldOptionsNames: prevState.lvtCusmtomFieldOptionsNames.concat([newInput]) }));
     }
 
     render() {
@@ -170,18 +189,19 @@ class Create extends Component {
                                             <strong>Opciones</strong> a agregar
                                         </CardHeader>
                                         <CardBody>
-                                            {this.state.lvtCusmtomFieldOptionsNames.map((customFieldOption, indexOption) => 
+                                            {this.state.lvtCusmtomFieldOptions.map((customFieldOption, indexOption) => 
                                                 <FormGroup row key={indexOption}>
                                                     <Col md="3">
-                                                        {/* <Label htmlFor={`${customFieldOption}`}>Opción 1</Label> */}
-                                                        <Label htmlFor={customFieldOption}>Opción {indexOption + 1}</Label>
+                                                        <Label htmlFor={customFieldOption.name}>Opción {indexOption + 1}</Label>
                                                     </Col>
                                                     <Col xs="12" md="9">
                                                         <Input
                                                             type="text"
-                                                            id={customFieldOption}
-                                                            name={customFieldOption}
+                                                            id={customFieldOption.name}
+                                                            name={customFieldOption.name}
                                                             placeholder={'Item ' + (indexOption + 1)}
+                                                            //value={customFieldOption.value}
+                                                            onChange={(e) => this.inputOptionChangeHandler.call(this, e)}
                                                         />
                                                     </Col>
                                                 </FormGroup>

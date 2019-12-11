@@ -35,6 +35,8 @@ class Create extends Component {
         this.state = {
             lvtCustomFieldName: '',
             lvtCustomFieldType: '',
+            lvtHelpText: '',
+            lvtAppendText: '',
             fieldTypes: [],
             isEnableCustomFieldOptions: false,
             lvtCusmtomFieldOptions: [],
@@ -100,7 +102,48 @@ class Create extends Component {
     
     handleSubmit(event){
         event.preventDefault();
-        console.log(this.state)
+        let customFieldOptions = this.state.lvtCusmtomFieldOptions.filter(function(customFieldOption) {
+            if( customFieldOption.value === null || customFieldOption.value === undefined || customFieldOption.value === '' ){
+              return false; // skip
+            }
+            return true;
+        }).map(function(customFieldOption) {
+            return {
+              name: customFieldOption.value,
+            }
+        });
+        const customFormFieldata = {
+            idfieldtype: this.state.lvtCustomFieldType,
+            name: this.state.lvtCustomFieldName,
+            helptext: this.state.lvtHelpText,
+            appendtext: this.state.lvtAppendText,
+        }
+        if( customFieldOptions.length ){
+            customFormFieldata['options'] = customFieldOptions
+        }
+    
+        console.log(customFormFieldata)
+        this.setState({ loading: true });
+        axios.post(
+            defines.API_DOMAIN + '/fieldcastp/', 
+            customFormFieldata
+        )
+        .then( (response) => {
+            if(response.status === 200 ) {
+                this.setState({ loading: false, redirect: true });
+            }else{
+                throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
+            }
+        }).catch( (error) => {
+            if (error.response) { 
+                console.log(error.response.data);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log('Error', error.message);
+            }
+            this.setState({ loading: false, error: true });
+        });
     }
     
     componentDidMount() {
@@ -130,6 +173,16 @@ class Create extends Component {
     render() {
         const fieldTypeList = this.state.fieldTypes;
         const isEnableCustomFieldOptions = this.state.isEnableCustomFieldOptions;
+        if (this.state.redirect) {
+            return <Redirect to='/customfield/list'/>;
+        }
+        if (this.state.loading) {
+            return(
+                <div>
+                    <p> Loading... </p>
+                </div>
+            )
+        }
         return (
             <div className="animated fadeIn">
                 <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-person" onSubmit={this.handleSubmit} >
@@ -178,6 +231,38 @@ class Create extends Component {
                                             <FormText color="muted">Tipo de campo</FormText>
                                         </Col>
                                     </FormGroup>
+                                    <FormGroup row>
+                                        <Col md="3">
+                                            <Label htmlFor="lvtHelpText">Texto de ayuda</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <Input
+                                                type="text"
+                                                id="lvtHelpText"
+                                                name="lvtHelpText"
+                                                placeholder=""
+                                                value={this.state.lvtHelpText}
+                                                onChange={(e) => this.inputChangeHandler.call(this, e)}
+                                            />
+                                            <FormText color="muted">Ingrese texto de ayuda para mostrar</FormText>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row>
+                                        <Col md="3">
+                                            <Label htmlFor="lvtAppendText">Abreviatura</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <Input
+                                                type="text"
+                                                id="lvtAppendText"
+                                                name="lvtAppendText"
+                                                placeholder=""
+                                                value={this.state.lvtAppendText}
+                                                onChange={(e) => this.inputChangeHandler.call(this, e)}
+                                            />
+                                            <FormText color="muted">Ingrese unidades (cm, kg, etc) en caso de ser necesario</FormText>
+                                        </Col>
+                                    </FormGroup>
                                 </CardBody>
                             </Card>
                         </Col>
@@ -200,7 +285,7 @@ class Create extends Component {
                                                             id={customFieldOption.name}
                                                             name={customFieldOption.name}
                                                             placeholder={'Item ' + (indexOption + 1)}
-                                                            //value={customFieldOption.value}
+                                                            value={customFieldOption.value}
                                                             onChange={(e) => this.inputOptionChangeHandler.call(this, e)}
                                                         />
                                                     </Col>

@@ -1,12 +1,12 @@
 /*
     On this file are the config defines
 */
-exports.API_DOMAIN = 'http://localhost:3009';
-exports.CUSTOM_FIELD_CHECKBOX = 1;
+exports.API_DOMAIN = 'http://localhost:3000';
+exports.CUSTOM_FIELD_TEXT = 1;
 exports.CUSTOM_FIELD_TEXTAREA = 2;
-exports.CUSTOM_FIELD_RADIO = 3;
-exports.CUSTOM_FIELD_COMBOBOX = 4;
-exports.CUSTOM_FIELD_TEXT = 5;
+exports.CUSTOM_FIELD_COMBOBOX = 3;
+exports.CUSTOM_FIELD_RADIO = 4;
+exports.CUSTOM_FIELD_CHECKBOX = 5;
 exports.CUSTOM_FIELD_PREFIX = 'lvtCustomField_'
 exports.GL_HEAD = {
     headers: {

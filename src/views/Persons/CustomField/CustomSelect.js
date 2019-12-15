@@ -60,7 +60,7 @@ class CustomSelect extends Component {
                         name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
                         id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
                         onChange = {(e) => this.handleChange.call(this, e)} >
-                        <option value="0">Seleccione</option>
+                        <option value="">Seleccione</option>
                         {customFieldObj.values.map((customOption, index) =>
                             <option key={index} value = { parseInt(customOption.idfieldopcastp) }>
                                 {customOption.value}

@@ -198,7 +198,7 @@ class Create extends Component {
       } else {
         console.log('Error', error.message);
       }
-      //this.setState({ loading: false, error: true });
+      this.setState({ loading: false, error: true });
     });
   }
 
@@ -627,9 +627,8 @@ class Create extends Component {
                           action = {defines.API_DOMAIN + '/uploadimages'} // upload route
 
                           source = {(response) => {
-                            //return (defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + response[0].filename)
                             return (response[0])
-                          }} // response image source
+                          }}
 
                           onWarning = {(type, rules) => {
                             switch(type) {
@@ -672,23 +671,24 @@ class Create extends Component {
                             this.setState({ lvtImages: arrImages })
                           }}
                           
-                          // onConfirmDelete = {(currentImage, images) => {
-                          //   return window.confirm(`¿Seguro que desea eliminar '${currentImage.file.name}'?`)
-                          // }}
+                          onConfirmDelete = {(currentImage, images) => {
+                            return window.confirm(`¿Seguro que desea eliminar '${currentImage.source.originalname}'?`)
+                          }}
 
-                          // onDeleted={(deletedImage, images) => {
-                          //   let arrImages = this.state.lvtImages.filter(function(item) {
-                          //     if(item.uid !== deletedImage.uid){
-                          //       return item
-                          //     }
-                          //   })
+                          onDeleted={(deletedImage, images) => {
+                            let arrImages = this.state.lvtImages.filter(function(item) {
+                              if(item.uid !== deletedImage.uid){
+                                return true
+                              }
+                              return false;
+                            })
                             
-                          //   this.setState({ lvtImages: arrImages })
+                            if ( deletedImage.selected && images.length ) {
+                              images[0].select()
+                            }
 
-                          //   if ( deletedImage.selected && images.length ) {
-                          //     images[0].select()
-                          //   }
-                          // }}
+                            this.setState({ lvtImages: arrImages })
+                          }}
                         />
                     </Col>
                   </FormGroup>

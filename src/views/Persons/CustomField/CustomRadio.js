@@ -72,7 +72,9 @@ class CustomRadio extends Component {
         return(
             <FormGroup row>
                 <Col md="3">
-                    <Label>{customFieldObj.fieldoption}</Label>
+                    <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}>
+                        {customFieldObj.fieldoption}
+                    </Label>
                 </Col>
                 <Col md="9">
                     {customFieldObj.values.map((customOption, index) =>

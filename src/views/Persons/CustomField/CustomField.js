@@ -30,6 +30,7 @@ import { isNull } from 'util';
 import CustomText from './CustomText';
 import CustomTextArea from './CustomTextArea';
 import CustomRadio from './CustomRadio';
+import CustomSelect from './CustomSelect';
 
 class CustomField extends Component {
     constructor(props) {
@@ -95,6 +96,17 @@ class CustomField extends Component {
                 }
                 break;
             
+            case defines.CUSTOM_FIELD_COMBOBOX:
+                return(
+                    <CustomSelect
+                        customFieldObj = { customFieldObj }
+                        customFieldValue = { customFieldValue }
+                        onCustomFieldChange = {this.handleChange}
+                        isSearch = { isSearch }
+                    />
+                );
+                break;
+            
             case defines.CUSTOM_FIELD_RADIO:
                 return(
                     <CustomRadio
@@ -158,29 +170,6 @@ class CustomField extends Component {
             //         id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
             //         idfieldcastp = {customFieldObj.idfieldcastp}
             //         multiple >
-            //         <option value="1">Option #1</option>
-            //         <option value="2">Option #2</option>
-            //         <option value="3">Option #3</option>
-            //         <option value="4">Option #4</option>
-            //         <option value="5">Option #5</option>
-            //       </Input>
-            //     </Col>
-            //     </FormGroup>
-            //   );
-            //   break;
-    
-            // case defines.CUSTOM_FIELD_COMBOBOX:
-            //   return(
-            //     <FormGroup row>
-            //     <Col md="3">
-            //       <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}>{customFieldObj.value}</Label>
-            //     </Col>
-            //     <Col md="9">
-            //       <Input
-            //         type="select" 
-            //         name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-            //         id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-            //         idfieldcastp = {customFieldObj.idfieldcastp} >
             //         <option value="1">Option #1</option>
             //         <option value="2">Option #2</option>
             //         <option value="3">Option #3</option>

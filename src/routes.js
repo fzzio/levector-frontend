@@ -46,6 +46,7 @@ const customFieldCreate = React.lazy(() => import('./views/CustomField/Create'))
 // Persons
 const personList = React.lazy(() => import('./views/Persons/List'));
 const personCreate = React.lazy(() => import('./views/Persons/Create'));
+const personView = React.lazy(() => import('./views/Persons/View'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -99,6 +100,7 @@ const routes = [
   { path: '/customfield/create', exact: true, name: 'Campo dinámico', component: customFieldCreate},
   { path: '/person/list', exact: true, name: 'Personas', component: personList},
   { path: '/person/create', exact: true, name: 'Agregar Personas', component: personCreate},
+  { path: '/person/:id', exact: true, name: 'Persona', component: personView },
 ];
 
 export default routes;

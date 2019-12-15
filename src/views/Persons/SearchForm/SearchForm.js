@@ -208,12 +208,10 @@ class SearchForm extends Component {
           )
           .then( (response) => {
             if(response.status === 200 ) {
-                this.setState(
-                    { 
-                        loading: false,
-                        persons: response.data.data
-                    }
-                );
+                this.setState({ 
+                    loading: false,
+                    persons: response.data.data
+                });
                 this.props.handleResults( response.data.data );
             }else{
                 throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );

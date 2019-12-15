@@ -9,6 +9,7 @@ import {
     CardFooter,
     CardHeader,
     Col,
+    Collapse,
     Container,
     DropdownItem,
     DropdownMenu,
@@ -77,6 +78,7 @@ class SearchForm extends Component {
             customFieldsData: [],
             loading: false,
             error: false,
+            collapseSearchForm: false,
         }
 
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
@@ -86,6 +88,11 @@ class SearchForm extends Component {
         this.rangeHeightChangeHandler = this.rangeHeightChangeHandler.bind(this);
         this.rangeWeightChangeHandler = this.rangeWeightChangeHandler.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.toggleSearchForm = this.toggleSearchForm.bind(this);
+    }
+
+    toggleSearchForm() {
+        this.setState({ collapseSearchForm: !this.state.collapseSearchForm });
     }
 
     componentDidMount() {
@@ -173,7 +180,6 @@ class SearchForm extends Component {
         }).map(function(customFieldData) {
             return {
                 idfieldcastp: customFieldData.idfieldcastp,
-                idfieldopcastp: '',
                 value: customFieldData.value,
             }
         })
@@ -193,6 +199,7 @@ class SearchForm extends Component {
             limit: this.props.limit,
             offset: this.props.offset,
         };
+        console.log(personSearchData)
 
         this.setState({ loading: true });
         axios.post(
@@ -204,7 +211,7 @@ class SearchForm extends Component {
                 this.setState(
                     { 
                         loading: false,
-                        // persons: response.data.data,
+                        persons: response.data.data
                     }
                 );
                 this.props.handleResults( response.data.data );
@@ -234,131 +241,140 @@ class SearchForm extends Component {
                     <Form action="" method="post" className="form-horizontal" id="lvt-form-search" >
                         <Card>
                             <CardHeader>
-                                <i className="fa fa-align-justify"></i> Búsqueda <small className="text-muted"> Filtros de selección</small>
+                                <i className="fa fa-search"></i> Búsqueda <small className="text-muted"> Filtros de selección</small>
+                                <div className="card-header-actions">
+                                    <Button color="link" className="card-header-action btn-minimize" data-target="#collapseSearch" onClick={this.toggleSearchForm}>
+                                        <i className="icon-arrow-down"></i>
+                                    </Button>
+                                </div>
                             </CardHeader>
-                            <CardBody>
-                                <Row>
-                                    <Col md="4">
-                                        <FormGroup row>
-                                            <Col md="3">
-                                                <Label>Género</Label>
-                                            </Col>
-                                            <Col md="9">
-                                                {gendersList.map((gender, index) =>
-                                                    <GenderRadioOption 
-                                                        key={index} 
-                                                        gender={gender}
-                                                        genderValue = {this.state.formFields.lvtGender}
-                                                        onGenderFieldChange = {(e) => this.customInputRadioHandler.call(this, e)}
+                            <Collapse isOpen={this.state.collapseSearchForm} id="collapseSearch">
+                                <CardBody>
+                                    <Row>
+                                        <Col md="4">
+                                            <FormGroup row>
+                                                <Col md="3">
+                                                    <Label>Género</Label>
+                                                </Col>
+                                                <Col md="9">
+                                                    {gendersList.map((gender, index) =>
+                                                        <GenderRadioOption 
+                                                            key={index} 
+                                                            gender={gender}
+                                                            genderValue = {this.state.formFields.lvtGender}
+                                                            onGenderFieldChange = {(e) => this.customInputRadioHandler.call(this, e)}
+                                                        />
+                                                    )}
+                                                </Col>
+                                            </FormGroup>
+                                            <FormGroup row>
+                                                <Col md="3">
+                                                    <Label>Edad</Label>
+                                                </Col>
+                                                <Col md="9">
+                                                    <Range
+                                                        min={defines.LVT_AGE_MIN}
+                                                        max={defines.LVT_AGE_MAX}
+                                                        defaultValue={[18, 35]}
+                                                        marks={{ 
+                                                            0: defines.LVT_AGE_MIN,
+                                                            100: defines.LVT_AGE_MAX,
+                                                        }}
+                                                        tipFormatter={value => `${value} ${defines.LVT_AGE_UNIT}s`}
+                                                        onChange = {(e) => this.rangeAgeChangeHandler.call(this, e)}
+                                                        allowCross = {false}
                                                     />
-                                                )}
-                                            </Col>
-                                        </FormGroup>
-                                        <FormGroup row>
-                                            <Col md="3">
-                                                <Label>Edad</Label>
-                                            </Col>
-                                            <Col md="9">
-                                                <Range
-                                                    min={defines.LVT_AGE_MIN}
-                                                    max={defines.LVT_AGE_MAX}
-                                                    defaultValue={[18, 35]}
-                                                    marks={{ 
-                                                        0: defines.LVT_AGE_MIN,
-                                                        100: defines.LVT_AGE_MAX,
-                                                    }}
-                                                    tipFormatter={value => `${value} ${defines.LVT_AGE_UNIT}s`}
-                                                    onChange = {(e) => this.rangeAgeChangeHandler.call(this, e)}
-                                                    allowCross = {false}
+                                                </Col>
+                                            </FormGroup>
+                                            <FormGroup row>
+                                                <Col md="3">
+                                                    <Label>Estatura</Label>
+                                                </Col>
+                                                <Col md="9">
+                                                    <Range
+                                                        min={defines.LVT_HEIGHT_MIN}
+                                                        max={defines.LVT_HEIGHT_MAX}
+                                                        defaultValue={[140, 180]}
+                                                        marks={{
+                                                            0: defines.LVT_HEIGHT_MIN,
+                                                            240: defines.LVT_HEIGHT_MAX,
+                                                        }}
+                                                        tipFormatter={value => `${value} ${defines.LVT_HEIGHT_UNIT}`}
+                                                        onChange = {(e) => this.rangeHeightChangeHandler.call(this, e)}
+                                                        allowCross = {false}
+                                                    />
+                                                </Col>
+                                            </FormGroup>
+                                            <FormGroup row>
+                                                <Col md="3">
+                                                    <Label>Peso</Label>
+                                                </Col>
+                                                <Col md="9">
+                                                    <Range
+                                                        min={defines.LVT_WEIGHT_MIN}
+                                                        max={defines.LVT_WEIGHT_MAX}
+                                                        defaultValue={[60, 90]}
+                                                        marks={{ 
+                                                            0: defines.LVT_WEIGHT_MIN,
+                                                            150: defines.LVT_WEIGHT_MAX,
+                                                        }}
+                                                        tipFormatter={value => `${value} ${defines.LVT_WEIGHT_UNIT}`}
+                                                        onChange = {(e) => this.rangeWeightChangeHandler.call(this, e)}
+                                                        allowCross = {false}
+                                                    />
+                                                </Col>
+                                            </FormGroup>
+                                        </Col>
+                                        <Col md="4">
+                                            <FormGroup row>
+                                                <Col md="3">
+                                                    <Label htmlFor="lvtFirstname">Nombres</Label>
+                                                </Col>
+                                                <Col xs="12" md="9">
+                                                    <Input
+                                                        type="text"
+                                                        id="lvtFirstname"
+                                                        name="lvtFirstname"
+                                                        placeholder="Juan"
+                                                        value={this.state.formFields.lvtFirstname}
+                                                        onChange={(e) => this.inputChangeHandler.call(this, e)}
+                                                    />
+                                                </Col>
+                                            </FormGroup>
+                                            <FormGroup row>
+                                                <Col md="3">
+                                                    <Label htmlFor="lvtLastname">Apellidos</Label>
+                                                </Col>
+                                                <Col xs="12" md="9">
+                                                    <Input 
+                                                        type="text"
+                                                        id="lvtLastname"
+                                                        name="lvtLastname"
+                                                        placeholder="Pérez"
+                                                        value={this.state.formFields.lvtLastname}
+                                                        onChange={(e) => this.inputChangeHandler.call(this, e)}
+                                                    />
+                                                </Col>
+                                            </FormGroup>
+                                        </Col>
+                                        <Col md="4">
+                                            {( customFieldList || []).map((customFieldObj, index) =>
+                                                <CustomField 
+                                                    key={index}
+                                                    customFieldObj={customFieldObj}
+                                                    customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
+                                                    onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
+                                                    isSearch = { true }
                                                 />
-                                            </Col>
-                                        </FormGroup>
-                                        <FormGroup row>
-                                            <Col md="3">
-                                                <Label>Estatura</Label>
-                                            </Col>
-                                            <Col md="9">
-                                                <Range
-                                                    min={defines.LVT_HEIGHT_MIN}
-                                                    max={defines.LVT_HEIGHT_MAX}
-                                                    defaultValue={[140, 180]}
-                                                    marks={{
-                                                        0: defines.LVT_HEIGHT_MIN,
-                                                        240: defines.LVT_HEIGHT_MAX,
-                                                    }}
-                                                    tipFormatter={value => `${value} ${defines.LVT_HEIGHT_UNIT}`}
-                                                    onChange = {(e) => this.rangeHeightChangeHandler.call(this, e)}
-                                                    allowCross = {false}
-                                                />
-                                            </Col>
-                                        </FormGroup>
-                                        <FormGroup row>
-                                            <Col md="3">
-                                                <Label>Peso</Label>
-                                            </Col>
-                                            <Col md="9">
-                                                <Range
-                                                    min={defines.LVT_WEIGHT_MIN}
-                                                    max={defines.LVT_WEIGHT_MAX}
-                                                    defaultValue={[60, 90]}
-                                                    marks={{ 
-                                                        0: defines.LVT_WEIGHT_MIN,
-                                                        150: defines.LVT_WEIGHT_MAX,
-                                                    }}
-                                                    tipFormatter={value => `${value} ${defines.LVT_WEIGHT_UNIT}`}
-                                                    onChange = {(e) => this.rangeWeightChangeHandler.call(this, e)}
-                                                    allowCross = {false}
-                                                />
-                                            </Col>
-                                        </FormGroup>
-                                    </Col>
-                                    <Col md="4">
-                                        <FormGroup row>
-                                            <Col md="3">
-                                                <Label htmlFor="lvtFirstname">Nombres</Label>
-                                            </Col>
-                                            <Col xs="12" md="9">
-                                                <Input
-                                                    type="text"
-                                                    id="lvtFirstname"
-                                                    name="lvtFirstname"
-                                                    placeholder="Juan"
-                                                    value={this.state.formFields.lvtFirstname}
-                                                    onChange={(e) => this.inputChangeHandler.call(this, e)}
-                                                />
-                                            </Col>
-                                        </FormGroup>
-                                        <FormGroup row>
-                                            <Col md="3">
-                                                <Label htmlFor="lvtLastname">Apellidos</Label>
-                                            </Col>
-                                            <Col xs="12" md="9">
-                                                <Input 
-                                                    type="text"
-                                                    id="lvtLastname"
-                                                    name="lvtLastname"
-                                                    placeholder="Pérez"
-                                                    value={this.state.formFields.lvtLastname}
-                                                    onChange={(e) => this.inputChangeHandler.call(this, e)}
-                                                />
-                                            </Col>
-                                        </FormGroup>
-                                    </Col>
-                                    <Col md="4">
-                                        {( customFieldList || []).map((customFieldObj, index) =>
-                                            <CustomField 
-                                                key={index}
-                                                customFieldObj={customFieldObj}
-                                                customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
-                                                onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
-                                                isSearch = { true }
-                                            />
-                                        )}
-                                    </Col>
-                                </Row>
-                            </CardBody>
+                                            )}
+                                        </Col>
+                                    </Row>
+                                </CardBody>
+                            </Collapse>
                             <CardFooter>
-                                <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-search"></i> Buscar</Button>
+                                <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} >
+                                    <i className="fa fa-search"></i> Buscar
+                                </Button>
                                 {/* <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Limpiar</Button> */}
                             </CardFooter>
                         </Card>

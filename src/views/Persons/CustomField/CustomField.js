@@ -1,36 +1,10 @@
 import React, { Component } from 'react';
 import defines from '../../../defines'
-import {
-    Badge,
-    Button,
-    Card,
-    CardBody,
-    CardFooter,
-    CardHeader,
-    Col,
-    Collapse,
-    Container,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Fade,
-    Form,
-    FormGroup,
-    FormText,
-    FormFeedback,
-    Input,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupButtonDropdown,
-    InputGroupText,
-    Label,
-    Row,
-} from 'reactstrap';
-import { isNull } from 'util';
 import CustomText from './CustomText';
 import CustomTextArea from './CustomTextArea';
-import CustomRadio from './CustomRadio';
 import CustomSelect from './CustomSelect';
+import CustomRadio from './CustomRadio';
+import CustomCheckbox from './CustomCheckbox';
 
 class CustomField extends Component {
     constructor(props) {
@@ -58,10 +32,6 @@ class CustomField extends Component {
         const customFieldValue = this.props.customFieldValue;
         const isSearch = this.state.isSearch;
 
-        let helpText = null;
-        if( customFieldObj.helptext !== "" || customFieldObj.helptext !== null ){
-            helpText = <FormText color="muted">{customFieldObj.helptext}</FormText>;
-        }
         switch (customFieldObj.idfieldtype) {
             case defines.CUSTOM_FIELD_TEXT:
                 return(
@@ -119,70 +89,18 @@ class CustomField extends Component {
                 break;
 
             // case defines.CUSTOM_FIELD_CHECKBOX:
-            //   return(
-            //     <FormGroup row>
-            //       <Col md="3"><Label>{customFieldObj.value}</Label></Col>
-            //       <Col md="9">
-            //         {/* { ( customFieldObj.hasOwnProperty('values') ) 
-            //           ? customFieldObj.values.map((value, index) => {
-            //               return (
-            //                 <FormGroup check className="checkbox">
-            //                   <Input
-            //                     className="form-check-input"
-            //                     type="checkbox"
-            //                     id="checkbox1"
-            //                     name="checkbox1"
-            //                     value={value}
-            //                     idfieldcastp = {customFieldObj.idfieldcastp}
-            //                   />
-            //                   <Label check className="form-check-label" htmlFor="checkbox1">Option 1</Label>
-            //                 </FormGroup>
-            //               )
-            //             })
-            //           : <Col xs="12" md="9">
-            //             <p className="form-control-static">No existen opciones</p>
-            //           </Col>
-            //         } */}
-            //           <FormGroup check className="checkbox">
-            //             <Input
-            //               className="form-check-input"
-            //               type="checkbox"
-            //               id="checkbox1"
-            //               name="checkbox1"
-            //             />
-            //             <Label check className="form-check-label" htmlFor="checkbox1">Option 1</Label>
-            //           </FormGroup>
-            //       </Col>
-            //     </FormGroup>
-            //   );
-            //   break;
-    
-            // case defines.CUSTOM_FIELD_LIST:
-            //   return(
-            //     <FormGroup row>
-            //     <Col md="3">
-            //       <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}>{customFieldObj.value}</Label>
-            //     </Col>
-            //     <Col md="9">
-            //       <Input
-            //         type="select" 
-            //         name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-            //         id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-            //         idfieldcastp = {customFieldObj.idfieldcastp}
-            //         multiple >
-            //         <option value="1">Option #1</option>
-            //         <option value="2">Option #2</option>
-            //         <option value="3">Option #3</option>
-            //         <option value="4">Option #4</option>
-            //         <option value="5">Option #5</option>
-            //       </Input>
-            //     </Col>
-            //     </FormGroup>
-            //   );
-            //   break;
+            //     return(
+            //         <CustomCheckbox
+            //             customFieldObj = { customFieldObj }
+            //             customFieldValue = { customFieldValue }
+            //             onCustomFieldChange = {this.handleChange}
+            //             isSearch = { isSearch }
+            //         />
+            //     );
+            //     break;
             
-        default:
-            return (null);
+            default:
+                return (null);
             break;
         }
     }

@@ -1,28 +1,12 @@
 import React, { Component, useState, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Badge,
   Button,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
   Col,
-  Collapse,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Fade,
-  Form,
-  FormGroup,
-  FormText,
-  FormFeedback,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButtonDropdown,
-  InputGroupText,
-  Label,
   Row,
 } from 'reactstrap';
 import axios from 'axios';

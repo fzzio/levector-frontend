@@ -1,30 +1,11 @@
 import React, { Component } from 'react';
 import defines from '../../../defines'
 import {
-    Badge,
-    Button,
-    Card,
-    CardBody,
-    CardFooter,
-    CardHeader,
     Col,
-    Collapse,
-    Container,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Fade,
-    Form,
     FormGroup,
     FormText,
-    FormFeedback,
     Input,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupButtonDropdown,
-    InputGroupText,
     Label,
-    Row,
   } from 'reactstrap';
 import { isNull } from 'util';
 
@@ -49,7 +30,9 @@ class CustomTextArea extends Component {
         return(
             <FormGroup row>
                 <Col md="3">
-                    <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}>{customFieldObj.fieldoption}</Label>
+                    <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}>
+                        {customFieldObj.fieldoption}
+                    </Label>
                 </Col>
                 <Col xs="12" md="9">
                     <Input

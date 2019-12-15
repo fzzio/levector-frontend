@@ -1,29 +1,15 @@
 import React, { Component, lazy, Suspense } from 'react';
 import axios from 'axios';
-import { Bar, Line } from 'react-chartjs-2';
 import {
-  Badge,
-  Button,
-  ButtonDropdown,
-  ButtonGroup,
-  ButtonToolbar,
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
-  CardTitle,
   Col,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
   Progress,
   Row,
   Table,
 } from 'reactstrap';
 import Widget02 from '../Widgets/Widget02';
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
-import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
 import defines from '../../defines'
 
 

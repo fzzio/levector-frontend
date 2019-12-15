@@ -128,6 +128,7 @@ class Create extends Component {
       customFieldsData[index].value = e.target.value;
     }
     this.setState({ customFieldsData });
+    console.log(this.state)
   }
 
   handleSubmit(event) {

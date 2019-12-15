@@ -31,7 +31,7 @@ function CustomRadioOption(props){
     const customOption = props.customOption;
 
     return(
-        <FormGroup check inline>
+        <FormGroup check className="radio">
             <Input
                 className="form-check-input"
                 type="radio"

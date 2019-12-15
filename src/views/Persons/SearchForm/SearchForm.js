@@ -358,15 +358,19 @@ class SearchForm extends Component {
                                             </FormGroup>
                                         </Col>
                                         <Col md="4">
-                                            {( customFieldList || []).map((customFieldObj, index) =>
-                                                <CustomField 
-                                                    key={index}
-                                                    customFieldObj={customFieldObj}
-                                                    customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
-                                                    onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
-                                                    isSearch = { true }
-                                                />
-                                            )}
+                                            {(customFieldList.length > 0) ?
+                                                customFieldList.map((customFieldObj, index) =>
+                                                    <CustomField 
+                                                        key={index}
+                                                        customFieldObj={customFieldObj}
+                                                        customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
+                                                        onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
+                                                        isSearch = { true }
+                                                    />
+                                                )
+                                                :
+                                                <p className="form-control-static">No existen elementos</p>
+                                            }
                                         </Col>
                                     </Row>
                                 </CardBody>

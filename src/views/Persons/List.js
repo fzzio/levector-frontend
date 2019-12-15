@@ -103,9 +103,13 @@ class List extends Component {
               <CardBody>
                 <Suspense fallback={this.loading()}>
                   <Row>
-                    {personList.map((person, index) =>
-                      <PersonCard key={index} person={person}/>
-                    )}
+                    {(personList.length > 0) ?
+                      personList.map((person, index) =>
+                        <PersonCard key={index} person={person}/>
+                      )
+                    :
+                      <p className="form-control-static">No existen elementos</p>
+                    }
                   </Row>
                 </Suspense>
               </CardBody>

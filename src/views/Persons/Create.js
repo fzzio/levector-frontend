@@ -128,7 +128,6 @@ class Create extends Component {
       customFieldsData[index].value = e.target.value;
     }
     this.setState({ customFieldsData });
-    console.log(this.state)
   }
 
   handleSubmit(event) {
@@ -141,10 +140,8 @@ class Create extends Component {
       }
       return true;
     }).map(function(customFieldData) {
-      console.log(customFieldData)
       return {
         idfieldcastp: customFieldData.idfieldcastp,
-        // idfieldopcastp: '', // TODO @fzzio // remove this line
         value: customFieldData.value,
       }
     })
@@ -152,7 +149,7 @@ class Create extends Component {
     // Get images uploaded
     let imagesPerson = this.state.lvtImages.map(function(imagePerson) {
       return {
-        path: imagePerson.path,
+        path: imagePerson.filename,
       }
     });
     
@@ -176,6 +173,7 @@ class Create extends Component {
       // unused
       //video: this.state.formFields.lvtVideo 
       createdby: 1,
+      idcity: 1,
     };
 
     console.log(personData);
@@ -629,7 +627,8 @@ class Create extends Component {
                           action = {defines.API_DOMAIN + '/uploadimages'} // upload route
 
                           source = {(response) => {
-                            return (defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + response[0].filename)
+                            //return (defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + response[0].filename)
+                            return (response[0])
                           }} // response image source
 
                           onWarning = {(type, rules) => {
@@ -659,39 +658,37 @@ class Create extends Component {
                             }
                           }}
 
-                          onChange = {(lvtImages) => {
-                            // console.log(" --- lvtImages --- ")
-                            // console.log(lvtImages)
-                            //this.setState({ lvtImages }) // save current component
-                          }}
+                          // onChange = {(imagesUploaded) => {
+                          //   this.setState({ lvtImages: imagesUploaded })
+                          // }}
 
                           onSuccess = {(imageUploaded) => {
-                            console.log(imageUploaded)
                             let arrImages = this.state.lvtImages
                             arrImages.push({
                               "uid": imageUploaded.uid,
-                              "path": imageUploaded.source,
+                              "path": defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + imageUploaded.source.filename,
+                              "filename": imageUploaded.source.filename,
                             })
                             this.setState({ lvtImages: arrImages })
                           }}
                           
-                          onConfirmDelete = {(currentImage, images) => {
-                            return window.confirm('¿Seguro que desea eliminar?')
-                          }}
+                          // onConfirmDelete = {(currentImage, images) => {
+                          //   return window.confirm(`¿Seguro que desea eliminar '${currentImage.file.name}'?`)
+                          // }}
 
-                          onDeleted={(deletedImage, images) => {
-                            let arrImages = this.state.lvtImages.filter(function(item) {
-                              if(item.uid !== deletedImage.uid){
-                                return item
-                              }
-                            })
+                          // onDeleted={(deletedImage, images) => {
+                          //   let arrImages = this.state.lvtImages.filter(function(item) {
+                          //     if(item.uid !== deletedImage.uid){
+                          //       return item
+                          //     }
+                          //   })
                             
-                            this.setState({ lvtImages: arrImages })
+                          //   this.setState({ lvtImages: arrImages })
 
-                            if ( deletedImage.selected && images.length ) {
-                              images[0].select()
-                            }
-                          }}
+                          //   if ( deletedImage.selected && images.length ) {
+                          //     images[0].select()
+                          //   }
+                          // }}
                         />
                     </Col>
                   </FormGroup>

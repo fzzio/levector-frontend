@@ -40,8 +40,8 @@ class View extends Component {
                 let personData = responsePerson.data.data[0]
                 let personImagesGallery = personData.photo.map(function(photo) {
                     return {
-                        original: photo.url,
-                        thumbnail: photo.url,
+                        original: defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + photo.url,
+                        thumbnail: defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + photo.url,
                         originalAlt: personData.dni,
                     }
                 })

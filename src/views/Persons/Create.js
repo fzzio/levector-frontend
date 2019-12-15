@@ -97,7 +97,7 @@ class Create extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.inputChangeHandler = this.inputChangeHandler.bind(this);
-    this.customInputRadioHandler = this.customInputRadioHandler.bind(this);
+    this.inputRadioHandler = this.inputRadioHandler.bind(this);
     this.customInputChangeHandler = this.customInputChangeHandler.bind(this);
     this.toggleModalForm = this.toggleModalForm.bind(this);
   }
@@ -115,7 +115,7 @@ class Create extends Component {
     this.setState({ formFields });
   }
 
-  customInputRadioHandler(e){
+  inputRadioHandler(e){
     let formFields = this.state.formFields;
     formFields[e.target.name] = parseInt(e.target.value);
     this.setState({ formFields });
@@ -128,7 +128,6 @@ class Create extends Component {
       customFieldsData[index].value = e.target.value;
     }
     this.setState({ customFieldsData });
-    //console.log( this.state );
   }
 
   handleSubmit(event) {
@@ -141,9 +140,10 @@ class Create extends Component {
       }
       return true;
     }).map(function(customFieldData) {
+      console.log(customFieldData)
       return {
         idfieldcastp: customFieldData.idfieldcastp,
-        idfieldopcastp: '',
+        // idfieldopcastp: '', // TODO @fzzio // remove this line
         value: customFieldData.value,
       }
     })
@@ -378,7 +378,7 @@ class Create extends Component {
                           key={index} 
                           gender={gender}
                           genderValue = {this.state.formFields.lvtGender}
-                          onGenderFieldChange = {(e) => this.customInputRadioHandler.call(this, e)}
+                          onGenderFieldChange = {(e) => this.inputRadioHandler.call(this, e)}
                         />
                       )}
                     </Col>
@@ -620,7 +620,7 @@ class Create extends Component {
                         <RUG
                           rules = {{
                             limit: 10,
-                            size: 5000
+                            size: 20000
                           }}
 
                           accept = {['jpg', 'jpeg', 'png']}

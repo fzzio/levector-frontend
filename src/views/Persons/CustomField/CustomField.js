@@ -25,10 +25,11 @@ import {
     InputGroupText,
     Label,
     Row,
-  } from 'reactstrap';
+} from 'reactstrap';
 import { isNull } from 'util';
 import CustomText from './CustomText';
 import CustomTextArea from './CustomTextArea';
+import CustomRadio from './CustomRadio';
 
 class CustomField extends Component {
     constructor(props) {
@@ -61,6 +62,50 @@ class CustomField extends Component {
             helpText = <FormText color="muted">{customFieldObj.helptext}</FormText>;
         }
         switch (customFieldObj.idfieldtype) {
+            case defines.CUSTOM_FIELD_TEXT:
+                return(
+                    <CustomText 
+                        customFieldObj = { customFieldObj }
+                        customFieldValue = { customFieldValue }
+                        onCustomFieldChange = {this.handleChange}
+                        isSearch = { isSearch }
+                    />
+                );
+                break;
+            
+            case defines.CUSTOM_FIELD_TEXTAREA:
+                if ( !isSearch ) {
+                    return(
+                        <CustomTextArea 
+                            customFieldObj = { customFieldObj }
+                            customFieldValue = { customFieldValue }
+                            onCustomFieldChange = {this.handleChange}
+                            isSearch = { isSearch }
+                        />
+                    );
+                }else{
+                    return(
+                        <CustomText 
+                            customFieldObj = { customFieldObj }
+                            customFieldValue = { customFieldValue }
+                            onCustomFieldChange = {this.handleChange}
+                            isSearch = { isSearch }
+                        />
+                    );
+                }
+                break;
+            
+            case defines.CUSTOM_FIELD_RADIO:
+                return(
+                    <CustomRadio
+                        customFieldObj = { customFieldObj }
+                        customFieldValue = { customFieldValue }
+                        onCustomFieldChange = {this.handleChange}
+                        isSearch = { isSearch }
+                    />
+                );
+                break;
+
             // case defines.CUSTOM_FIELD_CHECKBOX:
             //   return(
             //     <FormGroup row>
@@ -99,28 +144,6 @@ class CustomField extends Component {
             //     </FormGroup>
             //   );
             //   break;
-    
-        case defines.CUSTOM_FIELD_TEXTAREA:
-            if ( !isSearch ) {
-                return(
-                    <CustomTextArea 
-                        customFieldObj = { customFieldObj }
-                        customFieldValue = { customFieldValue }
-                        onCustomFieldChange = {this.handleChange}
-                        isSearch = { isSearch }
-                    />
-                );
-            }else{
-                return(
-                    <CustomText 
-                        customFieldObj = { customFieldObj }
-                        customFieldValue = { customFieldValue }
-                        onCustomFieldChange = {this.handleChange}
-                        isSearch = { isSearch }
-                    />
-                );
-            }
-            break;
     
             // case defines.CUSTOM_FIELD_LIST:
             //   return(
@@ -168,17 +191,6 @@ class CustomField extends Component {
             //     </FormGroup>
             //   );
             //   break;
-    
-        case defines.CUSTOM_FIELD_TEXT:
-            return(
-                <CustomText 
-                    customFieldObj = { customFieldObj }
-                    customFieldValue = { customFieldValue }
-                    onCustomFieldChange = {this.handleChange}
-                    isSearch = { isSearch }
-                />
-            );
-            break;
             
         default:
             return (null);

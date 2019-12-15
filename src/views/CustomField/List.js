@@ -38,6 +38,8 @@ class List extends Component {
             offset: 0,
             loading: true,
             error: false,
+            errorCode: 0,
+            errorMessage: '',
         }
     }
 
@@ -49,6 +51,7 @@ class List extends Component {
         
             if(responseCustomFields.status === 200 ) {
                 this.setState({ 
+                    error: false,
                     customFields: responseCustomFields.data.data,
                 });
             }else{
@@ -57,7 +60,12 @@ class List extends Component {
         }))
         .catch( (error) => {
             if (error.response) { 
-                console.log(error.response.data);
+                this.setState({ 
+                    error: true,
+                    errorCode: error.response.status,
+                    errorMessage: error.response.data.data.msg,
+                });
+                console.log(this.state);
             } else if (error.request) {
                 console.log(error.request);
             } else {
@@ -68,6 +76,23 @@ class List extends Component {
 
     render() {
         const customFieldList = this.state.customFields;
+        if (this.state.error) {
+            return(
+                <div className="animated fadeIn">
+                    <Row>
+                        <Col xl={12}>
+                            <Card>
+                                <CardBody>
+                                    <p>
+                                        {this.state.errorMessage}
+                                    </p>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                </div>
+            )
+        }
         return (
             <div className="animated fadeIn">
               <Row>

@@ -577,7 +577,9 @@ class Create extends Component {
                         name="lvtObservations"
                         id="lvtObservations"
                         rows="4"
-                        placeholder="Igrese texto..."
+                        placeholder="Igrese observaciones de la persona"
+                        onChange={(e) => this.inputChangeHandler.call(this, e)}
+                        value={this.state.formFields.lvtObservations}
                       />
                       <FormText color="muted">Comentarios y observaciones referentes a la ficha ingresada</FormText>
                     </Col>

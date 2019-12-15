@@ -40,6 +40,8 @@ class List extends Component {
       offset: 0,
       loading: true,
       error: false,
+      errorCode: 0,
+      errorMessage: '',
     }
 
     this.handleResults = this.handleResults.bind(this);
@@ -55,13 +57,21 @@ class List extends Component {
     )
     .then( (response) => {
       if(response.status === 200 ) {
-        this.setState({ persons: response.data.data })
+        this.setState({ 
+          error: false,
+          persons: response.data.data,
+        })
       }else{
         throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
       }
     })
     .catch( (error) => {
       if (error.response) {
+        this.setState({ 
+          error: true,
+          errorCode: error.response.status,
+          errorMessage: error.response.data.data.msg,
+        });
         console.log(error.response.data);
       } else if (error.request) {
         console.log(error.request);
@@ -75,7 +85,23 @@ class List extends Component {
 
   render() {
     const personList = this.state.persons
-
+    if (this.state.error) {
+      return(
+          <div className="animated fadeIn">
+              <Row>
+                  <Col xl={12}>
+                      <Card>
+                          <CardBody>
+                              <p>
+                                  {this.state.errorMessage}
+                              </p>
+                          </CardBody>
+                      </Card>
+                  </Col>
+              </Row>
+          </div>
+      )
+    }
     return (
       <div className="animated fadeIn">
         <SearchForm 

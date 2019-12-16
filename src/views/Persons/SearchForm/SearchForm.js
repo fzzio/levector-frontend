@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import {
-    Alert,
     Button,
     Card,
     CardBody,
@@ -10,27 +9,15 @@ import {
     CardHeader,
     Col,
     Collapse,
-    Container,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Fade,
     Form,
     FormGroup,
-    FormText,
-    FormFeedback,
     Input,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupButtonDropdown,
-    InputGroupText,
     Label,
     Row,
   } from 'reactstrap';
-import { isNull } from 'util';
 import moment from 'moment';
 import defines from '../../../defines'
-import CustomField from '../CustomField/CustomField';
+import CustomField from '../../CustomField/CustomField';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 
@@ -210,7 +197,6 @@ class SearchForm extends Component {
             if(response.status === 200 ) {
                 this.setState({ 
                     loading: false,
-                    persons: response.data.data
                 });
                 this.props.handleResults( response.data.data );
             }else{

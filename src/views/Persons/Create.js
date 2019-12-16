@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router'
 import axios from 'axios';
 import defines from '../../defines'
-import CustomField from './CustomField/CustomField';
+import CustomField from '../CustomField/CustomField';
 import RUG, { DragArea, DropArea} from 'react-upload-gallery'
 import 'react-upload-gallery/dist/style.css'
 

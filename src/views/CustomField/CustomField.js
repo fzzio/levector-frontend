@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import defines from '../../../defines'
+import defines from '../../defines'
 import CustomText from './CustomText';
 import CustomTextArea from './CustomTextArea';
 import CustomSelect from './CustomSelect';

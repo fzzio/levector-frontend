@@ -31,3 +31,4 @@ exports.LVT_HEIGHT_UNIT = 'cm';
 exports.LVT_WEIGHT_MIN = 0;
 exports.LVT_WEIGHT_MAX = 150;
 exports.LVT_WEIGHT_UNIT = 'kg';
+exports.LVT_PAGINATION_OFFSET = 4;

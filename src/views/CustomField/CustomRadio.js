@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import defines from '../../../defines'
+import defines from '../../defines'
 import {
     Badge,
     Button,

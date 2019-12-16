@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import defines from '../../../defines'
+import defines from '../../defines'
 import {
     Col,
     FormGroup,
@@ -7,7 +7,6 @@ import {
     Input,
     Label,
   } from 'reactstrap';
-import { isNull } from 'util';
 
 class CustomTextArea extends Component {
     constructor(props) {

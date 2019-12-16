@@ -57,6 +57,13 @@ class List extends Component {
         });
     }
 
+    handleDelete(idfieldcastp){
+        // TODO @fzzio call api to delete
+        this.setState({
+            customFields: this.state.customFields.filter(customField => parseInt(customField.idfieldcastp) !== parseInt(idfieldcastp))
+        })
+    }
+
     render() {
         const customFieldList = this.state.customFields;
         if (this.state.error) {
@@ -138,7 +145,7 @@ class List extends Component {
                                                 <Button outline color="dark" size="sm">
                                                     <i className="fa fa-edit"></i>
                                                 </Button>
-                                                <Button outline color="dark" size="sm" className="ml-1">
+                                                <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfieldcastp)}>
                                                     <i className="fa fa-trash"></i>
                                                 </Button>
                                             </td>

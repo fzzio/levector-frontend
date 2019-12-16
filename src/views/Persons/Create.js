@@ -32,6 +32,21 @@ import {
   Row,
 } from 'reactstrap';
 
+// Import React FilePond
+import { FilePond, registerPlugin } from "react-filepond";
+
+// Import FilePond styles
+import "filepond/dist/filepond.min.css";
+
+// Import the Image EXIF Orientation and Image Preview plugins
+// Note: These need to be installed separately
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+
+// Register the plugins
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+
 const inputParsers = {
   date(input) {
     const [month, day, year] = input.split('/');
@@ -92,6 +107,7 @@ class Create extends Component {
       customFields: [],
       customFieldsData: [],
       lvtImages: [],
+      lvtVideos: [],
       modalForm: false,
     }
 
@@ -108,6 +124,10 @@ class Create extends Component {
     });
   }
 
+  handleInitUpload() {
+    //console.log("FilePond instance has initialised", this.pond);
+    console.log("FilePond instance has initialised");
+  }
 
   inputChangeHandler(e) {
     let formFields = {...this.state.formFields};
@@ -153,6 +173,13 @@ class Create extends Component {
       }
     });
     
+    // Get video uploaded
+    let videosPerson = this.state.lvtVideo.map(function(videoPerson) {
+      return {
+        path: videoPerson.filename,
+      }
+    });
+    
     // Setting data to request
     const personData = {
       dni: this.state.formFields.lvtDNI,
@@ -170,8 +197,7 @@ class Create extends Component {
       observations: this.state.formFields.lvtObservations,
       formcastp: formcastp,
       images: imagesPerson,
-      // unused
-      //video: this.state.formFields.lvtVideo 
+      videos: videosPerson,
       createdby: 1,
       idcity: 1,
     };
@@ -598,7 +624,33 @@ class Create extends Component {
                       <Label htmlFor="lvtVideo">Vídeo</Label>
                     </Col>
                     <Col xs="12" md="9">
-                      <Input type="file" id="lvtVideo" name="lvtVideo" />
+                        <FilePond
+                          ref={ref => (this.pond = ref)}
+                          files={this.state.lvtVideos}
+                          allowMultiple={true}
+                          allowDrop={false}
+                          acceptedFileTypes={['video/*']}
+                          server={defines.API_DOMAIN + '/uploadvideos'}
+                          oninit={() => this.handleInitUpload()}
+                          onprocessfile = {(error, file) => { 
+                            let processedFiles = JSON.parse(file.serverId)
+                            this.setState({ 
+                              lvtVideos: processedFiles.map(function(videoItem) {
+                                return {
+                                  path: videoItem.path,
+                                  filename: videoItem.filename,
+                                }
+                              })
+                            })
+                          }}
+                          onupdatefiles={fileItems => {
+                            // Set currently active file objects to this.state
+                            // this.setState({
+                            //   lvtVideos: fileItems.map(fileItem => fileItem.filename)
+                            // });
+                            // console.log(this.state)
+                          }}
+                        />
                       <FormText color="muted">Vídeo a mostrar</FormText>
                     </Col>
                   </FormGroup>
@@ -624,7 +676,7 @@ class Create extends Component {
 
                           accept = {['jpg', 'jpeg', 'png']}
 
-                          action = {defines.API_DOMAIN + '/uploadimages'} // upload route
+                          action = {defines.API_DOMAIN + '/uploadimages'}
 
                           source = {(response) => {
                             return (response[0])

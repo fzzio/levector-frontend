@@ -174,7 +174,7 @@ class Create extends Component {
     });
     
     // Get video uploaded
-    let videosPerson = this.state.lvtVideo.map(function(videoPerson) {
+    let videosPerson = this.state.lvtVideos.map(function(videoPerson) {
       return {
         path: videoPerson.filename,
       }

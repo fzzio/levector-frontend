@@ -171,9 +171,11 @@ class View extends Component {
                                 <strong>Multimedia</strong> Vídeo
                             </CardHeader>
                             <CardBody>
-                                <Player>
-                                    <source src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4" />
-                                </Player>
+                                {( person.videos || []).map((itemVideo, index) =>
+                                    <Player key={index}>
+                                        <source src={defines.API_DOMAIN + defines.PERSON_PATH_VID + '/' + itemVideo.url} />
+                                    </Player>
+                                )}
                             </CardBody>
                         </Card>
                     </Col>

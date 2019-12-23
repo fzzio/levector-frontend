@@ -88,16 +88,16 @@ class CustomField extends Component {
                 );
                 break;
 
-            // case defines.CUSTOM_FIELD_CHECKBOX:
-            //     return(
-            //         <CustomCheckbox
-            //             customFieldObj = { customFieldObj }
-            //             customFieldValue = { customFieldValue }
-            //             onCustomFieldChange = {this.handleChange}
-            //             isSearch = { isSearch }
-            //         />
-            //     );
-            //     break;
+            case defines.CUSTOM_FIELD_CHECKBOX:
+                return(
+                    <CustomCheckbox
+                        customFieldObj = { customFieldObj }
+                        customFieldValue = { customFieldValue }
+                        onCustomFieldChange = {this.handleChange}
+                        isSearch = { isSearch }
+                    />
+                );
+                break;
             
             default:
                 return (null);

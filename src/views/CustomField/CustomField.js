@@ -92,7 +92,7 @@ class CustomField extends Component {
                 return(
                     <CustomCheckbox
                         customFieldObj = { customFieldObj }
-                        customFieldValue = { customFieldValue }
+                        // customFieldValue = { customFieldValue }
                         onCustomFieldChange = {this.handleChange}
                         isSearch = { isSearch }
                     />

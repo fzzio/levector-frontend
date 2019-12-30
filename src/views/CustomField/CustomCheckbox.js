@@ -11,42 +11,44 @@ class CustomCheckbox extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            customOptionValues: [],
-            customFieldElements: [],
-            checkedItems: new Map(),
+            checkedIDs: []
         }
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(e){
-        const itemValue = e.target.value;
-        const isChecked = e.target.checked;
-        this.setState(prevState => ({ checkedItems: prevState.checkedItems.set(itemValue, isChecked) }));         
-
-        let optionIDs = []
-        this.state.checkedItems.filter(function(value, key) {
-            if( value === null || value === undefined || value === false ){
-              return false; // skip
+        let itemValue = e.target.value;
+        let isChecked = e.target.checked;
+        let checkedIDs = this.state.checkedIDs
+        
+        let indexItemValue = checkedIDs.indexOf( parseInt( itemValue ) );
+        if(indexItemValue === -1){
+            // the item does not exist, then if it is checked it is added
+            if(isChecked){
+                checkedIDs.push( parseInt( itemValue ) )
             }
-            return true;
-        }).forEach((element, index) => {
-            optionIDs.push(index)
-        });
+        }else{
+            // the item exists, then if it is not checked it is deleted
+            if(!isChecked){
+                checkedIDs.splice(indexItemValue, 1);
+            }
+        }
+        checkedIDs.sort()
+        this.setState({checkedIDs: checkedIDs})
 
         let pseudoEvent = {
             target : {
                 name: e.target.name,
-                value: optionIDs.join(",")
+                value: this.state.checkedIDs.join(",")
             }
         }
+        
+        // Send value to parent function
         this.props.onCustomFieldChange(pseudoEvent);
     }
 
     render(){
         const customFieldObj = this.props.customFieldObj;
-        const customFieldValue = this.props.customFieldValue;
-
-        console.log( customFieldValue )
 
         return(
             <FormGroup row>
@@ -65,7 +67,7 @@ class CustomCheckbox extends Component {
                                     id={"lvtCustomCheckboxOption_" + customOption.idfieldopcastp}
                                     name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
                                     value={parseInt(customOption.idfieldopcastp)}
-                                    checked={this.state.checkedItems.get(customOption.name)}
+                                    checked={this.state.checkedIDs.indexOf( parseInt( customOption.idfieldopcastp ) ) > -1 ? true: false}
                                     onChange={(e) => this.handleChange.call(this, e)}
                                 />
                                 <Label check className="form-check-label" htmlFor={`lvtCustomCheckboxOption_` + customOption.idfieldopcastp}>

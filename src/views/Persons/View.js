@@ -13,6 +13,7 @@ import {
     Table 
 } from 'reactstrap';
 import { Redirect } from 'react-router'
+import { Link, NavLink } from 'react-router-dom';
 import ImageGallery from 'react-image-gallery';
 import { Player } from 'video-react';
 import moment from 'moment';
@@ -192,7 +193,7 @@ class View extends Component {
                                 <dl className="row mb-1">
                                     <dt className="col-sm-3">Email</dt>
                                     <dd className="col-sm-9">
-                                        {person.email}
+                                        <a href={`mailto:${person.email}`}>{person.email}</a>
                                     </dd>
                                     
                                     <dt className="col-sm-3">Celular</dt>

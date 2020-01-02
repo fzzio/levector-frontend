@@ -4,24 +4,89 @@ export default {
       name: 'Dashboard',
       url: '/dashboard',
       icon: 'icon-speedometer',
-      badge: {
-        variant: 'info',
-        text: 'NEW',
-      },
+    },
+    {
+      divider: true,
     },
     {
       title: true,
-      name: 'Theme',
+      name: 'Levector',
+    },
+    {
+      name: 'Casting',
+      url: '',
+      icon: 'icon-people',
+      children: [
+        {
+          name: 'Agregar Persona',
+          url: '/person/create',
+        },
+        {
+          name: 'Ver todos',
+          url: '/person/list',
+        },
+      ],
+    },
+    {
+      name: 'Locaciones',
+      icon: 'icon-location-pin',
+      children: [
+        {
+          name: 'Agregar locación',
+          url: '',
+        },
+        {
+          name: 'Ver todas',
+          url: '',
+        },
+      ],
+    },
+    {
+      name: 'Utilería y vestuario',
+      icon: 'icon-mustache',
+      children: [
+        {
+          name: 'Agregar',
+          url: '',
+        },
+        {
+          name: 'Ver todas',
+          url: '',
+        },
+      ],
+    },
+    {
+      divider: true,
+    },
+    {
+      title: true,
+      name: 'Configuraciones',
+      url: '',
+      icon: '',
+    },
+    {
+      name: 'Campos dinámicos',
+      icon: 'icon-layers',
+      children: [
+        {
+          name: 'Agregar',
+          url: '/customfield/create',
+        },
+        {
+          name: 'Ver todas',
+          url: '/customfield/list',
+        },
+      ],
+    },
+    /* 
+    {
+      title: true,
+      name: 'Configuraciones',
       wrapper: {            // optional wrapper object
         element: '',        // required valid HTML5 element tag
         attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
       },
       class: ''             // optional class names space delimited list for title item ex: "text-center"
-    },
-    {
-      name: 'Colors',
-      url: '/theme/colors',
-      icon: 'icon-drop',
     },
     {
       name: 'Typography',
@@ -275,6 +340,7 @@ export default {
       icon: 'icon-layers',
       variant: 'danger',
       attributes: { target: '_blank', rel: "noopener" },
-    },
+    }, 
+    */
   ],
 };

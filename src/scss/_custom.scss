@@ -1,1 +1,39 @@
 // Here you can add other styles
+$lvt-orange: #ED4E03;
+$lvt-gray: #212121;
+.rug .rug-handle{
+    height: 200px !important;
+}
+.rug .rug-handle svg.rug-handle-icon{
+    width: 25px !important;
+}
+.rug .rug-handle .rug-handle-info .rug-handle-drop-text {
+    font-size: 15px !important;
+}
+.rug .rug-handle .rug-handle-info span {
+    padding: 6px 0 !important;
+    font-size: 15px !important;
+}
+.rug .rug-handle:before{
+    border: 1px solid $lvt-gray !important;
+}
+.rug .rug-handle-button{
+    background-color: $lvt-gray !important;
+}
+.rug .rug-handle-button:hover{
+    background-color: $lvt-orange !important;
+}
+.person-card .person-data-value{
+    margin-bottom: 0px;
+}
+.person-card .person-data-field{
+    margin-top: 0px;
+    color: $lvt-orange;
+}
+.person-card .lvt-img{
+    max-width: 100%;
+    height: auto;
+}
+.person-card .person-data-flag{
+    font-size: 10px;
+}

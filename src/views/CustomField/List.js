@@ -142,12 +142,14 @@ class List extends Component {
                                                 }
                                             </td>
                                             <td>
-                                                <Button outline color="dark" size="sm">
+                                                <Link to={`/customfield/${customField.idfieldcastp}/edit`} outline className="btn btn-dark btn-sm" size="sm">
                                                     <i className="fa fa-edit"></i>
-                                                </Button>
+                                                </Link>
+                                                
                                                 <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfieldcastp)}>
                                                     <i className="fa fa-trash"></i>
                                                 </Button>
+                               
                                             </td>
                                         </tr>
                                     )}

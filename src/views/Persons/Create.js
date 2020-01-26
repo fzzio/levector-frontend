@@ -331,6 +331,7 @@ class Create extends Component {
                         id="lvtDNI"
                         name="lvtDNI"
                         placeholder="09999999999"
+                        autoComplete="nope"
                         value={this.state.formFields.lvtDNI}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                       />
@@ -348,6 +349,7 @@ class Create extends Component {
                         id="lvtFirstname"
                         name="lvtFirstname"
                         placeholder="Juan"
+                        autoComplete="nope"
                         value={this.state.formFields.lvtFirstname}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                       />
@@ -364,6 +366,7 @@ class Create extends Component {
                         id="lvtLastname"
                         name="lvtLastname"
                         placeholder="Pérez"
+                        autoComplete="nope"
                         value={this.state.formFields.lvtLastname}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                       />
@@ -420,6 +423,7 @@ class Create extends Component {
                         id="lvtRUC"
                         name="lvtRUC"
                         placeholder="09999999999001"
+                        autoComplete="nope"
                         value={this.state.formFields.lvtRUC}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                       />
@@ -446,7 +450,7 @@ class Create extends Component {
                         id="lvtEmail"
                         name="lvtEmail"
                         placeholder="Ingrese email"
-                        autoComplete="email"
+                        autoComplete="nope"
                         value={this.state.formFields.lvtEmail}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                       />
@@ -470,6 +474,7 @@ class Create extends Component {
                           id="lvtCellphone"
                           name="lvtCellphone"
                           placeholder="593987654321"
+                          autoComplete="nope"
                           value={this.state.formFields.lvtCellphone}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
                         />
@@ -494,6 +499,7 @@ class Create extends Component {
                           id="lvtPhone"
                           name="lvtPhone"
                           placeholder="042999999"
+                          autoComplete="nope"
                           value={this.state.formFields.lvtPhone}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
                         />

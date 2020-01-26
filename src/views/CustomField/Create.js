@@ -203,6 +203,7 @@ class Create extends Component {
                                                 id="lvtCustomFieldName"
                                                 name="lvtCustomFieldName"
                                                 placeholder=""
+                                                autoComplete="off"
                                                 value={this.state.lvtCustomFieldName}
                                                 onChange={(e) => this.inputChangeHandler.call(this, e)}
                                             />
@@ -241,6 +242,7 @@ class Create extends Component {
                                                 id="lvtHelpText"
                                                 name="lvtHelpText"
                                                 placeholder=""
+                                                autoComplete="off"
                                                 value={this.state.lvtHelpText}
                                                 onChange={(e) => this.inputChangeHandler.call(this, e)}
                                             />
@@ -257,6 +259,7 @@ class Create extends Component {
                                                 id="lvtAppendText"
                                                 name="lvtAppendText"
                                                 placeholder=""
+                                                autoComplete="off"
                                                 value={this.state.lvtAppendText}
                                                 onChange={(e) => this.inputChangeHandler.call(this, e)}
                                             />
@@ -285,6 +288,7 @@ class Create extends Component {
                                                             id={customFieldOption.name}
                                                             name={customFieldOption.name}
                                                             placeholder={'Item ' + (indexOption + 1)}
+                                                            autoComplete="off"
                                                             value={customFieldOption.value}
                                                             onChange={(e) => this.inputOptionChangeHandler.call(this, e)}
                                                         />

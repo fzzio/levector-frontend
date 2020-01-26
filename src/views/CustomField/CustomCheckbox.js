@@ -71,7 +71,7 @@ class CustomCheckbox extends Component {
                                     onChange={(e) => this.handleChange.call(this, e)}
                                 />
                                 <Label check className="form-check-label" htmlFor={`lvtCustomCheckboxOption_` + customOption.idfieldopcastp}>
-                                    {customOption.value}
+                                    {customOption.value.split('||').join(',')}
                                 </Label>
                             </FormGroup>
                         )

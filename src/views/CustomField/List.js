@@ -134,7 +134,7 @@ class List extends Component {
                                                         <ul>
                                                             {customField.values.map((customFieldItem, indexItem) =>
                                                                 <li key={indexItem}>
-                                                                    {customFieldItem.value}
+                                                                    {customFieldItem.value.split('||').join(',')}
                                                                 </li>
                                                             )}
                                                         </ul>

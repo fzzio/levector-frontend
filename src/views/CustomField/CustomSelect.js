@@ -43,7 +43,7 @@ class CustomSelect extends Component {
                         <option value="">Seleccione</option>
                         {customFieldObj.values.map((customOption, index) =>
                             <option key={index} value = { parseInt(customOption.idfieldopcastp) }>
-                                {customOption.value}
+                                {customOption.value.split('||').join(',')}
                             </option>
                         )}
                     </Input>

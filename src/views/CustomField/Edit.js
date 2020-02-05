@@ -34,7 +34,7 @@ class Edit extends Component {
     
         this.state = {
             lvtCustomFieldName: '',
-            lvtCustomFieldType: '',
+            lvtCustomFieldType: '0',
             lvtHelpText: '',
             lvtAppendText: '',
             fieldTypes: [],
@@ -152,11 +152,17 @@ class Edit extends Component {
         const requestCustomField = axios.get( defines.API_DOMAIN + '/fieldcastp/' + this.props.match.params.customfieldId);
         axios.all([requestCustomField]).then(axios.spread((...responses) => {
             const responseCustomField = responses[0];
-            if(responseCustomField.status === 200 ) {                
-                this.setState({ 
-                    customField: responseCustomField.data.data[0],
-                    
-                });
+            if(responseCustomField.status === 200 ) {             
+                if ((Array.isArray(responseCustomField.data.data) && responseCustomField.data.data.length))
+                {
+                    let customfield = responseCustomField.data.data[0];
+                    this.setState({ 
+                        lvtCustomFieldName: customfield.name,
+                        lvtCustomFieldType: customfield.idfieldtype,
+                        lvtHelpText: customfield.helptext,
+                        lvtAppendText: customfield.appendtext
+                    });
+                }                   
             }else{
                 throw new Error( JSON.stringify( {status: responseCustomField.status, error: responseCustomField.data.data.msg} ) );
             }
@@ -227,7 +233,7 @@ class Edit extends Component {
                                                 id="lvtCustomFieldName"
                                                 name="lvtCustomFieldName"
                                                 placeholder=""
-                                                value={this.state.customField.name}
+                                                value={this.state.lvtCustomFieldName}
                                                 onChange={(e) => this.inputChangeHandler.call(this, e)}
                                             />
                                             <FormText color="muted">Nombre del campo dinámico</FormText>
@@ -238,8 +244,7 @@ class Edit extends Component {
                                             <Label htmlFor="lvtCustomFieldType">Tipo</Label>
                                         </Col>
                                         <Col xs="12" md="9">
-                                            <Input 
-                                                type="select" 
+                                            <Input type="select" value={this.state.lvtCustomFieldType}
                                                 name="lvtCustomFieldType" 
                                                 id="lvtCustomFieldType" 
                                                 style={{ textTransform: 'capitalize'}}

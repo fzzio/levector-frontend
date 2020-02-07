@@ -105,54 +105,58 @@ class List extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {customFieldList.map((customField, index) =>
-                                        <tr key={index}>
-                                            <th>{index + 1}</th>
-                                            <td>{customField.fieldoption}</td>
-                                            <td className="text-center">
-                                                {
-                                                    (customField.idfieldtype === defines.CUSTOM_FIELD_TEXT) ?
-                                                        <i className="fa fa-font fa-lg mt-2"></i>
-                                                    : (customField.idfieldtype === defines.CUSTOM_FIELD_TEXTAREA) ?
-                                                        <i className="fa fa-align-justify fa-lg mt-2"></i>
-                                                    : (customField.idfieldtype === defines.CUSTOM_FIELD_CHECKBOX) ?
-                                                        <i className="fa fa-check-square-o fa-lg mt-2"></i>
-                                                    : (customField.idfieldtype === defines.CUSTOM_FIELD_RADIO) ?
-                                                        <i className="fa fa-dot-circle-o fa-lg mt-2"></i>
-                                                    : (customField.idfieldtype === defines.CUSTOM_FIELD_COMBOBOX) ?
-                                                        <i className="fa fa-chevron-down fa-lg mt-2"></i>
-                                                    : ''
-                                                }
-                                                <br />
-                                                <span color="muted">({customField.type})</span>
-                                            </td>
-                                            <td>{customField.helptext}</td>
-                                            <td>{customField.appendtext}</td>
-                                            <td>
-                                                {
-                                                    ( customField.values.length ) ?
-                                                        <ul>
-                                                            {customField.values.map((customFieldItem, indexItem) =>
-                                                                <li key={indexItem}>
-                                                                    {customFieldItem.value.split('||').join(',')}
-                                                                </li>
-                                                            )}
-                                                        </ul>
-                                                    :   ''
-                                                }
-                                            </td>
-                                            <td>
-                                                <Link to={`/customfield/${customField.idfieldcastp}/edit`} outline className="btn btn-dark btn-sm" size="sm">
-                                                    <i className="fa fa-edit"></i>
-                                                </Link>
-                                                
-                                                <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfieldcastp)}>
-                                                    <i className="fa fa-trash"></i>
-                                                </Button>
-                               
-                                            </td>
-                                        </tr>
-                                    )}
+                                    {
+                                        ( customFieldList.length ) ?
+                                            customFieldList.map((customField, index) =>
+                                                <tr key={index}>
+                                                    <th>{index + 1}</th>
+                                                    <td>{customField.fieldoption}</td>
+                                                    <td className="text-center">
+                                                        {
+                                                            (customField.idfieldtype === defines.CUSTOM_FIELD_TEXT) ?
+                                                                <i className="fa fa-font fa-lg mt-2"></i>
+                                                            : (customField.idfieldtype === defines.CUSTOM_FIELD_TEXTAREA) ?
+                                                                <i className="fa fa-align-justify fa-lg mt-2"></i>
+                                                            : (customField.idfieldtype === defines.CUSTOM_FIELD_CHECKBOX) ?
+                                                                <i className="fa fa-check-square-o fa-lg mt-2"></i>
+                                                            : (customField.idfieldtype === defines.CUSTOM_FIELD_RADIO) ?
+                                                                <i className="fa fa-dot-circle-o fa-lg mt-2"></i>
+                                                            : (customField.idfieldtype === defines.CUSTOM_FIELD_COMBOBOX) ?
+                                                                <i className="fa fa-chevron-down fa-lg mt-2"></i>
+                                                            : ''
+                                                        }
+                                                        <br />
+                                                        <span color="muted">({customField.type})</span>
+                                                    </td>
+                                                    <td>{customField.helptext}</td>
+                                                    <td>{customField.appendtext}</td>
+                                                    <td>
+                                                        {
+                                                            ( customField.values.length ) ?
+                                                                <ul>
+                                                                    {customField.values.map((customFieldItem, indexItem) =>
+                                                                        <li key={indexItem}>
+                                                                            {customFieldItem.value.split('||').join(',')}
+                                                                        </li>
+                                                                    )}
+                                                                </ul>
+                                                            :   ''
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <Link to={`/customfield/${customField.idfieldcastp}/edit`} outline className="btn btn-dark btn-sm" size="sm">
+                                                            <i className="fa fa-edit"></i>
+                                                        </Link>
+                                                        
+                                                        <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfieldcastp)}>
+                                                            <i className="fa fa-trash"></i>
+                                                        </Button>
+                                    
+                                                    </td>
+                                                </tr>
+                                            )
+                                        : ''
+                                    }
                                 </tbody>
                             </Table>
                         </CardBody>

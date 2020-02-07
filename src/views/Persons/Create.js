@@ -187,7 +187,7 @@ class Create extends Component {
       firstname: this.state.formFields.lvtFirstname,
       lastname: this.state.formFields.lvtLastname,
       dob: this.state.formFields.lvtDateOfBirth,
-      gender: this.state.formFields.lvtGender,
+      idgender: this.state.formFields.lvtGender,
       height: parseInt( this.state.formFields.lvtHeight ),
       weight: parseInt( this.state.formFields.lvtWeight ),
       ruc: this.state.formFields.lvtRUC,

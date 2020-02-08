@@ -15,7 +15,9 @@ exports.GL_HEAD = {
 }
 exports.PERSON_ID_DIGITS = 5;
 exports.PERSON_PAD_CHARACTER = 0;
-exports.PERSON_PATH_IMG = '/person/img';
+exports.PERSON_PATH_IMG_THUMBNAIL = '/person/img/thumbnail/';
+exports.PERSON_PATH_IMG_OPTIMIZED = '/person/img/optimized/';
+exports.PERSON_PATH_IMG_ORIGINAL = '/person/img/original/';
 exports.PERSON_PATH_VID = '/person/vid';
 exports.LVT_STATUS_ACTIVE = 1;
 exports.LVT_STATUS_INACTIVE = 0;

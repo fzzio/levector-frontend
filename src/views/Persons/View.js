@@ -41,9 +41,10 @@ class View extends Component {
                 let personData = responsePerson.data.data[0]
                 let personImagesGallery = personData.photo.map(function(photo) {
                     return {
-                        original: defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + photo.url,
-                        thumbnail: defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + photo.url,
+                        original: defines.API_DOMAIN + defines.PERSON_PATH_IMG_OPTIMIZED + '/' + photo.optimized,
+                        thumbnail: defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + photo.thumbnail,
                         originalAlt: personData.dni,
+                        thumbnailAlt: personData.dni
                     }
                 })
 

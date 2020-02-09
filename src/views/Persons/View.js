@@ -101,6 +101,11 @@ class View extends Component {
                                     <dd className="col-sm-9">
                                         {moment(person.dob).format('YYYY-MM-DD')}
                                     </dd>
+
+                                    <dt className="col-sm-3">Edad</dt>
+                                    <dd className="col-sm-9">
+                                        {person.age}
+                                    </dd>
                                     
                                     <dt className="col-sm-3">Género</dt>
                                     <dd className="col-sm-9">

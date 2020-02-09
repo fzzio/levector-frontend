@@ -28,27 +28,30 @@ import {
     Row,
 } from 'reactstrap';
 
-class Create extends Component {
+class Edit extends Component {
     constructor(props) {
         super(props);
     
         this.state = {
             lvtCustomFieldName: '',
-            lvtCustomFieldType: '',
+            lvtCustomFieldType: '0',
             lvtHelpText: '',
             lvtAppendText: '',
             fieldTypes: [],
             isEnableCustomFieldOptions: false,
-            lvtCusmtomFieldOptions: [],
+            lvtCusmtomFieldOptions: [],            
             loading: false,
             error: false,
             redirect: false,
             modalForm: false,
+            customFieldId:0
         }
 
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
         this.inputTypeHandler = this.inputTypeHandler.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.inputOptionChangeHandler = this.inputOptionChangeHandler.bind(this);
     }
 
     inputChangeHandler(e) {
@@ -60,58 +63,77 @@ class Create extends Component {
     appendInput() {
         let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
         lvtCusmtomFieldOptions.push({
-            name: `lvtCustomFieldOption_${this.state.lvtCusmtomFieldOptions.length}`,
-            value: ''
+            name: '',
+            idfieldopcastp: `lvtCustomFieldOption_${this.state.lvtCusmtomFieldOptions.length}`,
+            status: defines.STATUS_CREATE_CUSTOM_FIELD_OP
         })
         this.setState({
             lvtCusmtomFieldOptions : lvtCusmtomFieldOptions
         });
     }
 
-    inputOptionChangeHandler(e) {
+    inputOptionChangeHandler(e, itm) {
         let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
-        let index = lvtCusmtomFieldOptions.findIndex(item => (item.name === e.target.name));
+        
+        let index = lvtCusmtomFieldOptions.findIndex(item => (item.idfieldopcastp === itm.idfieldopcastp));
+
         if( index >= 0 ){
-            lvtCusmtomFieldOptions[index].value = e.target.value;
+            lvtCusmtomFieldOptions[index].name = e.target.value;
         }
         this.setState({
             lvtCusmtomFieldOptions: lvtCusmtomFieldOptions,
         });
     }
 
-    inputTypeHandler(e) {
-        let inputType = parseInt(e.target.value)
+    isCumtonFilesEnabled()
+    {
+        let inputType = this.state.lvtCustomFieldType;
         let isEnableCustomFieldOptions = false
-        let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
         if( 
             inputType === defines.CUSTOM_FIELD_CHECKBOX ||  
             inputType === defines.CUSTOM_FIELD_COMBOBOX ||  
             inputType === defines.CUSTOM_FIELD_RADIO 
         ){
             isEnableCustomFieldOptions = true
-        }else{
-            isEnableCustomFieldOptions = false
-            lvtCusmtomFieldOptions = []
         }
+
+        return isEnableCustomFieldOptions;
+    }
+
+    inputTypeHandler(e) {
+        let inputType = parseInt(e.target.value)
+        let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
+        
         this.setState({
             lvtCustomFieldType: inputType,
-            isEnableCustomFieldOptions: isEnableCustomFieldOptions,
+            isEnableCustomFieldOptions: this.isCumtonFilesEnabled(),
             lvtCusmtomFieldOptions: lvtCusmtomFieldOptions,
         });
     }
     
     handleSubmit(event){
         event.preventDefault();
+        console.log(this.state.lvtCusmtomFieldOptions);
+        let isEnableCustomFieldOptions=this.isCumtonFilesEnabled();
+        console.log("enable"+isEnableCustomFieldOptions);
         let customFieldOptions = this.state.lvtCusmtomFieldOptions.filter(function(customFieldOption) {
-            if( customFieldOption.value === null || customFieldOption.value === undefined || customFieldOption.value === '' ){
+            if( customFieldOption.name === null || customFieldOption.name === undefined || customFieldOption.name === '' ){
               return false; // skip
+            }
+            if (!isEnableCustomFieldOptions && customFieldOption.status === defines.STATUS_CREATE_CUSTOM_FIELD_OP)
+            {
+                return false;
             }
             return true;
         }).map(function(customFieldOption) {
             return {
-              name: customFieldOption.value,
-            }
+                idfieldopcast: customFieldOption.status === defines.STATUS_CREATE_CUSTOM_FIELD_OP ? '' : customFieldOption.idfieldopcastp,
+                name:customFieldOption.name,
+                status:  isEnableCustomFieldOptions ? customFieldOption.status : defines.STATUS_DELETE_CUSTOM_FIELD_OP
+              }
         });
+
+        console.log("guardar customFieldOptions" + JSON.stringify(customFieldOptions));
         const customFormFieldata = {
             idfieldtype: this.state.lvtCustomFieldType,
             name: this.state.lvtCustomFieldName,
@@ -122,10 +144,10 @@ class Create extends Component {
             customFormFieldata['options'] = customFieldOptions
         }
     
-        console.log(JSON.stringify(customFormFieldata));
+        console.log(customFormFieldata)
         this.setState({ loading: true });
-        axios.post(
-            defines.API_DOMAIN + '/fieldcastp/', 
+        axios.put(
+            defines.API_DOMAIN + '/fieldcastp/' + this.state.customFieldId, 
             customFormFieldata
         )
         .then( (response) => {
@@ -146,7 +168,56 @@ class Create extends Component {
         });
     }
     
+    mapCusmtomFieldOptions(customOptions)
+    {
+        let cumtomOptionsAct = [];
+        if ((Array.isArray(customOptions) && customOptions.length))
+        {
+            customOptions.map((itm, itmIdx) =>
+                cumtomOptionsAct.push({
+                    idfieldopcastp: itm.idfieldopcastp,
+                    name: itm.value,
+                    status: defines.STATUS_UPDATE_CUSTOM_FIELD_OP
+                    })
+                );
+        }
+
+        return cumtomOptionsAct;        
+    }
+
     componentDidMount() {
+        //obtain customField
+        const requestCustomField = axios.get( defines.API_DOMAIN + '/fieldcastp/' + this.props.match.params.customfieldId);
+        axios.all([requestCustomField]).then(axios.spread((...responses) => {
+            const responseCustomField = responses[0];
+            if(responseCustomField.status === 200 ) {             
+                if ((Array.isArray(responseCustomField.data.data) && responseCustomField.data.data.length))
+                {
+                    let customfield = responseCustomField.data.data[0];
+                    this.setState({ 
+                        lvtCustomFieldName: customfield.fieldoption,
+                        lvtCustomFieldType: customfield.idfieldtype,
+                        lvtHelpText: customfield.helptext,
+                        lvtAppendText: customfield.appendtext,
+                        lvtCusmtomFieldOptions: this.mapCusmtomFieldOptions(customfield.values),
+                        isEnableCustomFieldOptions : this.isCumtonFilesEnabled(),
+                        customFieldId: customfield.idfieldcastp
+                    });
+                }                   
+            }else{
+                throw new Error( JSON.stringify( {status: responseCustomField.status, error: responseCustomField.data.data.msg} ) );
+            }
+        }))
+        .catch( (error) => {
+            if (error.response) { 
+                console.log(error.response.data);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log('Error', error.message);
+            }
+        });
+
         // fetch all API data
         const requestFieldTypes = axios.get( defines.API_DOMAIN + '/fieldtype' );
         axios.all([requestFieldTypes]).then(axios.spread((...responses) => {
@@ -168,6 +239,30 @@ class Create extends Component {
                 console.log('Error', error.message);
             }
         });
+    }
+
+    handleDelete(customFieldOption, index){
+        
+        let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
+       
+        if (!(index > 0 && index < lvtCusmtomFieldOptions.length))
+        {
+            return;
+        }
+       
+        if (customFieldOption.status === defines.STATUS_CREATE_CUSTOM_FIELD_OP)
+        {
+            lvtCusmtomFieldOptions = lvtCusmtomFieldOptions.filter(x => x.idfieldopcastp !== customFieldOption.idfieldopcastp)            
+            this.setState({
+                lvtCusmtomFieldOptions: lvtCusmtomFieldOptions
+            });
+            return;
+        }
+        
+        lvtCusmtomFieldOptions[index].status = defines.STATUS_DELETE_CUSTOM_FIELD_OP;
+        this.setState({
+           lvtCusmtomFieldOptions: lvtCusmtomFieldOptions
+        })        
     }
 
     render() {
@@ -203,7 +298,6 @@ class Create extends Component {
                                                 id="lvtCustomFieldName"
                                                 name="lvtCustomFieldName"
                                                 placeholder=""
-                                                autoComplete="off"
                                                 value={this.state.lvtCustomFieldName}
                                                 onChange={(e) => this.inputChangeHandler.call(this, e)}
                                             />
@@ -215,8 +309,7 @@ class Create extends Component {
                                             <Label htmlFor="lvtCustomFieldType">Tipo</Label>
                                         </Col>
                                         <Col xs="12" md="9">
-                                            <Input 
-                                                type="select" 
+                                            <Input type="select" value={this.state.lvtCustomFieldType}
                                                 name="lvtCustomFieldType" 
                                                 id="lvtCustomFieldType" 
                                                 style={{ textTransform: 'capitalize'}}
@@ -242,7 +335,6 @@ class Create extends Component {
                                                 id="lvtHelpText"
                                                 name="lvtHelpText"
                                                 placeholder=""
-                                                autoComplete="off"
                                                 value={this.state.lvtHelpText}
                                                 onChange={(e) => this.inputChangeHandler.call(this, e)}
                                             />
@@ -259,7 +351,6 @@ class Create extends Component {
                                                 id="lvtAppendText"
                                                 name="lvtAppendText"
                                                 placeholder=""
-                                                autoComplete="off"
                                                 value={this.state.lvtAppendText}
                                                 onChange={(e) => this.inputChangeHandler.call(this, e)}
                                             />
@@ -270,7 +361,7 @@ class Create extends Component {
                             </Card>
                         </Col>
                         {
-                            ( isEnableCustomFieldOptions ) ?
+                            ( this.isCumtonFilesEnabled() ) ?
                                 <Col xs="12" md="6">
                                     <Card>
                                         <CardHeader>
@@ -278,22 +369,30 @@ class Create extends Component {
                                         </CardHeader>
                                         <CardBody>
                                             {this.state.lvtCusmtomFieldOptions.map((customFieldOption, indexOption) => 
+                                                (customFieldOption.status !== defines.STATUS_DELETE_CUSTOM_FIELD_OP)?
+                                                
                                                 <FormGroup row key={indexOption}>
                                                     <Col md="3">
-                                                        <Label htmlFor={customFieldOption.name}>Opción {indexOption + 1}</Label>
+                                                        <Label htmlFor={`lvtCustomFieldOption_${indexOption}`}>Opción {indexOption + 1}</Label>
                                                     </Col>
-                                                    <Col xs="12" md="9">
+                                                    <Col xs="12" md="7">
                                                         <Input
                                                             type="text"
-                                                            id={customFieldOption.name}
-                                                            name={customFieldOption.name}
+                                                            id={`lvtCustomFieldOption_${indexOption}`} 
+                                                            name={`lvtCustomFieldOption_${indexOption}`}
                                                             placeholder={'Item ' + (indexOption + 1)}
                                                             autoComplete="off"
-                                                            value={customFieldOption.value}
-                                                            onChange={(e) => this.inputOptionChangeHandler.call(this, e)}
+                                                            value={customFieldOption.name}
+                                                            onChange={(e) => this.inputOptionChangeHandler.call(this, e, customFieldOption)}
                                                         />
                                                     </Col>
+                                                    <Col md="2">
+                                                        <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customFieldOption, indexOption)}>
+                                                            <i className="fa fa-trash"></i>
+                                                        </Button>
+                                                    </Col>
                                                 </FormGroup>
+                                                :''
                                             )}
                                         </CardBody>
                                         <CardFooter>
@@ -318,4 +417,4 @@ class Create extends Component {
     }
 }
 
-export default Create;
+export default Edit;

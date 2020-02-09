@@ -42,6 +42,7 @@ const LevectorDashboard = React.lazy(() => import('./views/Dashboard/LevectorDas
 // Custom Fields
 const customFieldList = React.lazy(() => import('./views/CustomField/List'));
 const customFieldCreate = React.lazy(() => import('./views/CustomField/Create'));
+const customFieldEdit = React.lazy(() => import('./views/CustomField/Edit'));
 
 // Persons
 const personList = React.lazy(() => import('./views/Persons/List'));
@@ -95,9 +96,11 @@ const routes = [
   // Levector
   { path: '/dashboard', name: 'Dashboard', component: LevectorDashboard },
 
-  // Person
+  //CustomField
   { path: '/customfield/list', exact: true, name: 'Campo dinámico', component: customFieldList},
   { path: '/customfield/create', exact: true, name: 'Campo dinámico', component: customFieldCreate},
+  { path: '/customfield/:customfieldId/edit', exact: true, name: 'Campo dinámico', component: customFieldEdit},
+  // Person
   { path: '/person/list', exact: true, name: 'Personas', component: personList},
   { path: '/person/create', exact: true, name: 'Agregar Personas', component: personCreate},
   { path: '/person/:id', exact: true, name: 'Persona', component: personView },

@@ -23,7 +23,7 @@ function CustomRadioOption(props){
                 onChange={props.onCustomOptionChange}
             />
             <Label className="form-check-label" check htmlFor={`lvtCustomRadioOption_` + customOption.idfieldopcastp}>
-                {customOption.value}
+                {customOption.value.split('||').join(',')}
             </Label>
         </FormGroup>
     );

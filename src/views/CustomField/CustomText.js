@@ -40,6 +40,7 @@ class CustomText extends Component {
                                 idfieldcastp = {customFieldObj.idfieldcastp}
                                 value = {customFieldValue}
                                 onChange = {this.handleChange}
+                                autoComplete="nope"
                             />;
         if( customFieldObj.appendtext !== "" && customFieldObj.appendtext !== null && !isSearch ){
             appendInput =    <InputGroup>

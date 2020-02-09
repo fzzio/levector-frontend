@@ -170,7 +170,9 @@ class Create extends Component {
     // Get images uploaded
     let imagesPerson = this.state.lvtImages.map(function(imagePerson) {
       return {
-        path: imagePerson.filename,
+        thumbnail: imagePerson.imgThumbnail,
+        optimized: imagePerson.imgOptimized,
+        original: imagePerson.imgOriginal
       }
     });
     
@@ -187,7 +189,7 @@ class Create extends Component {
       firstname: this.state.formFields.lvtFirstname,
       lastname: this.state.formFields.lvtLastname,
       dob: this.state.formFields.lvtDateOfBirth,
-      gender: this.state.formFields.lvtGender,
+      idgender: this.state.formFields.lvtGender,
       height: parseInt( this.state.formFields.lvtHeight ),
       weight: parseInt( this.state.formFields.lvtWeight ),
       ruc: this.state.formFields.lvtRUC,
@@ -203,7 +205,7 @@ class Create extends Component {
       idcity: 1,
     };
 
-    console.log(personData);
+    console.log(JSON.stringify(personData));
 
     this.setState({ loading: true });
     axios.post(
@@ -331,6 +333,7 @@ class Create extends Component {
                         id="lvtDNI"
                         name="lvtDNI"
                         placeholder="09999999999"
+                        autoComplete="nope"
                         value={this.state.formFields.lvtDNI}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                       />
@@ -348,6 +351,7 @@ class Create extends Component {
                         id="lvtFirstname"
                         name="lvtFirstname"
                         placeholder="Juan"
+                        autoComplete="nope"
                         value={this.state.formFields.lvtFirstname}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                       />
@@ -364,6 +368,7 @@ class Create extends Component {
                         id="lvtLastname"
                         name="lvtLastname"
                         placeholder="Pérez"
+                        autoComplete="nope"
                         value={this.state.formFields.lvtLastname}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                       />
@@ -420,6 +425,7 @@ class Create extends Component {
                         id="lvtRUC"
                         name="lvtRUC"
                         placeholder="09999999999001"
+                        autoComplete="nope"
                         value={this.state.formFields.lvtRUC}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                       />
@@ -446,7 +452,7 @@ class Create extends Component {
                         id="lvtEmail"
                         name="lvtEmail"
                         placeholder="Ingrese email"
-                        autoComplete="email"
+                        autoComplete="nope"
                         value={this.state.formFields.lvtEmail}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                       />
@@ -470,6 +476,7 @@ class Create extends Component {
                           id="lvtCellphone"
                           name="lvtCellphone"
                           placeholder="593987654321"
+                          autoComplete="nope"
                           value={this.state.formFields.lvtCellphone}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
                         />
@@ -494,6 +501,7 @@ class Create extends Component {
                           id="lvtPhone"
                           name="lvtPhone"
                           placeholder="042999999"
+                          autoComplete="nope"
                           value={this.state.formFields.lvtPhone}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
                         />
@@ -635,7 +643,7 @@ class Create extends Component {
                           action = {defines.API_DOMAIN + '/uploadimages'}
 
                           source = {(response) => {
-                            return (response[0])
+                            return response.images;
                           }}
 
                           onWarning = {(type, rules) => {
@@ -673,8 +681,10 @@ class Create extends Component {
                             let arrImages = this.state.lvtImages
                             arrImages.push({
                               "uid": imageUploaded.uid,
-                              "path": defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + imageUploaded.source.filename,
-                              "filename": imageUploaded.source.filename,
+                              "path": defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + imageUploaded.source.imgThumbnail,
+                              "imgThumbnail": imageUploaded.source.imgThumbnail,
+                              "imgOptimized": imageUploaded.source.imgOptimized,
+                              "imgOriginal": imageUploaded.source.imgOriginal
                             })
                             this.setState({ lvtImages: arrImages })
                           }}
@@ -720,30 +730,27 @@ class Create extends Component {
                     <Col xs="12" md="9">
                         <FilePond
                           ref={ref => (this.pond = ref)}
-                          files={this.state.lvtVideos}
+                          // files={this.state.lvtVideos}
                           allowMultiple={true}
                           allowDrop={false}
                           acceptedFileTypes={['video/*']}
-                          server={defines.API_DOMAIN + '/uploadvideos'}
+                          server={defines.API_DOMAIN + '/uploadvideo'}
                           oninit={() => this.handleInitUpload()}
-                          onprocessfile = {(error, file) => { 
-                            let processedFiles = JSON.parse(file.serverId)
-                            this.setState({ 
-                              lvtVideos: processedFiles.map(function(videoItem) {
-                                return {
-                                  path: videoItem.path,
-                                  filename: videoItem.filename,
-                                }
-                              })
+                          onprocessfile = {(error, file) => {
+                            let processedFile = JSON.parse(file.serverId);
+                            let arrVideos = this.state.lvtVideos;
+                            arrVideos.push({
+                              "filename": processedFile.video,
                             })
+                            this.setState({ lvtVideos: arrVideos })
                           }}
-                          onupdatefiles={fileItems => {
-                            // Set currently active file objects to this.state
-                            // this.setState({
-                            //   lvtVideos: fileItems.map(fileItem => fileItem.filename)
-                            // });
-                            // console.log(this.state)
-                          }}
+
+                          // onupdatefiles={(fileItems) => {
+                          //   this.setState({
+                          //     lvtVideos: fileItems.map(fileItem => fileItem.filename)
+                          //   });
+                          //   console.log(this.state.lvtVideos);
+                          // }}
                         />
                       <FormText color="muted">Vídeo a mostrar</FormText>
                     </Col>

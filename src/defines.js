@@ -7,16 +7,18 @@ exports.CUSTOM_FIELD_TEXTAREA = 2;
 exports.CUSTOM_FIELD_COMBOBOX = 3;
 exports.CUSTOM_FIELD_RADIO = 4;
 exports.CUSTOM_FIELD_CHECKBOX = 5;
-exports.CUSTOM_FIELD_PREFIX = 'lvtCustomField_'
+exports.CUSTOM_FIELD_PREFIX = 'lvtCustomField_';
 exports.GL_HEAD = {
-    headers: {
-        "Content-Type": "application/json",
-    }
-}
-exports.PERSON_ID_DIGITS = 5;
+  headers: {
+    'Content-Type': 'application/json'
+  }
+};
+exports.PERSON_ID_DIGITS = 4;
 exports.PERSON_PAD_CHARACTER = 0;
-exports.PERSON_PATH_IMG = '/person/img';
-exports.PERSON_PATH_VID = '/person/vid';
+exports.PERSON_PATH_IMG_THUMBNAIL = '/person/img/thumbnail/';
+exports.PERSON_PATH_IMG_OPTIMIZED = '/person/img/optimized/';
+exports.PERSON_PATH_IMG_ORIGINAL = '/person/img/original/';
+exports.PERSON_PATH_VID = '/person/vid/';
 exports.LVT_STATUS_ACTIVE = 1;
 exports.LVT_STATUS_INACTIVE = 0;
 exports.LVT_STATUS_REMOVED = -1;
@@ -32,3 +34,6 @@ exports.LVT_WEIGHT_MIN = 0;
 exports.LVT_WEIGHT_MAX = 150;
 exports.LVT_WEIGHT_UNIT = 'kg';
 exports.LVT_PAGINATION_OFFSET = 4;
+exports.STATUS_UPDATE_CUSTOM_FIELD_OP = 1;
+exports.STATUS_CREATE_CUSTOM_FIELD_OP = 2;
+exports.STATUS_DELETE_CUSTOM_FIELD_OP = 3;

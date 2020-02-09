@@ -41,9 +41,12 @@ class View extends Component {
                 let personData = responsePerson.data.data[0]
                 let personImagesGallery = personData.photo.map(function(photo) {
                     return {
-                        original: defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + photo.url,
-                        thumbnail: defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + photo.url,
+                        original: defines.API_DOMAIN + defines.PERSON_PATH_IMG_OPTIMIZED + photo.optimized,
+                        thumbnail: defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + photo.thumbnail,
+                        fullscreen: defines.API_DOMAIN + defines.PERSON_PATH_IMG_ORIGINAL + photo.original,
                         originalAlt: personData.dni,
+                        thumbnailAlt: personData.dni,
+                        // description: 'Ver'
                     }
                 })
 
@@ -99,6 +102,11 @@ class View extends Component {
                                     <dd className="col-sm-9">
                                         {moment(person.dob).format('YYYY-MM-DD')}
                                     </dd>
+
+                                    <dt className="col-sm-3">Edad</dt>
+                                    <dd className="col-sm-9">
+                                        {person.age + ' ' + defines.LVT_AGE_UNIT + 's'}
+                                    </dd>
                                     
                                     <dt className="col-sm-3">Género</dt>
                                     <dd className="col-sm-9">
@@ -138,7 +146,7 @@ class View extends Component {
                                         </Col>
                                         <Col xs="12" md="9">
                                             <span id="" className="">
-                                                {customFieldData.value}
+                                                {customFieldData.options}
                                             </span>
                                         </Col>
                                     </FormGroup>
@@ -159,6 +167,9 @@ class View extends Component {
                                     <ImageGallery 
                                         items={personImagesGallery}
                                         lazyLoad={true}
+                                        useBrowserFullscreen={true}
+                                        showPlayButton={false}
+                                        autoPlay={false}
                                     />
                                 :
                                     <p className="form-control-static">No existen elementos</p>
@@ -173,9 +184,11 @@ class View extends Component {
                             </CardHeader>
                             <CardBody>
                                 {( person.videos || []).map((itemVideo, index) =>
-                                    <Player key={index}>
-                                        <source src={defines.API_DOMAIN + defines.PERSON_PATH_VID + '/' + itemVideo.url} />
-                                    </Player>
+                                    <div className="border p-2 mb-3" key={index}>
+                                        <Player>
+                                            <source src={defines.API_DOMAIN + defines.PERSON_PATH_VID + itemVideo.url} />
+                                        </Player>
+                                    </div>
                                 )}
                             </CardBody>
                         </Card>
@@ -209,6 +222,16 @@ class View extends Component {
                                     <dt className="col-sm-3">Dirección</dt>
                                     <dd className="col-sm-9">
                                         {person.address}
+                                    </dd>
+
+                                    <dt className="col-sm-3">Ciudad</dt>
+                                    <dd className="col-sm-9">
+                                        {person.city}
+                                    </dd>
+
+                                    <dt className="col-sm-3">País</dt>
+                                    <dd className="col-sm-9">
+                                        <i className={'flag-icon flag-icon-' + person.countrycode +' h4 mb-0'} title={person.countrycode} id={person.countrycode}></i>
                                     </dd>
                                     
                                     <dt className="col-sm-3">Observaciones</dt>

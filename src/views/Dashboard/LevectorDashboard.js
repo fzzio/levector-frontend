@@ -142,7 +142,7 @@ class LevectorDashboard extends Component {
                           <tr key={index}>
                             <td className="text-center">
                               <div className="avatar">
-                                <img src={defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + person.photo} className="img-avatar" alt={person.firstname + ' ' + person.lastname} />
+                                <img src={defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + person.photo} className="img-avatar" alt={person.firstname + ' ' + person.lastname} />
                               </div>
                             </td>
                             <td>

@@ -43,6 +43,7 @@ class CustomTextArea extends Component {
                         idfieldcastp = {customFieldObj.idfieldcastp}
                         value = {customFieldValue}
                         onChange = {this.handleChange}
+                        autoComplete="nope"
                     />
                     {helpText}
                 </Col>

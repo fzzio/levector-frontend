@@ -730,30 +730,27 @@ class Create extends Component {
                     <Col xs="12" md="9">
                         <FilePond
                           ref={ref => (this.pond = ref)}
-                          files={this.state.lvtVideos}
+                          // files={this.state.lvtVideos}
                           allowMultiple={true}
                           allowDrop={false}
                           acceptedFileTypes={['video/*']}
-                          server={defines.API_DOMAIN + '/uploadvideos'}
+                          server={defines.API_DOMAIN + '/uploadvideo'}
                           oninit={() => this.handleInitUpload()}
-                          onprocessfile = {(error, file) => { 
-                            let processedFiles = JSON.parse(file.serverId)
-                            this.setState({ 
-                              lvtVideos: processedFiles.map(function(videoItem) {
-                                return {
-                                  path: videoItem.path,
-                                  filename: videoItem.filename,
-                                }
-                              })
+                          onprocessfile = {(error, file) => {
+                            let processedFile = JSON.parse(file.serverId);
+                            let arrVideos = this.state.lvtVideos;
+                            arrVideos.push({
+                              "filename": processedFile.video,
                             })
+                            this.setState({ lvtVideos: arrVideos })
                           }}
-                          onupdatefiles={fileItems => {
-                            // Set currently active file objects to this.state
-                            // this.setState({
-                            //   lvtVideos: fileItems.map(fileItem => fileItem.filename)
-                            // });
-                            // console.log(this.state)
-                          }}
+
+                          // onupdatefiles={(fileItems) => {
+                          //   this.setState({
+                          //     lvtVideos: fileItems.map(fileItem => fileItem.filename)
+                          //   });
+                          //   console.log(this.state.lvtVideos);
+                          // }}
                         />
                       <FormText color="muted">Vídeo a mostrar</FormText>
                     </Col>

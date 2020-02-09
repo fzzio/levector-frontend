@@ -174,9 +174,11 @@ class View extends Component {
                             </CardHeader>
                             <CardBody>
                                 {( person.videos || []).map((itemVideo, index) =>
-                                    <Player key={index}>
-                                        <source src={defines.API_DOMAIN + defines.PERSON_PATH_VID + '/' + itemVideo.url} />
-                                    </Player>
+                                    <div className="border p-2 mb-3" key={index}>
+                                        <Player>
+                                            <source src={defines.API_DOMAIN + defines.PERSON_PATH_VID + '/' + itemVideo.url} />
+                                        </Player>
+                                    </div>
                                 )}
                             </CardBody>
                         </Card>

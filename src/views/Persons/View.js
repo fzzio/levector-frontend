@@ -43,9 +43,10 @@ class View extends Component {
                     return {
                         original: defines.API_DOMAIN + defines.PERSON_PATH_IMG_OPTIMIZED + photo.optimized,
                         thumbnail: defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + photo.thumbnail,
+                        fullscreen: defines.API_DOMAIN + defines.PERSON_PATH_IMG_ORIGINAL + photo.original,
                         originalAlt: personData.dni,
                         thumbnailAlt: personData.dni,
-                        embedUrl: defines.API_DOMAIN + defines.PERSON_PATH_IMG_ORIGINAL + photo.original,
+                        // description: 'Ver'
                     }
                 })
 
@@ -104,7 +105,7 @@ class View extends Component {
 
                                     <dt className="col-sm-3">Edad</dt>
                                     <dd className="col-sm-9">
-                                        {person.age}
+                                        {person.age + ' ' + defines.LVT_AGE_UNIT + 's'}
                                     </dd>
                                     
                                     <dt className="col-sm-3">Género</dt>
@@ -221,6 +222,16 @@ class View extends Component {
                                     <dt className="col-sm-3">Dirección</dt>
                                     <dd className="col-sm-9">
                                         {person.address}
+                                    </dd>
+
+                                    <dt className="col-sm-3">Ciudad</dt>
+                                    <dd className="col-sm-9">
+                                        {person.city}
+                                    </dd>
+
+                                    <dt className="col-sm-3">País</dt>
+                                    <dd className="col-sm-9">
+                                        <i className={'flag-icon flag-icon-' + person.countrycode +' h4 mb-0'} title={person.countrycode} id={person.countrycode}></i>
                                     </dd>
                                     
                                     <dt className="col-sm-3">Observaciones</dt>

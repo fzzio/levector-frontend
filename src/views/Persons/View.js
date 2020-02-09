@@ -41,10 +41,11 @@ class View extends Component {
                 let personData = responsePerson.data.data[0]
                 let personImagesGallery = personData.photo.map(function(photo) {
                     return {
-                        original: defines.API_DOMAIN + defines.PERSON_PATH_IMG_OPTIMIZED + '/' + photo.optimized,
-                        thumbnail: defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + photo.thumbnail,
+                        original: defines.API_DOMAIN + defines.PERSON_PATH_IMG_OPTIMIZED + photo.optimized,
+                        thumbnail: defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + photo.thumbnail,
                         originalAlt: personData.dni,
-                        thumbnailAlt: personData.dni
+                        thumbnailAlt: personData.dni,
+                        embedUrl: defines.API_DOMAIN + defines.PERSON_PATH_IMG_ORIGINAL + photo.original,
                     }
                 })
 
@@ -139,7 +140,7 @@ class View extends Component {
                                         </Col>
                                         <Col xs="12" md="9">
                                             <span id="" className="">
-                                                {customFieldData.value}
+                                                {customFieldData.options}
                                             </span>
                                         </Col>
                                     </FormGroup>
@@ -160,6 +161,9 @@ class View extends Component {
                                     <ImageGallery 
                                         items={personImagesGallery}
                                         lazyLoad={true}
+                                        useBrowserFullscreen={true}
+                                        showPlayButton={false}
+                                        autoPlay={false}
                                     />
                                 :
                                     <p className="form-control-static">No existen elementos</p>
@@ -176,7 +180,7 @@ class View extends Component {
                                 {( person.videos || []).map((itemVideo, index) =>
                                     <div className="border p-2 mb-3" key={index}>
                                         <Player>
-                                            <source src={defines.API_DOMAIN + defines.PERSON_PATH_VID + '/' + itemVideo.url} />
+                                            <source src={defines.API_DOMAIN + defines.PERSON_PATH_VID + itemVideo.url} />
                                         </Player>
                                     </div>
                                 )}

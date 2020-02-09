@@ -9,6 +9,7 @@ import {
   Table,
   Row,
 } from 'reactstrap';
+import { AppSwitch } from '@coreui/react'
 import axios from 'axios';
 import defines from '../../defines'
 
@@ -102,6 +103,7 @@ class List extends Component {
                                         <th scope="col">Unidades</th>
                                         <th scope="col">Items</th>
                                         <th scope="col">Acciones</th>
+                                        <th scope="col">Estado</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -152,6 +154,9 @@ class List extends Component {
                                                             <i className="fa fa-trash"></i>
                                                         </Button>
                                     
+                                                    </td>
+                                                    <td>
+                                                        <AppSwitch className={'mx-1'} color={'dark'} checked />
                                                     </td>
                                                 </tr>
                                             )

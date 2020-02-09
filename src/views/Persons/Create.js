@@ -170,7 +170,9 @@ class Create extends Component {
     // Get images uploaded
     let imagesPerson = this.state.lvtImages.map(function(imagePerson) {
       return {
-        path: imagePerson.filename,
+        thumbnail: imagePerson.imgThumbnail,
+        optimized: imagePerson.imgOptimized,
+        original: imagePerson.imgOriginal
       }
     });
     
@@ -203,7 +205,7 @@ class Create extends Component {
       idcity: 1,
     };
 
-    console.log(personData);
+    console.log(JSON.stringify(personData));
 
     this.setState({ loading: true });
     axios.post(
@@ -641,7 +643,7 @@ class Create extends Component {
                           action = {defines.API_DOMAIN + '/uploadimages'}
 
                           source = {(response) => {
-                            return (response[0])
+                            return response.images;
                           }}
 
                           onWarning = {(type, rules) => {
@@ -679,8 +681,10 @@ class Create extends Component {
                             let arrImages = this.state.lvtImages
                             arrImages.push({
                               "uid": imageUploaded.uid,
-                              "path": defines.API_DOMAIN + defines.PERSON_PATH_IMG + '/' + imageUploaded.source.filename,
-                              "filename": imageUploaded.source.filename,
+                              "path": defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + imageUploaded.source.imgThumbnail,
+                              "imgThumbnail": imageUploaded.source.imgThumbnail,
+                              "imgOptimized": imageUploaded.source.imgOptimized,
+                              "imgOriginal": imageUploaded.source.imgOriginal
                             })
                             this.setState({ lvtImages: arrImages })
                           }}
@@ -726,30 +730,27 @@ class Create extends Component {
                     <Col xs="12" md="9">
                         <FilePond
                           ref={ref => (this.pond = ref)}
-                          files={this.state.lvtVideos}
+                          // files={this.state.lvtVideos}
                           allowMultiple={true}
                           allowDrop={false}
                           acceptedFileTypes={['video/*']}
-                          server={defines.API_DOMAIN + '/uploadvideos'}
+                          server={defines.API_DOMAIN + '/uploadvideo'}
                           oninit={() => this.handleInitUpload()}
-                          onprocessfile = {(error, file) => { 
-                            let processedFiles = JSON.parse(file.serverId)
-                            this.setState({ 
-                              lvtVideos: processedFiles.map(function(videoItem) {
-                                return {
-                                  path: videoItem.path,
-                                  filename: videoItem.filename,
-                                }
-                              })
+                          onprocessfile = {(error, file) => {
+                            let processedFile = JSON.parse(file.serverId);
+                            let arrVideos = this.state.lvtVideos;
+                            arrVideos.push({
+                              "filename": processedFile.video,
                             })
+                            this.setState({ lvtVideos: arrVideos })
                           }}
-                          onupdatefiles={fileItems => {
-                            // Set currently active file objects to this.state
-                            // this.setState({
-                            //   lvtVideos: fileItems.map(fileItem => fileItem.filename)
-                            // });
-                            // console.log(this.state)
-                          }}
+
+                          // onupdatefiles={(fileItems) => {
+                          //   this.setState({
+                          //     lvtVideos: fileItems.map(fileItem => fileItem.filename)
+                          //   });
+                          //   console.log(this.state.lvtVideos);
+                          // }}
                         />
                       <FormText color="muted">Vídeo a mostrar</FormText>
                     </Col>

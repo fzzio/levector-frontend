@@ -122,7 +122,7 @@ class Create extends Component {
             customFormFieldata['options'] = customFieldOptions
         }
     
-        console.log(customFormFieldata)
+        console.log(JSON.stringify(customFormFieldata));
         this.setState({ loading: true });
         axios.post(
             defines.API_DOMAIN + '/fieldcastp/', 

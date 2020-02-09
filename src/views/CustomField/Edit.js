@@ -44,7 +44,7 @@ class Edit extends Component {
             error: false,
             redirect: false,
             modalForm: false,
-            customField:{}
+            customFieldId:0
         }
 
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
@@ -113,16 +113,27 @@ class Edit extends Component {
     
     handleSubmit(event){
         event.preventDefault();
+        console.log(this.state.lvtCusmtomFieldOptions);
+        let isEnableCustomFieldOptions=this.isCumtonFilesEnabled();
+        console.log("enable"+isEnableCustomFieldOptions);
         let customFieldOptions = this.state.lvtCusmtomFieldOptions.filter(function(customFieldOption) {
-            if( customFieldOption.value === null || customFieldOption.value === undefined || customFieldOption.value === '' ){
+            if( customFieldOption.name === null || customFieldOption.name === undefined || customFieldOption.name === '' ){
               return false; // skip
+            }
+            if (!isEnableCustomFieldOptions && customFieldOption.status === defines.STATUS_CREATE_CUSTOM_FIELD_OP)
+            {
+                return false;
             }
             return true;
         }).map(function(customFieldOption) {
             return {
-              name: customFieldOption.value,
-            }
+                idfieldopcast: customFieldOption.status === defines.STATUS_CREATE_CUSTOM_FIELD_OP ? '' : customFieldOption.idfieldopcastp,
+                name:customFieldOption.name,
+                status:  isEnableCustomFieldOptions ? customFieldOption.status : defines.STATUS_DELETE_CUSTOM_FIELD_OP
+              }
         });
+
+        console.log("guardar customFieldOptions" + JSON.stringify(customFieldOptions));
         const customFormFieldata = {
             idfieldtype: this.state.lvtCustomFieldType,
             name: this.state.lvtCustomFieldName,
@@ -135,8 +146,8 @@ class Edit extends Component {
     
         console.log(customFormFieldata)
         this.setState({ loading: true });
-        axios.post(
-            defines.API_DOMAIN + '/fieldcastp/', 
+        axios.put(
+            defines.API_DOMAIN + '/fieldcastp/' + this.state.customFieldId, 
             customFormFieldata
         )
         .then( (response) => {
@@ -189,7 +200,8 @@ class Edit extends Component {
                         lvtHelpText: customfield.helptext,
                         lvtAppendText: customfield.appendtext,
                         lvtCusmtomFieldOptions: this.mapCusmtomFieldOptions(customfield.values),
-                        isEnableCustomFieldOptions : this.isCumtonFilesEnabled()
+                        isEnableCustomFieldOptions : this.isCumtonFilesEnabled(),
+                        customFieldId: customfield.idfieldcastp
                     });
                 }                   
             }else{
@@ -229,28 +241,28 @@ class Edit extends Component {
         });
     }
 
-    handleDelete(customFieldOption){
+    handleDelete(customFieldOption, index){
         
         let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
-
-        var index = lvtCusmtomFieldOptions.findIndex(x => x.name == customFieldOption.idfieldopcastp);
-        if (index === -1 )
+       
+        if (!(index > 0 && index < lvtCusmtomFieldOptions.length))
         {
             return;
         }
-
+       
         if (customFieldOption.status === defines.STATUS_CREATE_CUSTOM_FIELD_OP)
         {
+            lvtCusmtomFieldOptions = lvtCusmtomFieldOptions.filter(x => x.idfieldopcastp !== customFieldOption.idfieldopcastp)            
             this.setState({
-                lvtCusmtomFieldOptions: this.state.lvtCusmtomFieldOptions.filter(x => x.idfieldopcastp !== customFieldOption.idfieldopcastp)
+                lvtCusmtomFieldOptions: lvtCusmtomFieldOptions
             });
             return;
         }
-
+        
         lvtCusmtomFieldOptions[index].status = defines.STATUS_DELETE_CUSTOM_FIELD_OP;
         this.setState({
            lvtCusmtomFieldOptions: lvtCusmtomFieldOptions
-        })
+        })        
     }
 
     render() {
@@ -375,7 +387,7 @@ class Edit extends Component {
                                                         />
                                                     </Col>
                                                     <Col md="2">
-                                                        <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customFieldOption)}>
+                                                        <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customFieldOption, indexOption)}>
                                                             <i className="fa fa-trash"></i>
                                                         </Button>
                                                     </Col>

@@ -18,12 +18,12 @@ class CustomModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      modal: true,
+      visible: true,
       modalType : ( this.props.modalType !== '' ) ? this.props.modalType : 'primary',
       modalTitle: ( this.props.modalTitle !== '' ) ? this.props.modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
       modalBody: ( this.props.modalBody !== '' ) ? this.props.modalBody : '',
-      modalOkButton: ( this.props.modalOkButton !== '' ) ? this.props.modalOkButton : 'Ok',
-      modalCancelButton: ( this.props.modalCancelButton !== '' ) ? this.props.modalCancelButton : 'Cancel',
+      labelOkButton: ( this.props.labelOkButton !== '' ) ? this.props.labelOkButton : 'Ok',
+      labelCancelButton: ( this.props.labelCancelButton !== '' ) ? this.props.labelCancelButton : 'Cancel',
     };
     
     this.toggleCustomModal = this.toggleCustomModal.bind(this);
@@ -31,27 +31,28 @@ class CustomModal extends Component {
 
   toggleCustomModal() {
     this.setState({
-      modal: !this.state.modal,
+      visible: !this.state.visible,
     });
   }
 
+  // this.props.onCustomFieldChange(e);
+
   render() {
     return (
-      <Modal isOpen={this.state.modal} toggle={this.toggleCustomModal} className={`modal-${this.state.modalType} ` + this.props.className}>
+      <Modal isOpen={this.state.visible} toggle={this.toggleCustomModal} className={`modal-${this.state.modalType} ` + this.props.className}>
         <ModalHeader toggle={this.toggleCustomModal}>{ this.state.modalTitle }</ModalHeader>
         <ModalBody>
           { this.state.modalBody }
         </ModalBody>
         <ModalFooter>
           <Button color={`${this.state.modalType}`} onClick={this.toggleCustomModal}>
-            { this.state.modalOkButton }
+            { this.state.labelOkButton }
           </Button>{' '}
           <Button color="secondary" onClick={this.toggleCustomModal}>
-            { this.state.modalCancelButton }
+            { this.state.labelCancelButton }
           </Button>
         </ModalFooter>
       </Modal>
-
     );
   }
 }

@@ -30,6 +30,7 @@ class CustomField extends Component {
     render(){
         const customFieldObj = this.props.customFieldObj;
         const customFieldValue = this.props.customFieldValue;
+        const errorFields = this.props.errorFields;
         const isSearch = this.state.isSearch;
 
         switch (customFieldObj.idfieldtype) {
@@ -39,6 +40,7 @@ class CustomField extends Component {
                         customFieldObj = { customFieldObj }
                         customFieldValue = { customFieldValue }
                         onCustomFieldChange = {this.handleChange}
+                        errorFields = { errorFields }
                         isSearch = { isSearch }
                     />
                 );
@@ -51,6 +53,7 @@ class CustomField extends Component {
                             customFieldObj = { customFieldObj }
                             customFieldValue = { customFieldValue }
                             onCustomFieldChange = {this.handleChange}
+                            errorFields = { errorFields }
                             isSearch = { isSearch }
                         />
                     );
@@ -60,6 +63,7 @@ class CustomField extends Component {
                             customFieldObj = { customFieldObj }
                             customFieldValue = { customFieldValue }
                             onCustomFieldChange = {this.handleChange}
+                            errorFields = { errorFields }
                             isSearch = { isSearch }
                         />
                     );
@@ -72,6 +76,7 @@ class CustomField extends Component {
                         customFieldObj = { customFieldObj }
                         customFieldValue = { customFieldValue }
                         onCustomFieldChange = {this.handleChange}
+                        errorFields = { errorFields }
                         isSearch = { isSearch }
                     />
                 );
@@ -83,6 +88,7 @@ class CustomField extends Component {
                         customFieldObj = { customFieldObj }
                         customFieldValue = { customFieldValue }
                         onCustomFieldChange = {this.handleChange}
+                        errorFields = { errorFields }
                         isSearch = { isSearch }
                     />
                 );
@@ -92,8 +98,8 @@ class CustomField extends Component {
                 return(
                     <CustomCheckbox
                         customFieldObj = { customFieldObj }
-                        // customFieldValue = { customFieldValue }
                         onCustomFieldChange = {this.handleChange}
+                        errorFields = { errorFields }
                         isSearch = { isSearch }
                     />
                 );

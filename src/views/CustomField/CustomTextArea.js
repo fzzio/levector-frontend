@@ -21,6 +21,7 @@ class CustomTextArea extends Component {
     render(){
         const customFieldObj = this.props.customFieldObj;
         const customFieldValue = this.props.customFieldValue;
+        const errorFields = this.props.errorFields;
         let helpText = null;
         if( customFieldObj.helptext !== "" || customFieldObj.helptext !== null ){
             helpText = <FormText color="muted">{customFieldObj.helptext}</FormText>;
@@ -43,6 +44,8 @@ class CustomTextArea extends Component {
                         idfieldcastp = {customFieldObj.idfieldcastp}
                         value = {customFieldValue}
                         onChange = {this.handleChange}
+                        valid = { errorFields.valid.indexOf(defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp) > -1 }
+                        invalid = { errorFields.invalid.indexOf(defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp) > -1 }
                         autoComplete="nope"
                     />
                     {helpText}

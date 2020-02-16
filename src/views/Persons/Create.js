@@ -4,7 +4,9 @@ import axios from 'axios';
 import defines from '../../defines'
 import CustomField from '../CustomField/CustomField';
 import RUG, { DragArea, DropArea} from 'react-upload-gallery'
+import CustomModal from '../Notifications/Modals/CustomModal';
 import 'react-upload-gallery/dist/style.css'
+import labels from '../../labels'
 
 import {
   Badge,
@@ -108,20 +110,24 @@ class Create extends Component {
       customFieldsData: [],
       lvtImages: [],
       lvtVideos: [],
-      modalForm: false,
+      modalVisible: false,
+      modalData:{
+        modalType : 'primary',
+        modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
+        modalBody : 'Body',
+        modalOkButton : labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+        modalCancelButton : labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
+      },
+      errorFields: {
+        valid: [],
+        invalid: []
+      }
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.inputChangeHandler = this.inputChangeHandler.bind(this);
     this.inputRadioHandler = this.inputRadioHandler.bind(this);
     this.customInputChangeHandler = this.customInputChangeHandler.bind(this);
-    this.toggleModalForm = this.toggleModalForm.bind(this);
-  }
-
-  toggleModalForm() {
-    this.setState({
-      modalForm: !this.state.modalForm,
-    });
   }
 
   handleInitUpload() {
@@ -132,7 +138,9 @@ class Create extends Component {
   inputChangeHandler(e) {
     let formFields = {...this.state.formFields};
     formFields[e.target.name] = e.target.value;
-    this.setState({ formFields });
+    this.setState({ 
+      formFields:formFields
+    });
   }
 
   inputRadioHandler(e){
@@ -151,8 +159,103 @@ class Create extends Component {
     console.log(this.state);
   }
 
+  addFormError(fieldError) {
+    if( this.state.errorFields.invalid.indexOf(fieldError) <= -1 ){
+      let invalidErrorFields = this.state.errorFields.invalid;
+      let validErrorFields = this.state.errorFields.valid;
+      validErrorFields.splice( validErrorFields.indexOf(fieldError), 1 )
+      invalidErrorFields.push(fieldError);
+      this.setState({
+        errorFields:{
+          valid : validErrorFields,
+          invalid : invalidErrorFields,
+        }
+      });
+    }
+  }
+  removeFormError(fieldError) {
+    if( this.state.errorFields.invalid.indexOf(fieldError) > -1 ){
+      let invalidErrorFields = this.state.errorFields.invalid;
+      let validErrorFields = this.state.errorFields.valid;
+      invalidErrorFields.splice( invalidErrorFields.indexOf(fieldError), 1 )
+      validErrorFields.push(fieldError);
+      this.setState({
+        errorFields:{
+          valid : validErrorFields,
+          invalid : invalidErrorFields,
+        }
+      });
+    }
+  }
+
+  checkFormFields(){
+    if ( this.state.formFields.lvtDNI === '' ){
+      this.addFormError('lvtDNI');
+    }else{
+      this.removeFormError('lvtDNI');
+    }
+    if ( this.state.formFields.lvtFirstname === '' ){
+      this.addFormError('lvtFirstname');
+    }else{
+      this.removeFormError('lvtFirstname');
+    }
+    if ( this.state.formFields.lvtLastname === '' ){
+      this.addFormError('lvtLastname');
+    }else{
+      this.removeFormError('lvtLastname');
+    }
+    if ( this.state.formFields.lvtDateOfBirth === '' ){
+      this.addFormError('lvtDateOfBirth');
+    }else{
+      this.removeFormError('lvtDateOfBirth');
+    }
+    if ( this.state.formFields.lvtDateOfBirth === '' ){
+      this.addFormError('lvtDateOfBirth');
+    }else{
+      this.removeFormError('lvtDateOfBirth');
+    }
+    if ( this.state.formFields.lvtGender === '' ){
+      this.addFormError('lvtGender');
+    }else{
+      this.removeFormError('lvtGender');
+    }
+    if ( this.state.formFields.lvtHeight === '' ){
+      this.addFormError('lvtHeight');
+    }else{
+      this.removeFormError('lvtHeight');
+    }
+    if ( this.state.formFields.lvtWeight === '' ){
+      this.addFormError('lvtWeight');
+    }else{
+      this.removeFormError('lvtWeight');
+    }
+    if ( this.state.formFields.lvtRUC === '' ){
+      this.addFormError('lvtRUC');
+    }else{
+      this.removeFormError('lvtRUC');
+    }
+    if ( this.state.formFields.lvtEmail === '' ){
+      this.addFormError('lvtEmail');
+    }else{
+      this.removeFormError('lvtEmail');
+    }
+    if ( this.state.formFields.lvtCellphone === '' ){
+      this.addFormError('lvtCellphone');
+    }else{
+      this.removeFormError('lvtCellphone');
+    }
+    if ( this.state.formFields.lvtAddress === '' ){
+      this.addFormError('lvtAddress');
+    }else{
+      this.removeFormError('lvtAddress');
+    }
+  }
+
+
   handleSubmit(event) {
     event.preventDefault();
+
+    this.checkFormFields();
 
     // Get data from Custom field
     let formcastp = this.state.customFieldsData.filter(function(customFieldData) {
@@ -207,28 +310,47 @@ class Create extends Component {
 
     console.log(JSON.stringify(personData));
 
-    this.setState({ loading: true });
-    axios.post(
-      defines.API_DOMAIN + '/person/', 
-      personData
-    )
-    .then( (response) => {
-      if(response.status === 200 ) {
-        this.setState({ loading: false, redirect: true });
-      }else{
-        throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
-      }
-    })
-    .catch( (error) => {
-      if (error.response) { 
-        console.log(error.response.data);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        console.log('Error', error.message);
-      }
-      this.setState({ loading: false, error: true });
-    });
+    if( this.state.errorFields.invalid.length === 0 ){
+      this.setState({ loading: true });
+      axios.post(
+        defines.API_DOMAIN + '/person/', 
+        personData
+      )
+      .then( (response) => {
+        if(response.status === 200 ) {
+          this.setState({ loading: false, redirect: true });
+        }else{
+          throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
+        }
+      })
+      .catch( (error) => {
+        if (error.response) {
+          this.setState({
+            modalData:{
+              modalType : 'danger',
+              modalBody : error.response.data.data.msg
+            }
+          });
+          console.log(error.response.data);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error', error.message);
+        }
+        this.setState({ loading: false, error: true, modalVisible: true });
+      });
+    } else {
+      this.setState({
+        modalData:{
+          modalType : 'danger',
+          modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
+          modalBody : labels.LVT_ERROR_FIELDS_MESSAGE,
+          modalOkButton : labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+          modalCancelButton : labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
+        }
+      });
+      this.setState({ loading: false, error: true, modalVisible: true });
+    }
   }
 
 
@@ -300,21 +422,17 @@ class Create extends Component {
     // }
     return (
       <div className="animated fadeIn">
-        {/* <Modal isOpen={this.state.modalForm} toggle={this.toggleModalForm} className={this.props.className}>
-          <ModalHeader toggle={this.toggleModalForm}>Modal title</ModalHeader>
-          <ModalBody>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-            et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={this.toggleModalForm}>Do Something</Button>{' '}
-            <Button color="secondary" onClick={this.toggleModalForm}>Cancel</Button>
-          </ModalFooter>
-        </Modal> */}
-
+        { 
+          (this.state.modalVisible) ?
+            <CustomModal
+              modalType = {this.state.modalData.modalType}
+              modalTitle = {this.state.modalData.modalTitle}
+              modalBody = {this.state.modalData.modalBody}
+              labelOkButton = {this.state.modalData.modalOkButton}
+              labelCancelButton = {this.state.modalData.modalCancelButton}
+            />
+          : ''
+        }
         <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-person" onSubmit={this.handleSubmit} >
           <Row>
             <Col xs="12" md="6">
@@ -336,6 +454,8 @@ class Create extends Component {
                         autoComplete="nope"
                         value={this.state.formFields.lvtDNI}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
+                        valid = { this.state.errorFields.valid.indexOf("lvtDNI") > -1 }
+                        invalid = { this.state.errorFields.invalid.indexOf("lvtDNI") > -1 }
                       />
                       <FormText color="muted">Cédula/DNI/Pasaporte </FormText>
                     </Col>
@@ -354,6 +474,8 @@ class Create extends Component {
                         autoComplete="nope"
                         value={this.state.formFields.lvtFirstname}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
+                        valid = { this.state.errorFields.valid.indexOf("lvtFirstname") > -1 }
+                        invalid = { this.state.errorFields.invalid.indexOf("lvtFirstname") > -1 }
                       />
                       <FormText color="muted">Nombres de la persona</FormText>
                     </Col>
@@ -371,6 +493,8 @@ class Create extends Component {
                         autoComplete="nope"
                         value={this.state.formFields.lvtLastname}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
+                        valid = { this.state.errorFields.valid.indexOf("lvtLastname") > -1 }
+                        invalid = { this.state.errorFields.invalid.indexOf("lvtLastname") > -1 }
                       />
                       <FormText color="muted">Apellidos de la persona</FormText>
                     </Col>
@@ -394,6 +518,8 @@ class Create extends Component {
                           placeholder=""
                           value={this.state.formFields.lvtDateOfBirth}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
+                          valid = { this.state.errorFields.valid.indexOf("lvtDateOfBirth") > -1 }
+                          invalid = { this.state.errorFields.invalid.indexOf("lvtDateOfBirth") > -1 }
                         />
                       </InputGroup>
                     </Col>
@@ -428,6 +554,8 @@ class Create extends Component {
                         autoComplete="nope"
                         value={this.state.formFields.lvtRUC}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
+                        valid = { this.state.errorFields.valid.indexOf("lvtRUC") > -1 }
+                        invalid = { this.state.errorFields.invalid.indexOf("lvtRUC") > -1 }
                       />
                       <FormText color="muted">Dato para facturación</FormText>
                     </Col>
@@ -455,6 +583,8 @@ class Create extends Component {
                         autoComplete="nope"
                         value={this.state.formFields.lvtEmail}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
+                        valid = { this.state.errorFields.valid.indexOf("lvtEmail") > -1 }
+                        invalid = { this.state.errorFields.invalid.indexOf("lvtEmail") > -1 }
                       />
                       <FormText className="help-block">Ingrese correo electrónico</FormText>
                     </Col>
@@ -479,6 +609,8 @@ class Create extends Component {
                           autoComplete="nope"
                           value={this.state.formFields.lvtCellphone}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
+                          valid = { this.state.errorFields.valid.indexOf("lvtCellphone") > -1 }
+                          invalid = { this.state.errorFields.invalid.indexOf("lvtCellphone") > -1 }
                         />
                       </InputGroup>
                       <FormText color="muted">Teléfono celular</FormText>
@@ -504,6 +636,8 @@ class Create extends Component {
                           autoComplete="nope"
                           value={this.state.formFields.lvtPhone}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
+                          valid = { this.state.errorFields.valid.indexOf("lvtPhone") > -1 }
+                          invalid = { this.state.errorFields.invalid.indexOf("lvtPhone") > -1 }
                         />
                       </InputGroup>
                       <FormText color="muted">Teléfono fijo principal</FormText>
@@ -523,6 +657,8 @@ class Create extends Component {
                         placeholder="Urdesa Central, Cedros 215 y Victor Emilio Estrada"
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                         value={this.state.formFields.lvtAddress}
+                        valid = { this.state.errorFields.valid.indexOf("lvtAddress") > -1 }
+                        invalid = { this.state.errorFields.invalid.indexOf("lvtAddress") > -1 }
                       />
                       <FormText color="muted">Dirección de domicilio o de contacto principal</FormText>
                     </Col>
@@ -550,6 +686,8 @@ class Create extends Component {
                           placeholder="170"
                           value={this.state.formFields.lvtHeight}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
+                          valid = { this.state.errorFields.valid.indexOf("lvtHeight") > -1 }
+                          invalid = { this.state.errorFields.invalid.indexOf("lvtHeight") > -1 }
                         />
                         <InputGroupAddon addonType="append">
                           <InputGroupText>
@@ -573,6 +711,8 @@ class Create extends Component {
                           placeholder="63"
                           value={this.state.formFields.lvtWeight}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
+                          valid = { this.state.errorFields.valid.indexOf("lvtWeight") > -1 }
+                          invalid = { this.state.errorFields.invalid.indexOf("lvtWeight") > -1 }
                         />
                         <InputGroupAddon addonType="append">
                           <InputGroupText>
@@ -589,6 +729,7 @@ class Create extends Component {
                       customFieldObj={customFieldObj}
                       customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
                       onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
+                      errorFields = { this.state.errorFields }
                     />
                   )}
                 </CardBody>
@@ -614,6 +755,8 @@ class Create extends Component {
                         placeholder="Igrese observaciones de la persona"
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                         value={this.state.formFields.lvtObservations}
+                        valid = { this.state.errorFields.valid.indexOf("lvtObservations") > -1 }
+                        invalid = { this.state.errorFields.invalid.indexOf("lvtObservations") > -1 }
                       />
                       <FormText color="muted">Comentarios y observaciones referentes a la ficha ingresada</FormText>
                     </Col>

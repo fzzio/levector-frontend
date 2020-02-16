@@ -86,89 +86,91 @@ class List extends Component {
         }
         return (
             <div className="animated fadeIn">
-                <Row>
-                    <Col xl={12}>
-                        <Card>
-                            <CardHeader>
-                                <i className="fa fa-align-justify"></i> Dinámicos <small className="text-muted">Campos personalizados para el usuario</small>
-                            </CardHeader>
-                            <CardBody>
-                                <Table responsive hover bordered>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">No.</th>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Tipo</th>
-                                            <th scope="col">Ayuda</th>
-                                            <th scope="col">Unidades</th>
-                                            <th scope="col">Items</th>
-                                            <th scope="col">Acciones</th>
-                                            <th scope="col">Estado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {
-                                            ( customFieldList.length ) ?
-                                                customFieldList.map((customField, index) =>
-                                                    <tr key={index}>
-                                                        <th>{index + 1}</th>
-                                                        <td>{customField.fieldoption}</td>
-                                                        <td className="text-center">
-                                                            {
-                                                                (customField.idfieldtype === defines.CUSTOM_FIELD_TEXT) ?
-                                                                    <i className="fa fa-font fa-lg mt-2"></i>
-                                                                : (customField.idfieldtype === defines.CUSTOM_FIELD_TEXTAREA) ?
-                                                                    <i className="fa fa-align-justify fa-lg mt-2"></i>
-                                                                : (customField.idfieldtype === defines.CUSTOM_FIELD_CHECKBOX) ?
-                                                                    <i className="fa fa-check-square-o fa-lg mt-2"></i>
-                                                                : (customField.idfieldtype === defines.CUSTOM_FIELD_RADIO) ?
-                                                                    <i className="fa fa-dot-circle-o fa-lg mt-2"></i>
-                                                                : (customField.idfieldtype === defines.CUSTOM_FIELD_COMBOBOX) ?
-                                                                    <i className="fa fa-chevron-down fa-lg mt-2"></i>
-                                                                : ''
-                                                            }
-                                                            <br />
-                                                            <span color="muted">({customField.type})</span>
-                                                        </td>
-                                                        <td>{customField.helptext}</td>
-                                                        <td>{customField.appendtext}</td>
-                                                        <td>
-                                                            {
-                                                                ( customField.values.length ) ?
-                                                                    <ul>
-                                                                        {customField.values.map((customFieldItem, indexItem) =>
-                                                                            <li key={indexItem}>
-                                                                                {customFieldItem.value.split('||').join(',')}
-                                                                            </li>
-                                                                        )}
-                                                                    </ul>
-                                                                :   ''
-                                                            }
-                                                        </td>
-                                                        <td>
-                                                            <Link to={`/customfield/${customField.idfieldcastp}/edit`} outline className="btn btn-dark btn-sm" size="sm">
-                                                                <i className="fa fa-edit"></i>
-                                                            </Link>
-                                                            
-                                                            <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfieldcastp)}>
-                                                                <i className="fa fa-trash"></i>
-                                                            </Button>
-                                                        </td>
-                                                        <td>
-                                                            <AppSwitch className={'mx-1'} color={'dark'} checked />
-                                                        </td>
-                                                    </tr>
-                                                )
-                                            :   ''
-                                        }
-                                    </tbody>
-                                </Table>
-                            </CardBody>
-                        </Card>
-                    </Col>
+              <Row>
+                <Col xl={12}>
+                    <Card>
+                        <CardHeader>
+                            <i className="fa fa-align-justify"></i> Dinámicos <small className="text-muted">Campos personalizados para el usuario</small>
+                        </CardHeader>
+                        <CardBody>
+                            <Table responsive hover bordered>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No.</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Tipo</th>
+                                        <th scope="col">Ayuda</th>
+                                        <th scope="col">Unidades</th>
+                                        <th scope="col">Items</th>
+                                        <th scope="col">Acciones</th>
+                                        <th scope="col">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        ( customFieldList.length ) ?
+                                            customFieldList.map((customField, index) =>
+                                                <tr key={index}>
+                                                    <th>{index + 1}</th>
+                                                    <td>{customField.fieldoption}</td>
+                                                    <td className="text-center">
+                                                        {
+                                                            (customField.idfieldtype === defines.CUSTOM_FIELD_TEXT) ?
+                                                                <i className="fa fa-font fa-lg mt-2"></i>
+                                                            : (customField.idfieldtype === defines.CUSTOM_FIELD_TEXTAREA) ?
+                                                                <i className="fa fa-align-justify fa-lg mt-2"></i>
+                                                            : (customField.idfieldtype === defines.CUSTOM_FIELD_CHECKBOX) ?
+                                                                <i className="fa fa-check-square-o fa-lg mt-2"></i>
+                                                            : (customField.idfieldtype === defines.CUSTOM_FIELD_RADIO) ?
+                                                                <i className="fa fa-dot-circle-o fa-lg mt-2"></i>
+                                                            : (customField.idfieldtype === defines.CUSTOM_FIELD_COMBOBOX) ?
+                                                                <i className="fa fa-chevron-down fa-lg mt-2"></i>
+                                                            : ''
+                                                        }
+                                                        <br />
+                                                        <span color="muted">({customField.type})</span>
+                                                    </td>
+                                                    <td>{customField.helptext}</td>
+                                                    <td>{customField.appendtext}</td>
+                                                    <td>
+                                                        {
+                                                            ( customField.values.length ) ?
+                                                                <ul>
+                                                                    {customField.values.map((customFieldItem, indexItem) =>
+                                                                        <li key={indexItem}>
+                                                                            {customFieldItem.value.split('||').join(',')}
+                                                                        </li>
+                                                                    )}
+                                                                </ul>
+                                                            :   ''
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <Link to={`/customfield/${customField.idfieldcastp}/edit`} outline className="btn btn-dark btn-sm" size="sm">
+                                                            <i className="fa fa-edit"></i>
+                                                        </Link>
+                                                        
+                                                        <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfieldcastp)}>
+                                                            <i className="fa fa-trash"></i>
+                                                        </Button>
+                                    
+                                                    </td>
+                                                    <td>
+                                                        <AppSwitch className={'mx-1'} color={'dark'} checked />
+                                                    </td>
+                                                </tr>
+                                            )
+                                        : ''
+                                    }
+                                </tbody>
+                            </Table>
+                        </CardBody>
+                    </Card>
+                </Col>
                 </Row>
             </div>
         )
+
     }
 }
 export default List;

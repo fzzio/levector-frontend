@@ -25,6 +25,7 @@ class CustomText extends Component {
     render(){
         const customFieldObj = this.props.customFieldObj;
         const customFieldValue = this.props.customFieldValue;
+        const errorFields = this.props.errorFields;
         const isSearch = this.props.isSearch;
         let helpText = null;
         if( customFieldObj.helptext !== "" || customFieldObj.helptext !== null ){
@@ -40,6 +41,8 @@ class CustomText extends Component {
                                 idfieldcastp = {customFieldObj.idfieldcastp}
                                 value = {customFieldValue}
                                 onChange = {this.handleChange}
+                                valid = { errorFields.valid.indexOf(defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp) > -1 }
+                                invalid = { errorFields.invalid.indexOf(defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp) > -1 }
                                 autoComplete="nope"
                             />;
         if( customFieldObj.appendtext !== "" && customFieldObj.appendtext !== null && !isSearch ){

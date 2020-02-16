@@ -10,6 +10,7 @@ import {
 
 function CustomRadioOption(props){
     const customOption = props.customOption;
+    const errorFields = props.errorFields;
 
     return(
         <FormGroup check className="radio">
@@ -21,6 +22,8 @@ function CustomRadioOption(props){
                 value={parseInt(customOption.idfieldopcastp)}
                 checked={parseInt(customOption.idfieldopcastp) === props.customOptionValue}
                 onChange={props.onCustomOptionChange}
+                valid = { errorFields.valid.indexOf(defines.CUSTOM_FIELD_PREFIX + props.customFieldID) > -1 }
+                invalid = { errorFields.invalid.indexOf(defines.CUSTOM_FIELD_PREFIX + props.customFieldID) > -1 }
             />
             <Label className="form-check-label" check htmlFor={`lvtCustomRadioOption_` + customOption.idfieldopcastp}>
                 {customOption.value.split('||').join(',')}
@@ -49,6 +52,7 @@ class CustomRadio extends Component {
 
     render(){
         const customFieldObj = this.props.customFieldObj;
+        const errorFields = this.props.errorFields;
 
         return(
             <FormGroup row>
@@ -65,6 +69,7 @@ class CustomRadio extends Component {
                             customOptionValue = {this.state.customOptionValue}
                             onCustomOptionChange = {(e) => this.handleChange.call(this, e)}
                             customFieldID = {customFieldObj.idfieldcastp}
+                            errorFields = { errorFields }
                         />
                     )}
                 </Col>

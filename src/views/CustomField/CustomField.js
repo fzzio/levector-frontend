@@ -71,27 +71,49 @@ class CustomField extends Component {
                 break;
             
             case defines.CUSTOM_FIELD_COMBOBOX:
-                return(
-                    <CustomSelect
-                        customFieldObj = { customFieldObj }
-                        customFieldValue = { customFieldValue }
-                        onCustomFieldChange = {this.handleChange}
-                        errorFields = { errorFields }
-                        isSearch = { isSearch }
-                    />
-                );
+                if(!isSearch){
+                    return(
+                        <CustomSelect
+                            customFieldObj = { customFieldObj }
+                            customFieldValue = { customFieldValue }
+                            onCustomFieldChange = {this.handleChange}
+                            errorFields = { errorFields }
+                            isSearch = { isSearch }
+                        />
+                    );
+                }else{
+                    return(
+                        <CustomCheckbox
+                            customFieldObj = { customFieldObj }
+                            onCustomFieldChange = {this.handleChange}
+                            errorFields = { errorFields }
+                            isSearch = { isSearch }
+                        />
+                    );
+                }
                 break;
             
             case defines.CUSTOM_FIELD_RADIO:
-                return(
-                    <CustomRadio
-                        customFieldObj = { customFieldObj }
-                        customFieldValue = { customFieldValue }
-                        onCustomFieldChange = {this.handleChange}
-                        errorFields = { errorFields }
-                        isSearch = { isSearch }
-                    />
-                );
+                if(!isSearch){
+                    return(
+                        <CustomRadio
+                            customFieldObj = { customFieldObj }
+                            customFieldValue = { customFieldValue }
+                            onCustomFieldChange = {this.handleChange}
+                            errorFields = { errorFields }
+                            isSearch = { isSearch }
+                        />
+                    );
+                }else{
+                    return(
+                        <CustomCheckbox
+                            customFieldObj = { customFieldObj }
+                            onCustomFieldChange = {this.handleChange}
+                            errorFields = { errorFields }
+                            isSearch = { isSearch }
+                        />
+                    );
+                }
                 break;
 
             case defines.CUSTOM_FIELD_CHECKBOX:

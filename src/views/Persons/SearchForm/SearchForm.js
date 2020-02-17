@@ -53,6 +53,8 @@ class SearchForm extends Component {
 
         this.state = {
             formFields: {
+                lvtId : '',
+                lvtDni : '',
                 lvtFirstname : '',
                 lvtLastname : '',
                 lvtGender : '',
@@ -173,6 +175,8 @@ class SearchForm extends Component {
 
         // Setting data to request
         const personSearchData = {
+            idperson: this.state.formFields.lvtId,
+            dni: this.state.formFields.lvtDni,
             firstname: this.state.formFields.lvtFirstname,
             lastname: this.state.formFields.lvtLastname,
             minAge: this.state.lvtAge.min,
@@ -181,12 +185,12 @@ class SearchForm extends Component {
             maxHeight: this.state.lvtHeight.max,
             minWeight: this.state.lvtWeight.min,
             maxWeight: this.state.lvtWeight.max,
-            gender: this.state.formFields.lvtGender,
+            idgender: this.state.formFields.lvtGender,
             formcastp: formcastp,
             limit: this.props.limit,
             offset: this.props.offset,
         };
-        console.log(personSearchData)
+        console.log(JSON.stringify(personSearchData));
 
         this.setState({ loading: true });
         axios.post(
@@ -213,12 +217,16 @@ class SearchForm extends Component {
             }
             this.setState({ loading: false, error: true });
           });
-  
     }
 
     render() {
         const gendersList = this.state.genders;
-        const customFieldList = this.state.customFields;
+        const customFieldList = this.state.customFields.filter(function(customFieldObj) {
+            if( customFieldObj.idfieldtype === defines.CUSTOM_FIELD_TEXT || customFieldObj.idfieldtype === defines.CUSTOM_FIELD_TEXTAREA ){
+                return false; // skip
+            }
+            return true;
+        });
         return(
             <Row>
                 <Col xl={12}>
@@ -238,6 +246,71 @@ class SearchForm extends Component {
                                         <Col md="4">
                                             <FormGroup row>
                                                 <Col md="3">
+                                                    <Label htmlFor="lvtId">Código</Label>
+                                                    </Col>
+                                                    <Col xs="12" md="9">
+                                                    <Input
+                                                        type="text"
+                                                        id="lvtId"
+                                                        name="lvtId"
+                                                        placeholder="1234"
+                                                        autoComplete="nope"
+                                                        value={this.state.formFields.lvtId}
+                                                        onChange={(e) => this.inputChangeHandler.call(this, e)}
+                                                    />
+                                                </Col>
+                                            </FormGroup>
+                                            <FormGroup row>
+                                                <Col md="3">
+                                                    <Label htmlFor="lvtDni">Cédula</Label>
+                                                    </Col>
+                                                    <Col xs="12" md="9">
+                                                    <Input
+                                                        type="text"
+                                                        id="lvtDni"
+                                                        name="lvtDni"
+                                                        placeholder="09999999999"
+                                                        autoComplete="nope"
+                                                        value={this.state.formFields.lvtDni}
+                                                        onChange={(e) => this.inputChangeHandler.call(this, e)}
+                                                    />
+                                                </Col>
+                                            </FormGroup>
+                                        </Col>
+                                        
+                                        <Col md="4">
+                                            <FormGroup row>
+                                                <Col md="3">
+                                                    <Label htmlFor="lvtFirstname">Nombres</Label>
+                                                </Col>
+                                                <Col xs="12" md="9">
+                                                    <Input
+                                                        type="text"
+                                                        id="lvtFirstname"
+                                                        name="lvtFirstname"
+                                                        placeholder="Juan"
+                                                        value={this.state.formFields.lvtFirstname}
+                                                        onChange={(e) => this.inputChangeHandler.call(this, e)}
+                                                    />
+                                                </Col>
+                                            </FormGroup>
+                                            <FormGroup row>
+                                                <Col md="3">
+                                                    <Label htmlFor="lvtLastname">Apellidos</Label>
+                                                </Col>
+                                                <Col xs="12" md="9">
+                                                    <Input 
+                                                        type="text"
+                                                        id="lvtLastname"
+                                                        name="lvtLastname"
+                                                        placeholder="Pérez"
+                                                        value={this.state.formFields.lvtLastname}
+                                                        onChange={(e) => this.inputChangeHandler.call(this, e)}
+                                                    />
+                                                </Col>
+                                            </FormGroup>
+                                            <FormGroup row>
+                                                <Col md="3">
                                                     <Label>Género</Label>
                                                 </Col>
                                                 <Col md="9">
@@ -251,6 +324,9 @@ class SearchForm extends Component {
                                                     )}
                                                 </Col>
                                             </FormGroup>
+                                        </Col>
+                                        
+                                        <Col md="4">
                                             <FormGroup row>
                                                 <Col md="3">
                                                     <Label>Edad</Label>
@@ -309,53 +385,29 @@ class SearchForm extends Component {
                                                 </Col>
                                             </FormGroup>
                                         </Col>
-                                        <Col md="4">
-                                            <FormGroup row>
-                                                <Col md="3">
-                                                    <Label htmlFor="lvtFirstname">Nombres</Label>
-                                                </Col>
-                                                <Col xs="12" md="9">
-                                                    <Input
-                                                        type="text"
-                                                        id="lvtFirstname"
-                                                        name="lvtFirstname"
-                                                        placeholder="Juan"
-                                                        value={this.state.formFields.lvtFirstname}
-                                                        onChange={(e) => this.inputChangeHandler.call(this, e)}
-                                                    />
-                                                </Col>
-                                            </FormGroup>
-                                            <FormGroup row>
-                                                <Col md="3">
-                                                    <Label htmlFor="lvtLastname">Apellidos</Label>
-                                                </Col>
-                                                <Col xs="12" md="9">
-                                                    <Input 
-                                                        type="text"
-                                                        id="lvtLastname"
-                                                        name="lvtLastname"
-                                                        placeholder="Pérez"
-                                                        value={this.state.formFields.lvtLastname}
-                                                        onChange={(e) => this.inputChangeHandler.call(this, e)}
-                                                    />
-                                                </Col>
-                                            </FormGroup>
+                                    </Row>
+                                    <Row>
+                                        <Col md="12">
+                                            <hr />
                                         </Col>
-                                        <Col md="4">
-                                            {(customFieldList.length > 0) ?
-                                                customFieldList.map((customFieldObj, index) =>
-                                                    <CustomField 
-                                                        key={index}
+                                    </Row>
+                                    <Row>
+                                        {(customFieldList.length > 0) ?
+                                            customFieldList.map((customFieldObj, index) => 
+                                                <Col md="4" key={index}>
+                                                    <CustomField
                                                         customFieldObj={customFieldObj}
                                                         customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
                                                         onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
                                                         isSearch = { true }
                                                     />
-                                                )
-                                                :
+                                                </Col>
+                                            )
+                                            :
+                                            <Col md="12">
                                                 <p className="form-control-static">No existen elementos</p>
-                                            }
-                                        </Col>
+                                            </Col>
+                                        }
                                     </Row>
                                 </CardBody>
                             </Collapse>

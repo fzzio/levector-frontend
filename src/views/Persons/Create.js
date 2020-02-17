@@ -51,6 +51,7 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
 import PersonalDetail from './PersonaForm/PersonalDetail';
+import CustomPersonaDetail from './PersonaForm/CustomPersonaDetail';
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -395,6 +396,7 @@ class Create extends Component {
     // console.log('=== :', this.props.persona)
     const customFieldList = this.state.customFields;
 
+    // console.log('customFieldList:', customFieldList)
     if (this.state.redirect) {
       return <Redirect to='/person/list'/>;
     }
@@ -551,67 +553,15 @@ class Create extends Component {
                 <CardHeader>
                   <strong>Otros</strong> Características adicionales
                 </CardHeader>
-                <CardBody>
-                <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtHeight">Estatura</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <InputGroup>
-                        <Input
-                          type="number"
-                          id="lvtHeight"
-                          name="lvtHeight"
-                          placeholder="170"
-                          value={this.state.formFields.lvtHeight}
-                          onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid = { this.state.errorFields.valid.indexOf("lvtHeight") > -1 }
-                          invalid = { this.state.errorFields.invalid.indexOf("lvtHeight") > -1 }
-                        />
-                        <InputGroupAddon addonType="append">
-                          <InputGroupText>
-                            {defines.LVT_HEIGHT_UNIT}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <FormText color="muted">Escribe cuánto mide la persona</FormText>
-                    </Col>
-                  </FormGroup>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtWeight">Peso</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <InputGroup>
-                        <Input
-                          type="number"
-                          id="lvtWeight"
-                          name="lvtWeight"
-                          placeholder="63"
-                          value={this.state.formFields.lvtWeight}
-                          onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid = { this.state.errorFields.valid.indexOf("lvtWeight") > -1 }
-                          invalid = { this.state.errorFields.invalid.indexOf("lvtWeight") > -1 }
-                        />
-                        <InputGroupAddon addonType="append">
-                          <InputGroupText>
-                            {defines.LVT_WEIGHT_UNIT}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <FormText color="muted">Escribe cuánto pesa la persona</FormText>
-                    </Col>
-                  </FormGroup>
-                  {( customFieldList || []).map((customFieldObj, index) =>
-                    <CustomField 
-                      key={index}
-                      customFieldObj={customFieldObj}
-                      customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
-                      onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
-                      errorFields = { this.state.errorFields }
-                    />
-                  )}
-                </CardBody>
+                
+                <CustomPersonaDetail 
+                  _persona = {this.props.persona}
+                  customFieldList = {this.state.customFields}
+                  customFieldsData = {this.state.customFieldsData}
+                  errorFields = {this.state.errorFields}
+                  inputChangeHandler = {this._inputChangeHandler}
+                  inputRadioHandler = {this._inputRadioHandler}
+                />
               </Card>
             </Col>
             

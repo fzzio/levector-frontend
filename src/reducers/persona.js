@@ -24,7 +24,6 @@ const persona = (state = default_persona, action) => {
       
       let v = action.payload.value;
 
-      console.log('---- attr: ', action.payload.attr)
       if( action.payload.attr == 'lvtDNI' ||  action.payload.attr == 'lvtRUC' ||  
           action.payload.attr == 'lvtCellphone'  ||  action.payload.attr == 'lvtPhone'){
             if( !ONLY_NUMBERS.exec(v) ) // validating that only numbers are entered for these fields
@@ -32,12 +31,15 @@ const persona = (state = default_persona, action) => {
 
       }
       else if( action.payload.attr == 'lvtFirstname' || action.payload.attr == 'lvtLastname' ){
-        console.log('---- regex: ', ONLY_LETTERS.exec(v))
           if( !ONLY_LETTERS.exec(v) ){ // validating that only letters, space are entered for these fields
-            console.log('v:', v)
             v = ''; 
           }
+      }else if( action.payload.attr == 'lvtHeight' || action.payload.attr == 'lvtWeight' ){
+          if(parseInt(v)<0)
+            v = ''; 
       }
+
+      console.log('UPDATE_PERSONA_ATTRIBUTE: ', action.payload.value)
 
       if(v != '' || action.payload.value == '') // only update if value is empty or matches regex
         state[action.payload.attr] = action.payload.value;

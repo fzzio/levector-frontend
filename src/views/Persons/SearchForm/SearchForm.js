@@ -102,6 +102,7 @@ class SearchForm extends Component {
                     let customFieldElement = {
                         name: defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfieldcastp,
                         value: '',
+                        idfieldtype : responseCustomField.idfieldtype,
                         idfieldcastp: responseCustomField.idfieldcastp,
                     };
                     return customFieldElement;
@@ -170,6 +171,7 @@ class SearchForm extends Component {
             return {
                 idfieldcastp: customFieldData.idfieldcastp,
                 value: customFieldData.value,
+                idfieldtype: customFieldData.idfieldtype,
             }
         })
 

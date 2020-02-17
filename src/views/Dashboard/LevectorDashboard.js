@@ -11,6 +11,7 @@ import {
 } from 'reactstrap';
 import Widget02 from '../Widgets/Widget02';
 import defines from '../../defines'
+import defaultimg from '../../assets/img/levector.jpg'
 
 
 class LevectorDashboard extends Component {
@@ -142,7 +143,7 @@ class LevectorDashboard extends Component {
                           <tr key={index}>
                             <td className="text-center">
                               <div className="avatar">
-                                <img src={defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + person.photo} className="img-avatar" alt={person.firstname + ' ' + person.lastname} />
+                                <img src={(person.photo) ? defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + person.photo : defaultimg} className="img-avatar" alt={person.firstname + ' ' + person.lastname} />
                               </div>
                             </td>
                             <td>

@@ -257,9 +257,9 @@ class View extends Component {
                                 {/* <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} >
                                     <i className="fa fa-edit"></i> Editar
                                 </Button> */}
-                                <Link to={ '/person/edit/'+this.props.match.params.id } className="btn btn-dark btn-sm btn-block" color="primary" >
+                                <Link to={ '/person/edit/'+this.props.match.params.id } className="btn btn-dark btn-sm" color="primary" >
                                     Editar
-                                </Link>
+                                </Link>{' '}
                                 <Button type="reset" size="sm" color="danger">
                                     <i className="fa fa-trash"></i> Eliminar
                                 </Button>

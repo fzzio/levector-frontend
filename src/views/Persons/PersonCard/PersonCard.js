@@ -29,6 +29,7 @@ import {
 import { isNull } from 'util';
 import moment from 'moment';
 import defines from '../../../defines'
+import defaultimg from '../../../assets/img/levector.jpg'
 
 class PersonCard extends Component {
     constructor(props) {
@@ -39,7 +40,7 @@ class PersonCard extends Component {
                 fullname: this.props.person.firstname + ' ' + this.props.person.lastname,
                 link: `/person/${this.props.person.ID}`,
                 age: ( this.props.person.age > 0 ) ? this.props.person.age : 0,
-                photo: (this.props.person.photo) ? defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + this.props.person.photo : 'public/assets/img/levector.jpg',
+                photo: (this.props.person.photo) ? defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + this.props.person.photo : defaultimg,
                 gender: ( this.props.person.gender !== null ) ? this.props.person.gender : 0,
                 modified: moment(this.props.person.modified).format('YYYY-MM-DD'),
             },

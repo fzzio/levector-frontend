@@ -67,6 +67,7 @@ class View extends Component {
                     return {
                         original: defines.API_DOMAIN + defines.PERSON_PATH_IMG_OPTIMIZED + photo.optimized,
                         thumbnail: defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + photo.thumbnail,
+                        fullscreen: defines.API_DOMAIN + defines.PERSON_PATH_IMG_ORIGINAL + photo.url,
                         originalAlt: personData.dni,
                         thumbnailAlt: personData.dni,
                     }

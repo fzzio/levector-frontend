@@ -29,7 +29,30 @@ class View extends Component {
         this.state = {
             person: '',
             personImagesGallery: [],
+            redirect: false,
         }
+    }
+
+    handleDelete = () => {
+        this.setState({ loading: true });
+        const deletePerson = axios.put( defines.API_DOMAIN + '/deleteperson/' + this.props.match.params.id );
+        axios.all([deletePerson]).then(axios.spread((...responses) => {
+            const responseDeletePerson = responses[0];
+            if(responseDeletePerson.status === 200 ) {
+                this.setState({ loading: false, redirect: true });
+            }else{
+                throw new Error( JSON.stringify( {status: responseDeletePerson.status, error: responseDeletePerson.data.data.msg} ) );
+            }
+        }))
+        .catch( (error) => {
+            if (error.response) { 
+                console.log(error.response.data);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log('Error', error.message);
+            }
+        });
     }
 
     componentDidMount() {
@@ -72,6 +95,10 @@ class View extends Component {
     render() {
         const person = this.state.person
         const personImagesGallery = this.state.personImagesGallery
+
+        if (this.state.redirect) {
+            return <Redirect to='/person/list'/>;
+        }
 
         return(
             <div className="animated fadeIn">
@@ -260,7 +287,7 @@ class View extends Component {
                                 <Link to={ '/person/edit/'+this.props.match.params.id } className="btn btn-dark btn-sm" color="primary" >
                                     Editar
                                 </Link>{' '}
-                                <Button type="reset" size="sm" color="danger">
+                                <Button type="reset" size="sm" color="danger" onClick={this.handleDelete}>
                                     <i className="fa fa-trash"></i> Eliminar
                                 </Button>
                             </CardFooter>

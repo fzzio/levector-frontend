@@ -752,7 +752,7 @@ class Create extends Component {
                         name="lvtObservations"
                         id="lvtObservations"
                         rows="4"
-                        placeholder="Igrese observaciones de la persona"
+                        placeholder="Ingrese observaciones de la persona"
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                         value={this.state.formFields.lvtObservations}
                         valid = { this.state.errorFields.valid.indexOf("lvtObservations") > -1 }

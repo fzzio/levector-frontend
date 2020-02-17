@@ -44,8 +44,6 @@ class CustomTextArea extends Component {
                         idfieldcastp = {customFieldObj.idfieldcastp}
                         value = {customFieldValue}
                         onChange = {this.handleChange}
-                        valid = { errorFields.valid.indexOf(defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp) > -1 }
-                        invalid = { errorFields.invalid.indexOf(defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp) > -1 }
                         autoComplete="nope"
                     />
                     {helpText}

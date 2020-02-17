@@ -32,16 +32,19 @@ class List extends Component {
   }
 
   handleResults = (personResults) => {
-    this.setState({persons: personResults})
+    this.setState({persons: []});
+    this.setState({persons: personResults});
   }
 
   componentDidMount() {
+    this.setState({ loading: true });
     axios.get(
       defines.API_DOMAIN + '/person/' + this.state.limit + '/' + this.state.offset
     )
     .then( (response) => {
       if(response.status === 200 ) {
         this.setState({ 
+          loading: false,
           error: false,
           persons: response.data.data,
         })
@@ -52,11 +55,11 @@ class List extends Component {
     .catch( (error) => {
       if (error.response) {
         this.setState({ 
+          loading: false,
           error: true,
           errorCode: error.response.status,
           errorMessage: error.response.data.data.msg,
         });
-        console.log(error.response.data);
       } else if (error.request) {
         console.log(error.request);
       } else {
@@ -68,7 +71,14 @@ class List extends Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
-    const personList = this.state.persons
+    const personList = this.state.persons;
+    if (this.state.loading) {
+      return(
+        <div>
+          <p> Loading... </p>
+        </div>
+      )
+    }
     if (this.state.error) {
       return(
           <div className="animated fadeIn">

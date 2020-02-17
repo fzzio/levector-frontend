@@ -36,6 +36,40 @@ class List extends Component {
     this.setState({persons: personResults});
   }
 
+  handleLoadMore = () => {
+    this.setState({ loading: true });
+    axios.get(
+      defines.API_DOMAIN + '/person/' + this.state.limit + '/' + this.state.offset
+    )
+    .then( (response) => {
+      if(response.status === 200 ) {
+        this.setState({ 
+          loading: false,
+          error: false,
+          persons: response.data.data,
+          offset: this.state.offset + response.data.data.length,
+          limit: this.state.offset + response.data.data.length
+        })
+      }else{
+        throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
+      }
+    })
+    .catch( (error) => {
+      if (error.response) {
+        this.setState({ 
+          loading: false,
+          error: true,
+          errorCode: error.response.status,
+          errorMessage: error.response.data.data.msg,
+        });
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+    });
+  }
+
   componentDidMount() {
     this.setState({ loading: true });
     axios.get(
@@ -47,6 +81,7 @@ class List extends Component {
           loading: false,
           error: false,
           persons: response.data.data,
+          offset: this.state.offset + response.data.data.length
         })
       }else{
         throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
@@ -126,7 +161,7 @@ class List extends Component {
               <CardFooter>
                 <Row>
                   <Col md="12">
-                    <Button color="dark">
+                    <Button color="dark" onClick={this.handleLoadMore}>
                       Cargar más
                     </Button>
                   </Col>

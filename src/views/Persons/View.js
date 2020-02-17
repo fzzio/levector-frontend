@@ -34,6 +34,7 @@ class View extends Component {
 
     componentDidMount() {
         // fetch all API data
+
         const requestPerson = axios.get( defines.API_DOMAIN + '/person/' + this.props.match.params.id );
         axios.all([requestPerson]).then(axios.spread((...responses) => {
             const responsePerson = responses[0];
@@ -253,9 +254,12 @@ class View extends Component {
                     <Col xs="12" md="12">
                         <Card>
                             <CardFooter>
-                                <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} >
+                                {/* <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} >
                                     <i className="fa fa-edit"></i> Editar
-                                </Button>
+                                </Button> */}
+                                <Link to={ '/person/edit/'+this.props.match.params.id } className="btn btn-dark btn-sm btn-block" color="primary" >
+                                    Editar
+                                </Link>
                                 <Button type="reset" size="sm" color="danger">
                                     <i className="fa fa-trash"></i> Eliminar
                                 </Button>

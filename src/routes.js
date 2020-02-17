@@ -103,6 +103,7 @@ const routes = [
   // Person
   { path: '/person/list', exact: true, name: 'Personas', component: personList},
   { path: '/person/create', exact: true, name: 'Agregar Personas', component: personCreate},
+  { path: '/person/edit/:id', exact: true, name: 'Editar Persona', component: personCreate},
   { path: '/person/:id', exact: true, name: 'Persona', component: personView },
 ];
 

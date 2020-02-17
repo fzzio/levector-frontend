@@ -1,7 +1,7 @@
 /*
     On this file are the config defines
 */
-exports.API_DOMAIN = 'http://localhost:3000';
+exports.API_DOMAIN = 'http://ec2-100-24-34-213.compute-1.amazonaws.com:3000';
 exports.CUSTOM_FIELD_TEXT = 1;
 exports.CUSTOM_FIELD_TEXTAREA = 2;
 exports.CUSTOM_FIELD_COMBOBOX = 3;

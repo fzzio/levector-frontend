@@ -26,6 +26,10 @@ class CustomField extends Component {
     handleChange(e) {
         this.props.onCustomFieldChange(e);
     }
+    componentWillReceiveProps(a,b){
+        // console.log('==a:',a)
+        
+    }
 
     render(){
         const customFieldObj = this.props.customFieldObj;

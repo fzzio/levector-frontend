@@ -128,6 +128,10 @@ class Create extends Component {
     this.inputChangeHandler = this.inputChangeHandler.bind(this);
     this.inputRadioHandler = this.inputRadioHandler.bind(this);
     this.customInputChangeHandler = this.customInputChangeHandler.bind(this);
+    this.parsePersonData = this.parsePersonData.bind(this);
+    this.parsePersonField = this.parsePersonField.bind(this);
+    this.parseCustomFields = this.parseCustomFields.bind(this);
+    
   }
 
   handleInitUpload() {
@@ -156,7 +160,6 @@ class Create extends Component {
       customFieldsData[index].value = e.target.value;
     }
     this.setState({ customFieldsData: customFieldsData });
-    console.log(this.state);
   }
 
   addFormError(fieldError) {
@@ -359,7 +362,15 @@ class Create extends Component {
     // fetch all API data
     const requestGender = axios.get( defines.API_DOMAIN + '/gender' );
     const requestCustomFields = axios.get( defines.API_DOMAIN + '/allfieldcastopp' );
-    axios.all([requestGender, requestCustomFields]).then(axios.spread((...responses) => {
+    
+
+    let initialRequestList = [requestGender, requestCustomFields]
+    if(this.props.match.params && this.props.match.params.id){
+      const requestPersonData = axios.get( defines.API_DOMAIN + '/person/'+ this.props.match.params.id);
+      initialRequestList.push(requestPersonData);
+    }
+
+    axios.all( initialRequestList ).then(axios.spread((...responses) => {
       const responseGender = responses[0];
       const responseCustomFields = responses[1];
       if(responseGender.status === 200 ) {
@@ -385,6 +396,28 @@ class Create extends Component {
       }else{
         throw new Error( JSON.stringify( {status: responseCustomFields.status, error: responseCustomFields.data.data.msg} ) );
       }
+
+      if( responses[2] && responses[2].status==200){ 
+        const personaData = responses[2].data.data[0];
+        let f = '';
+        let v = '';
+        for (let field of Object.keys(personaData)) {
+            let formFields = {...this.state.formFields};
+            f =this.parsePersonField(field);
+            v = this.parsePersonData(field, personaData[field]);
+            
+            if(f == 'customfields'){
+              this.parseCustomFields(v)
+            }else{
+              formFields[f] = v;
+              this.setState( {formFields} );
+            }
+            f = '';
+            v = '';
+        }
+      }
+
+
     }))
     .catch( (error) => {
       if (error.response) { 
@@ -402,7 +435,7 @@ class Create extends Component {
   render() {
     const gendersList = this.state.genders;
     const customFieldList = this.state.customFields;
-
+    // console.log('render formFields: ',this.state.customFieldsData)
     if (this.state.redirect) {
       return <Redirect to='/person/list'/>;
     }
@@ -727,6 +760,8 @@ class Create extends Component {
                     <CustomField 
                       key={index}
                       customFieldObj={customFieldObj}
+                      defineas = {defines.CUSTOM_FIELD_PREFIX}
+                      customFieldsData= {this.state.customFieldsData}
                       customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
                       onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
                       errorFields = { this.state.errorFields }
@@ -912,6 +947,126 @@ class Create extends Component {
         </Form>
       </div>
     );
+  }
+
+  parsePersonField( field ){ 
+    switch (field) {
+      case 'dni':
+        return 'lvtDNI'
+        break;
+      case 'firstname':
+        return 'lvtFirstname'
+        break;
+      case 'lastname':
+        return 'lvtLastname'
+        break;
+      case 'dob':
+        return 'lvtDateOfBirth'
+        break;
+      case 'gender':
+        return 'lvtGender'
+        break;
+      case 'height':
+        return 'lvtHeight'
+        break;
+      case 'weight':
+        return 'lvtWeight'
+        break;
+      case 'ruc':
+        return 'lvtRUC'
+        break;
+      case 'email':
+        return 'lvtEmail'
+        break;
+      case 'phone1':
+        return 'lvtCellphone'
+        break;
+      case 'phone2':
+        return 'lvtPhone'
+        break;
+      case 'address':
+        return 'lvtAddress'
+        break;
+      case 'observations':
+        return 'lvtObservations'
+        break;
+      default:
+        break;
+    }
+    return field;
+  }
+  parsePersonData( field, value ){ 
+    switch (field) {
+      case 'dni':
+        return value
+        break;
+      case 'firstname':
+        return value
+        break;
+      case 'lastname':
+        return value
+        break;
+      case 'dob':
+        console.log('value:',value);
+        let temp_date = new Date(value)
+        let y = temp_date.getFullYear();
+        let d = temp_date.getDate()+1;
+        d = d<10 ? ("0" + d).slice(-2) : d;
+        let m = temp_date.getMonth()+1;
+        m = m<10 ? ("0" + m).slice(-2) : m;
+        let date = y+'-'+m+'-'+d;
+        return date
+        break;
+      case 'gender':
+        if(value=='Femenino')
+          return 2;
+        else if(value=='Masculino')
+          return 1;
+        else if(value=='Otros')
+          return 3;
+        break;
+      case 'height':
+        return value
+        break;
+      case 'weight':
+        return value
+        break;
+      case 'ruc':
+        return value
+        break;
+      case 'email':
+        return value
+        break;
+      case 'phone1':
+        return value
+        break;
+      case 'phone2':
+        return value
+        break;
+      case 'address':
+        return value
+        break;
+      case 'observations':
+        return value
+        break;
+      default:
+        return value
+        break;
+    }
+    return field;
+  }
+  parseCustomFields (customData){
+
+    let formCustoms = this.state.customFieldsData;
+    customData.map((f)=>{
+      formCustoms.map((obj)=>{
+        if(f.idfieldcastp == obj.idfieldcastp){
+          obj.value = f.idoptions;
+        }
+      })
+    });
+
+    // console.log('formCustoms: ', formCustoms)
   }
 }
 

@@ -7,6 +7,10 @@ import RUG, { DragArea, DropArea} from 'react-upload-gallery'
 import CustomModal from '../Notifications/Modals/CustomModal';
 import 'react-upload-gallery/dist/style.css'
 import labels from '../../labels'
+import { connect } from 'react-redux';
+
+import { _inputParsers } from '../../actions/utility.js';
+import { callDispatch } from '../../actions/personas.js';
 
 import {
   Badge,
@@ -46,40 +50,13 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
+import PersonalDetail from './PersonaForm/PersonalDetail';
+
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
-const inputParsers = {
-  date(input) {
-    const [month, day, year] = input.split('/');
-    return `${year}-${month}-${day}`;
-  },
-  uppercase(input) {
-    return input.toUpperCase();
-  },
-  number(input) {
-    return parseFloat(input);
-  },
-};
 
-function GenderRadioOption(props){
-  const gender = props.gender;
-  
-  return(
-    <FormGroup check inline>
-      <Input
-        className="form-check-input"
-        type="radio"
-        id={"lvtGender_" + gender.idgender}
-        name="lvtGender"
-        value={gender.idgender}
-        checked={gender.idgender === props.genderValue}
-        onChange={props.onGenderFieldChange}
-      />
-      <Label className="form-check-label" check htmlFor={`lvtGender_` + gender.idgender}>{gender.name}</Label>
-    </FormGroup>
-  );
-}
+
 
 class Create extends Component {
   constructor(props) {
@@ -87,11 +64,6 @@ class Create extends Component {
 
     this.state = {
       formFields: {
-        lvtDNI : '',
-        lvtFirstname : '',
-        lvtLastname : '',
-        lvtDateOfBirth : '',
-        lvtGender : '',
         lvtHeight : '',
         lvtWeight : '',
         lvtRUC : '',
@@ -127,12 +99,13 @@ class Create extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.inputChangeHandler = this.inputChangeHandler.bind(this);
     this.inputRadioHandler = this.inputRadioHandler.bind(this);
+    this._inputChangeHandler = this._inputChangeHandler.bind(this);
+    this._inputRadioHandler = this._inputRadioHandler.bind(this);
     this.customInputChangeHandler = this.customInputChangeHandler.bind(this);
   }
 
   handleInitUpload() {
     //console.log("FilePond instance has initialised", this.pond);
-    console.log("FilePond instance has initialised");
   }
 
   inputChangeHandler(e) {
@@ -156,7 +129,28 @@ class Create extends Component {
       customFieldsData[index].value = e.target.value;
     }
     this.setState({ customFieldsData: customFieldsData });
-    console.log(this.state);
+    // console.log(this.state);
+  }
+
+  _inputChangeHandler(e) {
+    // console.log('=== handler 1', e.target.name)
+    // console.log('=== handler 1', e.target.value)
+    this.props.dispatch({type:'UPDATE_PERSONA_ATTRIBUTE', 
+      payload:{
+        attr: e.target.name, 
+        value:e.target.value }
+    })
+    this.setState({refresh:true}); // this is a flag to use the props
+  }
+
+  _inputRadioHandler(e){
+    // console.log('=== handler 2', e)
+    this.props.dispatch({type:'UPDATE_PERSONA_ATTRIBUTE', 
+        payload:{
+          attr: e.target.name, 
+          value: parseInt(e.target.value) }
+    })
+    this.setState({refresh:true}); // this is a flag to use the props
   }
 
   addFormError(fieldError) {
@@ -308,7 +302,7 @@ class Create extends Component {
       idcity: 1,
     };
 
-    console.log(JSON.stringify(personData));
+    // console.log(JSON.stringify(personData));
 
     if( this.state.errorFields.invalid.length === 0 ){
       this.setState({ loading: true });
@@ -356,18 +350,13 @@ class Create extends Component {
 
   componentDidMount() {
 
+    this.props.dispatch({ type:'SET_ID_PERSONA'})
+    
     // fetch all API data
-    const requestGender = axios.get( defines.API_DOMAIN + '/gender' );
     const requestCustomFields = axios.get( defines.API_DOMAIN + '/allfieldcastopp' );
-    axios.all([requestGender, requestCustomFields]).then(axios.spread((...responses) => {
-      const responseGender = responses[0];
-      const responseCustomFields = responses[1];
-      if(responseGender.status === 200 ) {
-        this.setState({ genders: responseGender.data.data })
-      }else{
-        throw new Error( JSON.stringify( {status: responseGender.status, error: responseGender.data.data.msg} ) );
-      }
-
+    axios.all([requestCustomFields]).then(axios.spread((...responses) => {
+      const responseCustomFields = responses[0];
+      // console.log('=== ')
       if(responseCustomFields.status === 200 ) {
         let customFieldElements = responseCustomFields.data.data.map( ( responseCustomField ) => {
           let customFieldElement = {
@@ -387,6 +376,7 @@ class Create extends Component {
       }
     }))
     .catch( (error) => {
+      console.log('error create get:', error);
       if (error.response) { 
         console.log(error.response.data);
       } else if (error.request) {
@@ -395,12 +385,14 @@ class Create extends Component {
         console.log('Error', error.message);
       }
     });
+
+    
   }
 
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
-    const gendersList = this.state.genders;
+    // console.log('=== :', this.props.persona)
     const customFieldList = this.state.customFields;
 
     if (this.state.redirect) {
@@ -440,127 +432,14 @@ class Create extends Component {
                 <CardHeader>
                   <strong>Información</strong> Datos personales
                 </CardHeader>
-                <CardBody>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtDNI">Cédula</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <Input
-                        type="text"
-                        id="lvtDNI"
-                        name="lvtDNI"
-                        placeholder="09999999999"
-                        autoComplete="nope"
-                        value={this.state.formFields.lvtDNI}
-                        onChange={(e) => this.inputChangeHandler.call(this, e)}
-                        valid = { this.state.errorFields.valid.indexOf("lvtDNI") > -1 }
-                        invalid = { this.state.errorFields.invalid.indexOf("lvtDNI") > -1 }
-                      />
-                      <FormText color="muted">Cédula/DNI/Pasaporte </FormText>
-                    </Col>
-                  </FormGroup>
+                
+                <PersonalDetail 
+                  _persona = {this.props.persona}
+                  inputChangeHandler = {this._inputChangeHandler}
+                  inputRadioHandler = {this._inputRadioHandler}
+                />
 
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtFirstname">Nombres</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <Input
-                        type="text"
-                        id="lvtFirstname"
-                        name="lvtFirstname"
-                        placeholder="Juan"
-                        autoComplete="nope"
-                        value={this.state.formFields.lvtFirstname}
-                        onChange={(e) => this.inputChangeHandler.call(this, e)}
-                        valid = { this.state.errorFields.valid.indexOf("lvtFirstname") > -1 }
-                        invalid = { this.state.errorFields.invalid.indexOf("lvtFirstname") > -1 }
-                      />
-                      <FormText color="muted">Nombres de la persona</FormText>
-                    </Col>
-                  </FormGroup>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtLastname">Apellidos</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <Input 
-                        type="text"
-                        id="lvtLastname"
-                        name="lvtLastname"
-                        placeholder="Pérez"
-                        autoComplete="nope"
-                        value={this.state.formFields.lvtLastname}
-                        onChange={(e) => this.inputChangeHandler.call(this, e)}
-                        valid = { this.state.errorFields.valid.indexOf("lvtLastname") > -1 }
-                        invalid = { this.state.errorFields.invalid.indexOf("lvtLastname") > -1 }
-                      />
-                      <FormText color="muted">Apellidos de la persona</FormText>
-                    </Col>
-                  </FormGroup>
 
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtDateOfBirth">Fecha de nacimiento </Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="fa fa-calendar"></i>
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="date"
-                          id="lvtDateOfBirth"
-                          name="lvtDateOfBirth"
-                          placeholder=""
-                          value={this.state.formFields.lvtDateOfBirth}
-                          onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid = { this.state.errorFields.valid.indexOf("lvtDateOfBirth") > -1 }
-                          invalid = { this.state.errorFields.invalid.indexOf("lvtDateOfBirth") > -1 }
-                        />
-                      </InputGroup>
-                    </Col>
-                  </FormGroup>
-
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label>Género</Label>
-                    </Col>
-                    <Col md="9">
-                      {gendersList.map((gender, index) =>
-                        <GenderRadioOption 
-                          key={index} 
-                          gender={gender}
-                          genderValue = {this.state.formFields.lvtGender}
-                          onGenderFieldChange = {(e) => this.inputRadioHandler.call(this, e)}
-                        />
-                      )}
-                    </Col>
-                  </FormGroup>
-
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtRUC">RUC</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <Input
-                        type="text"
-                        id="lvtRUC"
-                        name="lvtRUC"
-                        placeholder="09999999999001"
-                        autoComplete="nope"
-                        value={this.state.formFields.lvtRUC}
-                        onChange={(e) => this.inputChangeHandler.call(this, e)}
-                        valid = { this.state.errorFields.valid.indexOf("lvtRUC") > -1 }
-                        invalid = { this.state.errorFields.invalid.indexOf("lvtRUC") > -1 }
-                      />
-                      <FormText color="muted">Dato para facturación</FormText>
-                    </Col>
-                  </FormGroup>
-                </CardBody>
               </Card>
             </Col>
 
@@ -915,4 +794,12 @@ class Create extends Component {
   }
 }
 
-export default Create;
+const mapStateToProps = state => {
+  // console.log('-- state -- ', state )
+  return{
+    persona: state.persona,
+    loader: state.loader
+  }
+}
+
+export default connect(mapStateToProps)(Create);

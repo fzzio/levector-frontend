@@ -6,6 +6,7 @@ import {
     Input,
     Label,
 } from 'reactstrap';
+import { parse } from 'react-filepond';
 
 class CustomCheckbox extends Component {
     constructor(props) {
@@ -45,6 +46,20 @@ class CustomCheckbox extends Component {
         
         // Send value to parent function
         this.props.onCustomFieldChange(pseudoEvent);
+    }
+
+    componentWillReceiveProps(np){
+        
+        if(np.customFieldValue){
+            let temp_custom_value = np.customFieldValue.split(',');
+            temp_custom_value = temp_custom_value.map((t)=>{
+                t = parseInt(t);
+                return t;
+            })
+            console.log('--- checkbox: ',temp_custom_value )
+            
+            this.setState({checkedIDs:temp_custom_value})
+        }
     }
 
     render(){

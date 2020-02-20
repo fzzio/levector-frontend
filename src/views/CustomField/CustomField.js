@@ -36,6 +36,8 @@ class CustomField extends Component {
         const customFieldValue = this.props.customFieldValue;
         const errorFields = this.props.errorFields;
         const isSearch = this.state.isSearch;
+        // console.log('--- customFieldObj: ', customFieldObj)
+        // console.log('--- render customFieldsData: ',this.props.customFieldsData)
 
         switch (customFieldObj.idfieldtype) {
             case defines.CUSTOM_FIELD_TEXT:
@@ -90,6 +92,7 @@ class CustomField extends Component {
                         <CustomCheckbox
                             customFieldObj = { customFieldObj }
                             onCustomFieldChange = {this.handleChange}
+                            customFieldValue = { customFieldValue }
                             errorFields = { errorFields }
                             isSearch = { isSearch }
                         />
@@ -113,6 +116,7 @@ class CustomField extends Component {
                         <CustomCheckbox
                             customFieldObj = { customFieldObj }
                             onCustomFieldChange = {this.handleChange}
+                            customFieldValue = { customFieldValue }
                             errorFields = { errorFields }
                             isSearch = { isSearch }
                         />
@@ -125,6 +129,7 @@ class CustomField extends Component {
                     <CustomCheckbox
                         customFieldObj = { customFieldObj }
                         onCustomFieldChange = {this.handleChange}
+                        customFieldValue = { customFieldValue }
                         errorFields = { errorFields }
                         isSearch = { isSearch }
                     />

@@ -11,7 +11,7 @@ class CustomSelect extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            customOptionValue: null
+            customOptionValue: this.props.customFieldValue? parseInt(this.props.customFieldValue): null
         }
         this.handleChange = this.handleChange.bind(this);
     }
@@ -25,8 +25,16 @@ class CustomSelect extends Component {
         this.props.onCustomFieldChange(e);
     }
 
+    componentWillReceiveProps(np){
+        
+        if(np.customFieldValue){
+            this.setState({customOptionValue:parseInt(np.customFieldValue)})
+        }
+    }
+
     render(){
         const customFieldObj = this.props.customFieldObj;
+        
         return(
             <FormGroup row>
                 <Col md="3">
@@ -39,7 +47,9 @@ class CustomSelect extends Component {
                         type="select" 
                         name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
                         id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-                        onChange = {(e) => this.handleChange.call(this, e)} >
+                        onChange = {(e) => this.handleChange.call(this, e)} 
+                        value = {this.state.customOptionValue}
+                        >
                         <option value="">Seleccione</option>
                         {customFieldObj.values.map((customOption, index) =>
                             <option key={index} value = { parseInt(customOption.idfieldopcastp) }>

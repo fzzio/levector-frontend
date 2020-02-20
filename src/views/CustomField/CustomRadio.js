@@ -48,6 +48,13 @@ class CustomRadio extends Component {
         this.props.onCustomFieldChange(e);
     }
 
+    componentWillReceiveProps(np){
+        
+        if(np.customFieldValue){
+            this.setState({customOptionValue:parseInt(np.customFieldValue)})
+        }
+    }
+
     render(){
         const customFieldObj = this.props.customFieldObj;
         const errorFields = this.props.errorFields;

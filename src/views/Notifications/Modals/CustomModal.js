@@ -27,12 +27,24 @@ class CustomModal extends Component {
     };
     
     this.toggleCustomModal = this.toggleCustomModal.bind(this);
+    this.okFunction = this.okFunction.bind(this);
+    this.cancelFunction = this.cancelFunction.bind(this);
   }
 
   toggleCustomModal() {
     this.setState({
       visible: !this.state.visible,
     });
+  }
+
+  okFunction(){
+    if(this.props.okFunction) this.props.okFunction();
+    this.toggleCustomModal();
+  }
+
+  cancelFunction(){
+    if(this.props.cancelFunction) this.props.cancelFunction();
+    this.toggleCustomModal();
   }
 
   // this.props.onCustomFieldChange(e);
@@ -45,12 +57,14 @@ class CustomModal extends Component {
           { this.state.modalBody }
         </ModalBody>
         <ModalFooter>
-          <Button color={`${this.state.modalType}`} onClick={this.toggleCustomModal}>
+          <Button color={`${this.state.modalType}`} onClick={this.okFunction}>
             { this.state.labelOkButton }
           </Button>{' '}
-          <Button color="secondary" onClick={this.toggleCustomModal}>
-            { this.state.labelCancelButton }
-          </Button>
+          { this.state.labelCancelButton &&
+            <Button color="secondary" onClick={this.cancelFunction}>
+              { this.state.labelCancelButton }
+            </Button>
+          }
         </ModalFooter>
       </Modal>
     );

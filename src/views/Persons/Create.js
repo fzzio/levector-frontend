@@ -121,7 +121,9 @@ class Create extends Component {
       errorFields: {
         valid: [],
         invalid: []
-      }
+      },
+      editCustomValues:{},
+      okFunctionState:null
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -131,6 +133,7 @@ class Create extends Component {
     this.parsePersonData = this.parsePersonData.bind(this);
     this.parsePersonField = this.parsePersonField.bind(this);
     this.parseCustomFields = this.parseCustomFields.bind(this);
+    this.enableRedirect = this.enableRedirect.bind(this);
     
   }
 
@@ -158,7 +161,9 @@ class Create extends Component {
     const index = customFieldsData.findIndex(item => (item.name === e.target.name));
     if( index >= 0 ){
       customFieldsData[index].value = e.target.value;
+      this.setState({editCustomValues:{[customFieldsData[index].name] : e.target.value}});
     }
+    // console.log('---- customFieldsData change: ', editCustomValues);
     this.setState({ customFieldsData: customFieldsData });
   }
 
@@ -254,6 +259,10 @@ class Create extends Component {
     }
   }
 
+  enableRedirect(){
+    console.log('OK CLICKED');this.setState({redirect: true})
+  }
+
 
   handleSubmit(event) {
     event.preventDefault();
@@ -269,6 +278,7 @@ class Create extends Component {
     }).map(function(customFieldData) {
       return {
         idfieldcastp: customFieldData.idfieldcastp,
+        idfieldopcastp: customFieldData.idfieldcastp,
         value: customFieldData.value,
       }
     })
@@ -315,15 +325,30 @@ class Create extends Component {
 
     if( this.state.errorFields.invalid.length === 0 ){
       this.setState({ loading: true });
-      axios.post(
-        defines.API_DOMAIN + '/person/', 
-        personData
-      )
+
+      let save_person = axios.post(defines.API_DOMAIN + '/person/', personData );
+      if(this.props.match.params && this.props.match.params.id){
+        save_person = axios.put( defines.API_DOMAIN + '/person/'+ this.props.match.params.id, personData);
+      }
+
+      axios.all( [save_person] )
       .then( (response) => {
-        if(response.status === 200 ) {
-          this.setState({ loading: false, redirect: true });
+        let resp = response[0];
+        if(resp.status === 200 ) {
+          this.setState({
+            modalData:{
+              modalType : 'primary',
+              modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
+              modalBody : "Person  guardada exitosamente",
+              modalOkButton: 'Ok'
+            },
+            okFunctionState : this.enableRedirect ,
+            loading: false,
+            modalVisible: true
+          });
+          // this.setState({ loading: false, redirect: true });
         }else{
-          throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
+          throw new Error( JSON.stringify( {status: resp.status, error: resp.data.data.msg} ) );
         }
       })
       .catch( (error) => {
@@ -434,8 +459,10 @@ class Create extends Component {
 
   render() {
     const gendersList = this.state.genders;
-    const customFieldList = this.state.customFields;
-    // console.log('render formFields: ',this.state.customFieldsData)
+    let customFieldList = this.state.customFields;
+    console.log('render okFunctionState: ',this.state.okFunctionState)
+    // console.log('render customFieldList: ',this.state.customFields)
+    
     if (this.state.redirect) {
       return <Redirect to='/person/list'/>;
     }
@@ -446,13 +473,7 @@ class Create extends Component {
         </div>
       )
     }
-    // if (this.state.error || !this.state.formFields[0]) {// if request failed or data is empty don't try to access it either
-    //   return(
-    //     <div>
-    //       <p> An error occured </p>
-    //     </div>
-    //   )
-    // }
+
     return (
       <div className="animated fadeIn">
         { 
@@ -463,6 +484,7 @@ class Create extends Component {
               modalBody = {this.state.modalData.modalBody}
               labelOkButton = {this.state.modalData.modalOkButton}
               labelCancelButton = {this.state.modalData.modalCancelButton}
+              okFunction = {this.state.okFunctionState}
             />
           : ''
         }
@@ -762,7 +784,7 @@ class Create extends Component {
                       customFieldObj={customFieldObj}
                       defineas = {defines.CUSTOM_FIELD_PREFIX}
                       customFieldsData= {this.state.customFieldsData}
-                      customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
+                      customFieldValue = {this.state.editCustomValues[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
                       onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
                       errorFields = { this.state.errorFields }
                     />
@@ -1058,13 +1080,16 @@ class Create extends Component {
   parseCustomFields (customData){
 
     let formCustoms = this.state.customFieldsData;
+    let editCustomValues = this.state.editCustomValues;
     customData.map((f)=>{
       formCustoms.map((obj)=>{
         if(f.idfieldcastp == obj.idfieldcastp){
           obj.value = f.idoptions;
+          editCustomValues[defines.CUSTOM_FIELD_PREFIX + f.idfieldcastp] = f.idoptions
         }
       })
     });
+    this.setState({editCustomValues});
 
     // console.log('formCustoms: ', formCustoms)
   }

@@ -60,7 +60,7 @@ class List extends Component {
           loading: false,
           error: true,
           errorCode: error.response.status,
-          errorMessage: error.response.data.data.msg,
+          errorMessage: error.response.data.data? error.response.data.data.msg : '',
         });
       } else if (error.request) {
         console.log(error.request);
@@ -93,7 +93,7 @@ class List extends Component {
           loading: false,
           error: true,
           errorCode: error.response.status,
-          errorMessage: error.response.data.data.msg,
+          errorMessage: error.response.data.data? error.response.data.data.msg : '',
         });
       } else if (error.request) {
         console.log(error.request);

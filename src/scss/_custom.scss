@@ -1,6 +1,8 @@
 // Here you can add other styles
 $lvt-orange: #ED4E03;
 $lvt-gray: #212121;
+$lvt-gray2: #23282c;
+$lvt-dark: #181b1e;
 .rug .rug-handle{
     height: 200px !important;
 }
@@ -36,4 +38,10 @@ $lvt-gray: #212121;
 }
 .person-card .person-data-flag{
     font-size: 10px;
+}
+.sidebar .nav-link:hover{
+    background-color: $lvt-orange !important;
+}
+.btn-dark:hover{
+    background-color: $lvt-orange !important;
 }

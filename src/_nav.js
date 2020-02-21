@@ -18,12 +18,25 @@ export default {
       icon: 'icon-people',
       children: [
         {
-          name: 'Agregar Persona',
+          name: 'Ver todos',
+          url: '/person/list',
+        },
+        {
+          name: 'Agregar',
           url: '/person/create',
         },
         {
-          name: 'Ver todos',
-          url: '/person/list',
+          name: 'Campos',
+          children: [
+            {
+              name: 'Agregar',
+              url: '/customfield/create',
+            },
+            {
+              name: 'Ver todas',
+              url: '/customfield/list',
+            },
+          ],
         },
       ],
     },
@@ -32,12 +45,25 @@ export default {
       icon: 'icon-location-pin',
       children: [
         {
-          name: 'Agregar locación',
+          name: 'Ver todos',
           url: '',
         },
         {
-          name: 'Ver todas',
+          name: 'Agregar',
           url: '',
+        },
+        {
+          name: 'Campos',
+          children: [
+            {
+              name: 'Agregar',
+              url: '',
+            },
+            {
+              name: 'Ver todas',
+              url: '',
+            },
+          ],
         },
       ],
     },
@@ -46,12 +72,25 @@ export default {
       icon: 'icon-mustache',
       children: [
         {
+          name: 'Ver todos',
+          url: '',
+        },
+        {
           name: 'Agregar',
           url: '',
         },
         {
-          name: 'Ver todas',
-          url: '',
+          name: 'Campos',
+          children: [
+            {
+              name: 'Agregar',
+              url: '',
+            },
+            {
+              name: 'Ver todas',
+              url: '',
+            },
+          ],
         },
       ],
     },
@@ -63,20 +102,6 @@ export default {
       name: 'Configuraciones',
       url: '',
       icon: '',
-    },
-    {
-      name: 'Campos dinámicos',
-      icon: 'icon-layers',
-      children: [
-        {
-          name: 'Agregar',
-          url: '/customfield/create',
-        },
-        {
-          name: 'Ver todas',
-          url: '/customfield/list',
-        },
-      ],
     },
     /* 
     {
@@ -100,120 +125,6 @@ export default {
         element: '',
         attributes: {},
       },
-    },
-    {
-      name: 'Base',
-      url: '/base',
-      icon: 'icon-puzzle',
-      children: [
-        {
-          name: 'Breadcrumbs',
-          url: '/base/breadcrumbs',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Cards',
-          url: '/base/cards',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Carousels',
-          url: '/base/carousels',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Collapses',
-          url: '/base/collapses',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Dropdowns',
-          url: '/base/dropdowns',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Forms',
-          url: '/base/forms',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Jumbotrons',
-          url: '/base/jumbotrons',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'List groups',
-          url: '/base/list-groups',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Navs',
-          url: '/base/navs',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Paginations',
-          url: '/base/paginations',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Popovers',
-          url: '/base/popovers',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Progress Bar',
-          url: '/base/progress-bar',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Switches',
-          url: '/base/switches',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Tables',
-          url: '/base/tables',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Tabs',
-          url: '/base/tabs',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Tooltips',
-          url: '/base/tooltips',
-          icon: 'icon-puzzle',
-        },
-      ],
-    },
-    {
-      name: 'Buttons',
-      url: '/buttons',
-      icon: 'icon-cursor',
-      children: [
-        {
-          name: 'Buttons',
-          url: '/buttons/buttons',
-          icon: 'icon-cursor',
-        },
-        {
-          name: 'Button dropdowns',
-          url: '/buttons/button-dropdowns',
-          icon: 'icon-cursor',
-        },
-        {
-          name: 'Button groups',
-          url: '/buttons/button-groups',
-          icon: 'icon-cursor',
-        },
-        {
-          name: 'Brand Buttons',
-          url: '/buttons/brand-buttons',
-          icon: 'icon-cursor',
-        },
-      ],
     },
     {
       name: 'Charts',

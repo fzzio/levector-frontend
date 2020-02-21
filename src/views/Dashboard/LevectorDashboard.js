@@ -23,6 +23,7 @@ class LevectorDashboard extends Component {
 
     this.state = {
       persons: [],
+      summaryCasting: [],
       limit: 2,
       offset: 0,
       dropdownOpen: false,
@@ -45,10 +46,15 @@ class LevectorDashboard extends Component {
   componentDidMount() {
     // fetch all API data
     const requestLastPersons = axios.get( defines.API_DOMAIN + '/person/' + this.state.limit + '/' + this.state.offset );
-    axios.all([requestLastPersons]).then(axios.spread((...responses) => {
+    const requestSummary = axios.get( defines.API_DOMAIN + '/casting-summary/' );
+    axios.all([requestLastPersons, requestSummary]).then(axios.spread((...responses) => {
         const responseLastPersons = responses[0];
+        const responseSummary = responses[1];
         if(responseLastPersons.status === 200 ) {
-            this.setState({ persons: responseLastPersons.data.data })
+            this.setState({
+              persons: responseLastPersons.data.data,
+              summaryCasting: responseSummary.data.casting
+            })
         }else{
             throw new Error( JSON.stringify( {status: responseLastPersons.status, error: responseLastPersons.data.data.msg} ) );
         }
@@ -67,13 +73,14 @@ class LevectorDashboard extends Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
-    const personList = this.state.persons
+    const personList = this.state.persons;
+    const summaryCasting = this.state.summaryCasting;
     
     return (
       <div className="animated fadeIn">
         <Row>
           <Col xs="12" sm="6" lg="4">
-            <Widget02 header="123" mainText="Personas" icon="fa fa-users" color="primary" />
+            <Widget02 header={summaryCasting.totalPersons + ""} mainText="Personas" icon="fa fa-users" color="primary" />
           </Col>
           <Col xs="12" sm="6" lg="4">
             <Widget02 header="40" mainText="Locaciones" icon="fa fa-map-marker" color="info" />
@@ -97,30 +104,30 @@ class LevectorDashboard extends Component {
                         <div className="progress-group-header">
                           <i className="icon-user progress-group-icon"></i>
                           <span className="title">Masculino</span>
-                          <span className="ml-auto font-weight-bold">50%</span>
+                          <span className="ml-auto font-weight-bold">{summaryCasting.percentMale} %</span>
                         </div>
                         <div className="progress-group-bars">
-                          <Progress className="progress-xs" color="warning" value="50" />
+                          <Progress className="progress-xs" color="warning" value={summaryCasting.percentMale} />
                         </div>
                       </div>
                       <div className="progress-group">
                         <div className="progress-group-header">
                           <i className="icon-user-female progress-group-icon"></i>
                           <span className="title">Femenino</span>
-                          <span className="ml-auto font-weight-bold">40%</span>
+                          <span className="ml-auto font-weight-bold">{summaryCasting.percentFemale} %</span>
                         </div>
                         <div className="progress-group-bars">
-                          <Progress className="progress-xs" color="warning" value="40" />
+                          <Progress className="progress-xs" color="warning" value={summaryCasting.percentFemale} />
                         </div>
                       </div>
                       <div className="progress-group mb-5">
                         <div className="progress-group-header">
                           <i className="icon-emotsmile progress-group-icon"></i>
                           <span className="title">Otros</span>
-                          <span className="ml-auto font-weight-bold">10%</span>
+                          <span className="ml-auto font-weight-bold">{summaryCasting.percentOthers} %</span>
                         </div>
                         <div className="progress-group-bars">
-                          <Progress className="progress-xs" color="warning" value="10" />
+                          <Progress className="progress-xs" color="warning" value={summaryCasting.percentOthers} />
                         </div>
                       </div>
                     </ul>

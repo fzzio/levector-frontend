@@ -23,6 +23,7 @@ class List extends Component {
       limit: 8,
       offset: 0,
       loading: true,
+      loading_more: false,
       error: false,
       errorCode: 0,
       errorMessage: '',
@@ -37,18 +38,20 @@ class List extends Component {
   }
 
   handleLoadMore = () => {
-    this.setState({ loading: true });
+    
+    this.setState({ loading_more: true });
     axios.get(
       defines.API_DOMAIN + '/person/' + this.state.limit + '/' + this.state.offset
     )
     .then( (response) => {
       if(response.status === 200 ) {
+        let temp_persons = this.state.persons;
         this.setState({ 
-          loading: false,
+          loading_more: false,
           error: false,
-          persons: response.data.data,
+          persons: temp_persons.concat(response.data.data),
           offset: this.state.offset + response.data.data.length,
-          limit: this.state.offset + response.data.data.length
+          // limit: this.state.offset + response.data.data.length
         })
       }else{
         throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
@@ -57,7 +60,7 @@ class List extends Component {
     .catch( (error) => {
       if (error.response) {
         this.setState({ 
-          loading: false,
+          loading_more: false,
           error: true,
           errorCode: error.response.status,
           errorMessage: error.response.data.data? error.response.data.data.msg : '',
@@ -158,6 +161,10 @@ class List extends Component {
                   </Row>
                 </Suspense>
               </CardBody>
+              { this.state.loading_more &&
+                <div>
+                <p Style={'margin-Left:20px'}> Loading... </p>
+              </div>}
               <CardFooter>
                 <Row>
                   <Col md="12">

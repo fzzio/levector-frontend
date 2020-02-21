@@ -12,6 +12,8 @@ import {
 import { AppSwitch } from '@coreui/react'
 import axios from 'axios';
 import defines from '../../defines'
+import labels from '../../labels';
+import CustomModal from '../Notifications/Modals/CustomModal';
 
 class List extends Component {
     constructor(props) {
@@ -24,6 +26,17 @@ class List extends Component {
             error: false,
             errorCode: 0,
             errorMessage: '',
+            idtodelete:'',
+            modalVisible:false,
+            modal:{
+                modalType:'',
+                modalTitle:'',
+                modalBody:'',
+                modalOkButton:'',
+                modalCancelButton:'',
+                okFunctionState:null,
+                cancelFunctionState: this.cancelFunctionState
+            }
         }
     }
 
@@ -61,7 +74,25 @@ class List extends Component {
     handleDelete(idfieldcastp){
         // TODO @fzzio call api to delete
         this.setState({
-            customFields: this.state.customFields.filter(customField => parseInt(customField.idfieldcastp) !== parseInt(idfieldcastp))
+            modalVisible:true,
+            idtodelete:idfieldcastp,
+            modal:{
+                modalType : 'danger',
+                modalBody : 'Esta seguro de eliminar a registro?',
+                modalTitle : labels.LVT_MODAL_DEFAULT_CONFIRMATION_TITLE,
+                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+                modalCancelButton: labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
+                okFunctionState: this.deletCall,
+                cancelFunctionState: this.cancelFunctionState
+            }
+        });
+    }
+
+    
+    deletCall = () =>{
+        let that  = this;
+        this.setState({
+            customFields: this.state.customFields.filter(customField => parseInt(customField.idfieldcastp) !== parseInt(that.state.idtodelete))
         })
     }
 
@@ -86,6 +117,19 @@ class List extends Component {
         }
         return (
             <div className="animated fadeIn">
+                { 
+                    (this.state.modalVisible) ?
+                        <CustomModal
+                            modalType = {this.state.modal.modalType}
+                            modalTitle = {this.state.modal.modalTitle}
+                            modalBody = {this.state.modal.modalBody}
+                            labelOkButton = {this.state.modal.modalOkButton}
+                            labelCancelButton = {this.state.modal.modalCancelButton}
+                            okFunction = {this.state.modal.okFunctionState}
+                            cancelFunction = {this.state.modal.cancelFunctionState}
+                        />
+                    : ''
+                }
               <Row>
                 <Col xl={12}>
                     <Card>

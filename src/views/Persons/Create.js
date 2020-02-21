@@ -340,7 +340,7 @@ class Create extends Component {
               modalType : 'primary',
               modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
               modalBody : "Person  guardada exitosamente",
-              modalOkButton: 'Ok'
+              modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK
             },
             okFunctionState : this.enableRedirect ,
             loading: false,

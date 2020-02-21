@@ -98,7 +98,7 @@ class View extends Component {
             modalVisible:true,
             modal:{
                 modalType : 'primary',
-                modalBody : 'Record borrado exitosamente',
+                modalBody : 'Registro borrado exitosamente',
                 modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
                 modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
                 okFunctionState: this.enableRedirect

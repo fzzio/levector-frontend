@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router'
 import axios from 'axios';
 import defines from '../../defines'
+import labels from '../../labels';
+import CustomModal from '../Notifications/Modals/CustomModal';
 import {
     Badge,
     Button,
@@ -44,11 +46,30 @@ class Create extends Component {
             error: false,
             redirect: false,
             modalForm: false,
+            modalVisible:false,
+            modal:{
+                modalType:'',
+                modalTitle:'',
+                modalBody:'',
+                modalOkButton:'',
+                modalCancelButton:'',
+                okFunctionState:null,
+                cancelFunctionState: this.cancelFunctionState
+            }
         }
 
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
         this.inputTypeHandler = this.inputTypeHandler.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    cancelFunctionState =()=>{
+        console.log('----handle cancel ----')
+        this.setState({modalVisible:false})
+    }
+
+    enableRedirect=()=>{
+        console.log('OK CLICKED');this.setState({modalVisible:false,redirect: true})
     }
 
     inputChangeHandler(e) {
@@ -130,7 +151,8 @@ class Create extends Component {
         )
         .then( (response) => {
             if(response.status === 200 ) {
-                this.setState({ loading: false, redirect: true });
+                this.setState({ loading: false });
+                this.confirmFieldCreated();
             }else{
                 throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
             }
@@ -143,6 +165,20 @@ class Create extends Component {
                 console.log('Error', error.message);
             }
             this.setState({ loading: false, error: true });
+        });
+    }
+
+    confirmFieldCreated = () =>{
+        console.log('--- confirm to redirect ----')
+        this.setState({
+            modalVisible:true,
+            modal:{
+                modalType : 'primary',
+                modalBody : 'Registro creado exitosamente',
+                modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
+                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+                okFunctionState: this.enableRedirect
+            }
         });
     }
     
@@ -185,6 +221,20 @@ class Create extends Component {
         }
         return (
             <div className="animated fadeIn">
+                { 
+                    (this.state.modalVisible) ?
+                        <CustomModal
+                            modalType = {this.state.modal.modalType}
+                            modalTitle = {this.state.modal.modalTitle}
+                            modalBody = {this.state.modal.modalBody}
+                            labelOkButton = {this.state.modal.modalOkButton}
+                            labelCancelButton = {this.state.modal.modalCancelButton}
+                            okFunction = {this.state.modal.okFunctionState}
+                            cancelFunction = {this.state.modal.cancelFunctionState}
+                        />
+                    : ''
+                }
+
                 <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-person" onSubmit={this.handleSubmit} >
                     <Row>
                         <Col xs="12" md="6">

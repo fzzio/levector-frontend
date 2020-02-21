@@ -18,7 +18,9 @@ import ImageGallery from 'react-image-gallery';
 import { Player } from 'video-react';
 import moment from 'moment';
 import axios from 'axios';
-import defines from '../../defines'
+import defines from '../../defines';
+import labels from '../../labels';
+import CustomModal from '../Notifications/Modals/CustomModal';
 
 import 'react-image-gallery/styles/css/image-gallery.css'
 import 'video-react/dist/video-react.css';
@@ -30,16 +32,51 @@ class View extends Component {
             person: '',
             personImagesGallery: [],
             redirect: false,
+            modalVisible:false,
+            modal:{
+                modalType:'',
+                modalTitle:'',
+                modalBody:'',
+                modalOkButton:'',
+                modalCancelButton:'',
+                okFunctionState:null,
+                cancelFunctionState: this.cancelFunctionState
+            }
         }
+    }
+    cancelFunctionState =()=>{
+        console.log('----handle cancel ----')
+        this.setState({modalVisible:false})
+    }
+
+    enableRedirect=()=>{
+        console.log('OK CLICKED');this.setState({redirect: true})
     }
 
     handleDelete = () => {
-        this.setState({ loading: true });
+        // this.setState({ loading: true });
+        console.log('----handle delete ----')
+        this.setState({
+            modalVisible:true,
+            modal:{
+                modalType : 'danger',
+                modalBody : 'Esta seguro de eliminar a registro?',
+                modalTitle : labels.LVT_MODAL_DEFAULT_CONFIRMATION_TITLE,
+                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+                modalCancelButton: labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
+                okFunctionState: this.deletePerson,
+                cancelFunctionState: this.cancelFunctionState
+            }
+        });
+    }
+
+    deletePerson = () =>{
         const deletePerson = axios.put( defines.API_DOMAIN + '/deleteperson/' + this.props.match.params.id );
         axios.all([deletePerson]).then(axios.spread((...responses) => {
             const responseDeletePerson = responses[0];
             if(responseDeletePerson.status === 200 ) {
-                this.setState({ loading: false, redirect: true });
+                this.setState({ modalVisible:false, loading: false });
+                this.confirmPersonDeleted()
             }else{
                 throw new Error( JSON.stringify( {status: responseDeletePerson.status, error: responseDeletePerson.data.data.msg} ) );
             }
@@ -51,6 +88,20 @@ class View extends Component {
                 console.log(error.request);
             } else {
                 console.log('Error', error.message);
+            }
+        });
+    }
+
+    confirmPersonDeleted = () =>{
+        console.log('--- confirm to redirect ----')
+        this.setState({
+            modalVisible:true,
+            modal:{
+                modalType : 'primary',
+                modalBody : 'Record borrado exitosamente',
+                modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
+                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+                okFunctionState: this.enableRedirect
             }
         });
     }
@@ -102,6 +153,20 @@ class View extends Component {
 
         return(
             <div className="animated fadeIn">
+                { 
+                    (this.state.modalVisible) ?
+                        <CustomModal
+                            modalType = {this.state.modal.modalType}
+                            modalTitle = {this.state.modal.modalTitle}
+                            modalBody = {this.state.modal.modalBody}
+                            labelOkButton = {this.state.modal.modalOkButton}
+                            labelCancelButton = {this.state.modal.modalCancelButton}
+                            okFunction = {this.state.modal.okFunctionState}
+                            cancelFunction = {this.state.modal.cancelFunctionState}
+                        />
+                    : ''
+                }
+
                 <Row>
                     <Col xs="12" md="6">
                         <Card>

@@ -43,7 +43,10 @@ class CustomModal extends Component {
   }
 
   cancelFunction(){
-    if(this.props.cancelFunction) this.props.cancelFunction();
+    console.log('---- ')
+    if(this.props.cancelFunction){
+      console.log('- props - ', this.props.cancelFunction)
+       this.props.cancelFunction();}
     this.toggleCustomModal();
   }
 

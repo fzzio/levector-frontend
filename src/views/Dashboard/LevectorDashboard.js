@@ -83,10 +83,10 @@ class LevectorDashboard extends Component {
             <Widget02 header={summaryCasting.totalPersons + ""} mainText="Personas" icon="fa fa-users" color="primary" />
           </Col>
           <Col xs="12" sm="6" lg="4">
-            <Widget02 header="40" mainText="Locaciones" icon="fa fa-map-marker" color="info" />
+            <Widget02 header="0" mainText="Locaciones" icon="fa fa-map-marker" color="info" />
           </Col>
           <Col xs="12" sm="6" lg="4">
-            <Widget02 header="4321" mainText="Utilería" icon="fa fa-puzzle-piece" color="warning" />
+            <Widget02 header="0" mainText="Utilería" icon="fa fa-puzzle-piece" color="warning" />
           </Col>
         </Row>
         

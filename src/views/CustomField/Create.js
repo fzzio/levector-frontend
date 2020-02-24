@@ -5,28 +5,17 @@ import defines from '../../defines'
 import labels from '../../labels';
 import CustomModal from '../Notifications/Modals/CustomModal';
 import {
-    Badge,
     Button,
     Card,
     CardBody,
     CardFooter,
     CardHeader,
     Col,
-    Collapse,
-    Container,
-    DropdownItem, DropdownMenu, DropdownToggle,
-    Fade,
     Form,
     FormGroup,
     FormText,
-    FormFeedback,
     Input,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupButtonDropdown,
-    InputGroupText,
     Label,
-    Modal, ModalBody, ModalFooter, ModalHeader,
     Row,
 } from 'reactstrap';
 
@@ -174,7 +163,7 @@ class Create extends Component {
             modalVisible:true,
             modal:{
                 modalType : 'primary',
-                modalBody : 'Registro creado exitosamente',
+                modalBody : labels.LVT_MODAL_DEFAULT_CREATION_SUCCESS_TEXT,
                 modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
                 modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
                 okFunctionState: this.enableRedirect

@@ -88,16 +88,83 @@ class List extends Component {
         });
     }
 
+    cancelFunctionState =()=>{
+        console.log('----handle cancel ----')
+        this.setState({modalVisible:false})
+    }
+
     
     deletCall = () =>{
         let that  = this;
+        this.setState({modalVisible:false})
+
+        const deleteFieldRequest = axios.put( defines.API_DOMAIN + '/deletefieldcastp/'+this.state.idtodelete );
+
+        axios.all([deleteFieldRequest]).then(axios.spread((...responses) => {
+            const resp = responses[0];
+        
+            if(resp.status === 200 ) {
+                console.log('=== data:', resp.data)
+                this.confirmDeletedField(resp.data.data.status || 3);
+                if (resp.data.data.status == 3) {
+                    this.setState({
+                        customFields: this.state.customFields.filter(customField => parseInt(customField.idfieldcastp) !== parseInt(that.state.idtodelete))
+                    })    
+                }else{
+                    let temp_fields = this.state.customFields;
+                    
+                    temp_fields.map((field)=>{
+                        if(field.idfieldcastp == that.state.idtodelete){
+                            field.status = resp.data.data.status;
+                        }
+                    })
+                    console.log('=== ', temp_fields)
+                    this.setState({ customFields: temp_fields }) 
+                }
+                
+            }else{
+                throw new Error( JSON.stringify( {status: resp.status, error: resp.data.data.msg} ) );
+            }
+        }))
+        .catch( (error) => {
+            if (error.response) { 
+                this.setState({ 
+                    error: true,
+                    errorCode: error.response.status,
+                    errorMessage: error.response.data.data.msg,
+                });
+                console.log(this.state);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log('Error', error.message);
+            }
+        });
+
+    }
+
+    confirmDeletedField = (deleted_status) =>{
+        console.log('--- confirm deleted ----')
         this.setState({
-            customFields: this.state.customFields.filter(customField => parseInt(customField.idfieldcastp) !== parseInt(that.state.idtodelete))
-        })
+            modalVisible:true,
+            loading: false,
+            modal:{
+                modalType : 'primary',
+                modalBody : deleted_status==2 ? 'Este campo no puede eliminarse porque esta siendo usado. Su estado ha cambiado a deshabilitado.': labels.LVT_MODAL_DEFAULT_DELETION_SUCCESS_TEXT,
+                modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
+                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+                okFunctionState: this.okFunction
+            }
+        });
+    }
+
+    okFunction = () =>{
+        this.setState({modalVisible:false})
     }
 
     render() {
         const customFieldList = this.state.customFields;
+        console.log('---- customFieldList: ', customFieldList)
         if (this.state.error) {
             return(
                 <div className="animated fadeIn">
@@ -193,14 +260,16 @@ class List extends Component {
                                                         <Link to={`/customfield/${customField.idfieldcastp}/edit`} outline className="btn btn-dark btn-sm" size="sm">
                                                             <i className="fa fa-edit"></i>
                                                         </Link>
+                                                        { customField.status == 1 &&
+                                                            <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfieldcastp)}>
+                                                                <i className="fa fa-trash"></i>
+                                                            </Button>
+                                                        }
                                                         
-                                                        <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfieldcastp)}>
-                                                            <i className="fa fa-trash"></i>
-                                                        </Button>
                                     
                                                     </td>
                                                     <td>
-                                                        <AppSwitch className={'mx-1'} color={'dark'} checked />
+                                                        <AppSwitch className={'mx-1'} color={'dark'} checked={customField.status == 2? false : true} />
                                                     </td>
                                                 </tr>
                                             )

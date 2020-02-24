@@ -1,30 +1,21 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router'
 import axios from 'axios';
-import defines from '../../defines'
+import defines from '../../defines';
+import labels from '../../labels';
+import CustomModal from '../Notifications/Modals/CustomModal';
 import {
-    Badge,
     Button,
     Card,
     CardBody,
     CardFooter,
     CardHeader,
     Col,
-    Collapse,
-    Container,
-    DropdownItem, DropdownMenu, DropdownToggle,
-    Fade,
     Form,
     FormGroup,
     FormText,
-    FormFeedback,
     Input,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupButtonDropdown,
-    InputGroupText,
     Label,
-    Modal, ModalBody, ModalFooter, ModalHeader,
     Row,
 } from 'reactstrap';
 
@@ -44,14 +35,29 @@ class Edit extends Component {
             error: false,
             redirect: false,
             modalForm: false,
-            customFieldId:0
+            customFieldId:0,
+            modalVisible:false,
+            modal:{
+                modalType:'',
+                modalTitle:'',
+                modalBody:'',
+                modalOkButton:'',
+                modalCancelButton:'',
+                okFunctionState:null,
+                cancelFunctionState: this.cancelFunctionState
+            }
         }
 
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
         this.inputTypeHandler = this.inputTypeHandler.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
-        this.inputOptionChangeHandler = this.inputOptionChangeHandler.bind(this);
+        this.inputOptionChangeHandler = this.inputOptionChangeHandler.bind(this);       
+    }
+
+    enableRedirect=()=>{
+        console.log('OK CLICKED');
+        this.setState({modalVisible:false, redirect: true})
     }
 
     inputChangeHandler(e) {
@@ -111,11 +117,43 @@ class Edit extends Component {
         });
     }
     
+    confirmFieldEdited = () =>{
+        console.log('--- confirm to redirect ----')
+        this.setState({
+            modalVisible:true,
+            loading: false,
+            modal:{
+                modalType : 'primary',
+                modalBody : labels.LVT_MODAL_DEFAULT_EDITION_SUCCESS_TEXT,
+                modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
+                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+                okFunctionState: this.enableRedirect
+            }
+        });
+    }
+
+    errorFieldUpdated = (error_message) => {
+        this.setState({
+            modalVisible:true,
+            loading: false,
+            modal:{
+                modalType : 'danger',                
+                modalTitle : labels.LVT_MODAL_DEFAULT_ERROR_TITLE,
+                modalBody : error_message,
+                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+                okFunctionState: null
+            }
+        });
+    }
+
     handleSubmit(event){
+
         event.preventDefault();
         console.log(this.state.lvtCusmtomFieldOptions);
+
         let isEnableCustomFieldOptions=this.isCumtonFilesEnabled();
         console.log("enable"+isEnableCustomFieldOptions);
+
         let customFieldOptions = this.state.lvtCusmtomFieldOptions.filter(function(customFieldOption) {
             if( customFieldOption.name === null || customFieldOption.name === undefined || customFieldOption.name === '' ){
               return false; // skip
@@ -135,29 +173,51 @@ class Edit extends Component {
 
         console.log("guardar customFieldOptions" + JSON.stringify(customFieldOptions));
         const customFormFieldata = {
-            idfieldtype: this.state.lvtCustomFieldType,
+            // idfieldtype: this.state.lvtCustomFieldType,
             name: this.state.lvtCustomFieldName,
             helptext: this.state.lvtHelpText,
             appendtext: this.state.lvtAppendText,
+            options: []
         }
         if( customFieldOptions.length ){
             customFormFieldata['options'] = customFieldOptions
         }
     
         console.log(customFormFieldata)
+
         this.setState({ loading: true });
+
         axios.put(
             defines.API_DOMAIN + '/fieldcastp/' + this.state.customFieldId, 
             customFormFieldata
         )
         .then( (response) => {
+
             if(response.status === 200 ) {
-                this.setState({ loading: false, redirect: true });
-            }else{
+                this.confirmFieldEdited();
+            } else if( response.status === 400 ){
+                this.errorFieldUpdated(response.data.data.msg)
+
+            } else{
                 throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
             }
         }).catch( (error) => {
             if (error.response) { 
+
+                if(error.response.status === 400){
+                    let msg = '';
+                    if(error.response.data.data.mensaje){
+                        msg = error.response.data.data.mensaje;
+                        if( error.response.data.data.Opciones && error.response.data.data.Opciones.length ){
+                            console.log(error.response.data.data.Opciones)
+                            msg = msg + " "+ error.response.data.data.Opciones.join(', ')
+                        }
+                    }
+                    if(msg!='')
+                        this.errorFieldUpdated(msg)
+                    else
+                        this.errorFieldUpdated(labels.LVT_MODAL_DEFAULT_ERROR_MESSAGE)
+                }
                 console.log(error.response.data);
             } else if (error.request) {
                 console.log(error.request);
@@ -268,9 +328,11 @@ class Edit extends Component {
     render() {
         const fieldTypeList = this.state.fieldTypes;
         const isEnableCustomFieldOptions = this.state.isEnableCustomFieldOptions;
+        
         if (this.state.redirect) {
             return <Redirect to='/customfield/list'/>;
         }
+        
         if (this.state.loading) {
             return(
                 <div>
@@ -280,6 +342,22 @@ class Edit extends Component {
         }
         return (
             <div className="animated fadeIn">
+
+                { 
+                    (this.state.modalVisible) ?
+                        <CustomModal
+                            modalType = {this.state.modal.modalType}
+                            modalTitle = {this.state.modal.modalTitle}
+                            modalBody = {this.state.modal.modalBody}
+                            labelOkButton = {this.state.modal.modalOkButton}
+                            labelCancelButton = {this.state.modal.modalCancelButton}
+                            okFunction = {this.state.modal.okFunctionState}
+                            cancelFunction = {this.state.modal.cancelFunctionState}
+                        />
+                    : ''
+                }
+
+
                 <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-person" onSubmit={this.handleSubmit} >
                     <Row>
                         <Col xs="12" md="6">

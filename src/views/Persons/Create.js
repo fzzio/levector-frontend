@@ -8,31 +8,7 @@ import CustomModal from '../Notifications/Modals/CustomModal';
 import 'react-upload-gallery/dist/style.css'
 import labels from '../../labels'
 
-import {
-  Badge,
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Col,
-  Collapse,
-  Container,
-  DropdownItem, DropdownMenu, DropdownToggle,
-  Fade,
-  Form,
-  FormGroup,
-  FormText,
-  FormFeedback,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButtonDropdown,
-  InputGroupText,
-  Label,
-  Modal, ModalBody, ModalFooter, ModalHeader,
-  Row,
-} from 'reactstrap';
+import { Button, Card, CardBody, CardFooter, CardHeader, Col, Form, FormGroup, FormText, Input, InputGroup, InputGroupAddon, InputGroupText, Label, Row } from 'reactstrap';
 
 // Import React FilePond
 import { FilePond, registerPlugin } from "react-filepond";
@@ -81,6 +57,10 @@ function GenderRadioOption(props){
   );
 }
 
+const RUG_RULES = { limit: 10, size: 20000 };
+const RUG_ACCEPT = ['jpg', 'jpeg', 'png'];
+const RUG_ACTION = defines.API_DOMAIN + '/uploadimages';
+
 class Create extends Component {
   constructor(props) {
     super(props);
@@ -117,13 +97,13 @@ class Create extends Component {
         modalBody : 'Body',
         modalOkButton : labels.LVT_MODAL_DEFAULT_BUTTON_OK,
         modalCancelButton : labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
+        okFunctionState:null
       },
       errorFields: {
         valid: [],
         invalid: []
       },
-      editCustomValues:{},
-      okFunctionState:null
+      editCustomValues:{}
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -260,7 +240,7 @@ class Create extends Component {
   }
 
   enableRedirect(){
-    console.log('OK CLICKED');this.setState({redirect: true})
+    this.setState({redirect: true})
   }
 
 
@@ -324,6 +304,7 @@ class Create extends Component {
     console.log(JSON.stringify(personData));
 
     if( this.state.errorFields.invalid.length === 0 ){
+
       this.setState({ loading: true });
 
       let save_person = axios.post(defines.API_DOMAIN + '/person/', personData );
@@ -340,23 +321,28 @@ class Create extends Component {
               modalType : 'primary',
               modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
               modalBody : "Person  guardada exitosamente",
-              modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK
+              modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+              okFunctionState : this.enableRedirect
             },
-            okFunctionState : this.enableRedirect ,
+            
             loading: false,
             modalVisible: true
           });
           // this.setState({ loading: false, redirect: true });
         }else{
+          console.log('----- THROW ERROR create person -------')
           throw new Error( JSON.stringify( {status: resp.status, error: resp.data.data.msg} ) );
         }
       })
       .catch( (error) => {
         if (error.response) {
           this.setState({
+            modalVisible: true,
             modalData:{
               modalType : 'danger',
-              modalBody : error.response.data.data.msg
+              modalBody : error.response.data.data.msg,
+              modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
+              modalOkButton : labels.LVT_MODAL_DEFAULT_BUTTON_OK
             }
           });
           console.log(error.response.data);
@@ -365,7 +351,7 @@ class Create extends Component {
         } else {
           console.log('Error', error.message);
         }
-        this.setState({ loading: false, error: true, modalVisible: true });
+        this.setState({ loading: false, error: true  });
       });
     } else {
       this.setState({
@@ -430,15 +416,20 @@ class Create extends Component {
             let formFields = {...this.state.formFields};
             f =this.parsePersonField(field);
             v = this.parsePersonData(field, personaData[field]);
+
+            // console.log(f+':', v);
             
             if(f == 'customfields'){
               this.parseCustomFields(v)
-            }else{
+            } else if(f == 'lvtImages' ){
+              v = this.parsePhotos(v);
+              this.setState({[f]:v});
+              console.log(f+':', v);
+            } else{
               formFields[f] = v;
               this.setState( {formFields} );
             }
-            f = '';
-            v = '';
+            f = ''; v = '';
         }
       }
 
@@ -460,8 +451,8 @@ class Create extends Component {
   render() {
     const gendersList = this.state.genders;
     let customFieldList = this.state.customFields;
-    console.log('render okFunctionState: ',this.state.okFunctionState)
-    // console.log('render customFieldList: ',this.state.customFields)
+    let lvtImages = this.state.lvtImages;
+    // console.log('render lvtImages: ',  lvtImages)
     
     if (this.state.redirect) {
       return <Redirect to='/person/list'/>;
@@ -484,7 +475,7 @@ class Create extends Component {
               modalBody = {this.state.modalData.modalBody}
               labelOkButton = {this.state.modalData.modalOkButton}
               labelCancelButton = {this.state.modalData.modalCancelButton}
-              okFunction = {this.state.okFunctionState}
+              okFunction = {this.state.modalData.okFunctionState}
             />
           : ''
         }
@@ -728,31 +719,31 @@ class Create extends Component {
                   <strong>Otros</strong> Características adicionales
                 </CardHeader>
                 <CardBody>
-                <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtHeight">Estatura</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <InputGroup>
-                        <Input
-                          type="number"
-                          id="lvtHeight"
-                          name="lvtHeight"
-                          placeholder="170"
-                          value={this.state.formFields.lvtHeight}
-                          onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid = { this.state.errorFields.valid.indexOf("lvtHeight") > -1 }
-                          invalid = { this.state.errorFields.invalid.indexOf("lvtHeight") > -1 }
-                        />
-                        <InputGroupAddon addonType="append">
-                          <InputGroupText>
-                            {defines.LVT_HEIGHT_UNIT}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <FormText color="muted">Escribe cuánto mide la persona</FormText>
-                    </Col>
-                  </FormGroup>
+                  <FormGroup row>
+                      <Col md="3">
+                        <Label htmlFor="lvtHeight">Estatura</Label>
+                      </Col>
+                      <Col xs="12" md="9">
+                        <InputGroup>
+                          <Input
+                            type="number"
+                            id="lvtHeight"
+                            name="lvtHeight"
+                            placeholder="170"
+                            value={this.state.formFields.lvtHeight}
+                            onChange={(e) => this.inputChangeHandler.call(this, e)}
+                            valid = { this.state.errorFields.valid.indexOf("lvtHeight") > -1 }
+                            invalid = { this.state.errorFields.invalid.indexOf("lvtHeight") > -1 }
+                          />
+                          <InputGroupAddon addonType="append">
+                            <InputGroupText>
+                              {defines.LVT_HEIGHT_UNIT}
+                            </InputGroupText>
+                          </InputGroupAddon>
+                        </InputGroup>
+                        <FormText color="muted">Escribe cuánto mide la persona</FormText>
+                      </Col>
+                    </FormGroup>
                   <FormGroup row>
                     <Col md="3">
                       <Label htmlFor="lvtWeight">Peso</Label>
@@ -832,82 +823,38 @@ class Create extends Component {
                 <CardBody>
                   <FormGroup row>
                     <Col xs="12" md="12">
-                        <RUG
-                          rules = {{
-                            limit: 10,
-                            size: 20000
-                          }}
-
-                          accept = {['jpg', 'jpeg', 'png']}
-
-                          action = {defines.API_DOMAIN + '/uploadimages'}
-
-                          source = {(response) => {
-                            return response.images;
-                          }}
-
-                          onWarning = {(type, rules) => {
-                            switch(type) {
-                              case 'accept':
-                                console.log(`Only ${rules.accept.join(', ')}`)
-                                break;
-                        
-                              case 'limit':
-                                console.log('limit <= ', rules.limit)
-                                break;
-
-                              case 'size':
-                                console.log('max size <= ', rules.size)
-                                break;
-                        
-                              case 'minWidth': case 'minHeight':
-                                console.log('Dimensions > ', `${rules.width.min}x${rules.height.min}`)
-                                break;
-                        
-                              case 'maxWidth': case 'maxHeight':
-                                console.log('Dimensions < ', `${rules.width.max}x${rules.height.max}`)
-                                break;
-                        
-                              default:
-                                break;
-                            }
-                          }}
-
-                          // onChange = {(imagesUploaded) => {
-                          //   this.setState({ lvtImages: imagesUploaded })
-                          // }}
-
-                          onSuccess = {(imageUploaded) => {
-                            let arrImages = this.state.lvtImages
-                            arrImages.push({
-                              "uid": imageUploaded.uid,
-                              "path": defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + imageUploaded.source.imgThumbnail,
-                              "imgThumbnail": imageUploaded.source.imgThumbnail,
-                              "imgOptimized": imageUploaded.source.imgOptimized,
-                              "imgOriginal": imageUploaded.source.imgOriginal
-                            })
-                            this.setState({ lvtImages: arrImages })
-                          }}
-                          
-                          onConfirmDelete = {(currentImage, images) => {
-                            return window.confirm(`¿Seguro que desea eliminar '${currentImage.source.originalname}'?`)
-                          }}
-
-                          onDeleted={(deletedImage, images) => {
-                            let arrImages = this.state.lvtImages.filter(function(item) {
-                              if(item.uid !== deletedImage.uid){
-                                return true
-                              }
-                              return false;
-                            })
+                      {
+                        this.state.lvtImages.length > 0 ?
+                          <div>
+                            <RUG
+                              rules = {RUG_RULES}
+                              accept = {RUG_ACCEPT}
+                              action = {RUG_ACTION}
+                              // This propperty seems to be loaded once. It is not reactive to a state.
+                              // so, the entire elemente must be loaded to make it work
+                              initialState = { this.state.lvtImages }
+                              
+                              source = {this.rugSource}
+                              onWarning = {this.rugOnWarning}
+                              onSuccess = {this.rugOnSuccess}
+                              onConfirmDelete = {this.rugOnConfirmDelete}
+                              onDeleted={this.rugOnDeleted}
+                            />
+                          </div>
+                        :
+                          <RUG
+                            rules = {RUG_RULES}
+                            accept = {RUG_ACCEPT}
+                            action = {RUG_ACTION}
                             
-                            if ( deletedImage.selected && images.length ) {
-                              images[0].select()
-                            }
-
-                            this.setState({ lvtImages: arrImages })
-                          }}
-                        />
+                            source = {this.rugSource}
+                            onWarning = {this.rugOnWarning}
+                            onSuccess = {this.rugOnSuccess}
+                            onConfirmDelete = {this.rugOnConfirmDelete}
+                            onDeleted={this.rugOnDeleted}
+                          />
+                      }
+                        
                     </Col>
                   </FormGroup>
 
@@ -1012,6 +959,9 @@ class Create extends Component {
       case 'observations':
         return 'lvtObservations'
         break;
+      case 'photo':
+        return 'lvtImages'
+        break;
       default:
         break;
     }
@@ -1019,15 +969,6 @@ class Create extends Component {
   }
   parsePersonData( field, value ){ 
     switch (field) {
-      case 'dni':
-        return value
-        break;
-      case 'firstname':
-        return value
-        break;
-      case 'lastname':
-        return value
-        break;
       case 'dob':
         console.log('value:',value);
         let temp_date = new Date(value)
@@ -1046,30 +987,6 @@ class Create extends Component {
           return 1;
         else if(value=='Otros')
           return 3;
-        break;
-      case 'height':
-        return value
-        break;
-      case 'weight':
-        return value
-        break;
-      case 'ruc':
-        return value
-        break;
-      case 'email':
-        return value
-        break;
-      case 'phone1':
-        return value
-        break;
-      case 'phone2':
-        return value
-        break;
-      case 'address':
-        return value
-        break;
-      case 'observations':
-        return value
         break;
       default:
         return value
@@ -1090,8 +1007,94 @@ class Create extends Component {
       })
     });
     this.setState({editCustomValues});
+  }
 
-    // console.log('formCustoms: ', formCustoms)
+  parsePhotos = ( photos) =>{
+
+    photos.map((photo)=>{
+      
+      photo['name'] = photo.url;
+      photo['source'] = defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + photo.thumbnail;
+      photo['path'] = defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + photo.thumbnail;
+      photo['imgThumbnail'] = photo.thumbnail;
+      photo['imgOptimized'] = photo.optimized;
+      let original = photo.optimized;
+      original = original.split('_').slice(1,original.length);
+      original = original.join('_');
+      photo['imgOriginal'] = original;
+    })
+    console.log('photo:', photos)
+    return photos ;
+  }
+
+
+  /**
+   * RUG CUSTOM FUNCTIOLITY
+   */
+
+  rugSource = (response) => {
+    return response.images;
+  }
+
+  rugOnWarning = (type, rules) => {
+    switch(type) {
+      case 'accept':
+        console.log(`Only ${rules.accept.join(', ')}`)
+        break;
+
+      case 'limit':
+        console.log('limit <= ', rules.limit)
+        break;
+
+      case 'size':
+        console.log('max size <= ', rules.size)
+        break;
+
+      case 'minWidth': case 'minHeight':
+        console.log('Dimensions > ', `${rules.width.min}x${rules.height.min}`)
+        break;
+
+      case 'maxWidth': case 'maxHeight':
+        console.log('Dimensions < ', `${rules.width.max}x${rules.height.max}`)
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  rugOnSuccess = (imageUploaded) => {
+    console.log('======: on success: ', imageUploaded)
+    let arrImages = this.state.lvtImages
+    arrImages.push({
+      "uid": imageUploaded.uid,
+      "path": defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + imageUploaded.source.imgThumbnail,
+      "imgThumbnail": imageUploaded.source.imgThumbnail,
+      "imgOptimized": imageUploaded.source.imgOptimized,
+      "imgOriginal": imageUploaded.source.imgOriginal
+    })
+    this.setState({ lvtImages: arrImages })
+  }
+
+  rugOnConfirmDelete = (currentImage, images) => {
+    console.log(' currentImage: ', currentImage)
+    console.log(' currentImage to delete : ', currentImage.source)
+    return window.confirm(`¿Seguro que desea eliminar '${currentImage.source.originalname}'?`)
+  }
+
+  rugOnDeleted = (deletedImage, images) => {
+    let arrImages = this.state.lvtImages.filter(function(item) {
+      if(item.imgThumbnail !== deletedImage.imgThumbnail){
+        return true
+      }
+      return false;
+    })
+    
+    if ( deletedImage.selected && images.length ) {
+      images[0].select()
+    }
+
+    this.setState({ lvtImages: arrImages })
   }
 }
 

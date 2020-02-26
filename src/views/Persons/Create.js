@@ -424,8 +424,11 @@ class Create extends Component {
             } else if(f == 'lvtImages' ){
               v = this.parsePhotos(v);
               this.setState({[f]:v});
+            } else if( f == 'lvtVideos' ){
+              v = this.parseVideos(v);
+              this.setState({[f]:v});
               console.log(f+':', v);
-            } else{
+            } else {
               formFields[f] = v;
               this.setState( {formFields} );
             }
@@ -451,8 +454,8 @@ class Create extends Component {
   render() {
     const gendersList = this.state.genders;
     let customFieldList = this.state.customFields;
-    let lvtImages = this.state.lvtImages;
-    // console.log('render lvtImages: ',  lvtImages)
+    let lvtVideos = this.state.lvtVideos;
+    console.log('render lvtVideos: ',  lvtVideos)
     
     if (this.state.redirect) {
       return <Redirect to='/person/list'/>;
@@ -878,12 +881,16 @@ class Create extends Component {
                         <FilePond
                           ref={ref => (this.pond = ref)}
                           // files={this.state.lvtVideos}
+                          // files={
+                          //   [{source:defines.API_DOMAIN + '/uploadvideo/1582595290262-video2020-02-2420-35-35.mp4'}]
+                          // }
                           allowMultiple={true}
                           allowDrop={false}
                           acceptedFileTypes={['video/*']}
                           server={defines.API_DOMAIN + '/uploadvideo'}
                           oninit={() => this.handleInitUpload()}
                           onprocessfile = {(error, file) => {
+                            console.log('file processed: ', file)
                             let processedFile = JSON.parse(file.serverId);
                             let arrVideos = this.state.lvtVideos;
                             arrVideos.push({
@@ -962,6 +969,9 @@ class Create extends Component {
       case 'photo':
         return 'lvtImages'
         break;
+      case 'videos':
+        return 'lvtVideos'
+        break;
       default:
         break;
     }
@@ -1025,6 +1035,13 @@ class Create extends Component {
     })
     console.log('photo:', photos)
     return photos ;
+  }
+
+  parseVideos = ( videos ) => {
+    videos.map((video)=>{
+      video['filename']=video.url
+    })
+    return videos;
   }
 
 

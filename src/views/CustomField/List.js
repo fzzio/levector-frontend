@@ -88,8 +88,14 @@ class List extends Component {
         });
     }
 
+    statusSwitch =( e )=>{
+        let idfieldcastp = e.target.dataset.idfieldcastp;
+        let ischecked = e.target.checked;
+        console.log('----switch id: ', idfieldcastp)
+        console.log('----switch id: ', ischecked)
+    }
+
     cancelFunctionState =()=>{
-        console.log('----handle cancel ----')
         this.setState({modalVisible:false})
     }
 
@@ -149,7 +155,7 @@ class List extends Component {
             modalVisible:true,
             loading: false,
             modal:{
-                modalType : 'primary',
+                modalType : deleted_status==2 ? 'warning': 'primary',
                 modalBody : deleted_status==2 ? 'Este campo no puede eliminarse porque esta siendo usado. Su estado ha cambiado a deshabilitado.': labels.LVT_MODAL_DEFAULT_DELETION_SUCCESS_TEXT,
                 modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
                 modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
@@ -257,19 +263,22 @@ class List extends Component {
                                                         }
                                                     </td>
                                                     <td>
-                                                        <Link to={`/customfield/${customField.idfieldcastp}/edit`} outline className="btn btn-dark btn-sm" size="sm">
-                                                            <i className="fa fa-edit"></i>
-                                                        </Link>
+                                                        
                                                         { customField.status == 1 &&
-                                                            <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfieldcastp)}>
-                                                                <i className="fa fa-trash"></i>
-                                                            </Button>
+                                                            <React.Fragment>
+                                                                <Link to={`/customfield/${customField.idfieldcastp}/edit`} outline className="btn btn-dark btn-sm" size="sm">
+                                                                    <i className="fa fa-edit"></i>
+                                                                </Link>
+                                                                <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfieldcastp)}>
+                                                                    <i className="fa fa-trash"></i>
+                                                                </Button>
+                                                            </React.Fragment>
                                                         }
                                                         
                                     
                                                     </td>
                                                     <td>
-                                                        <AppSwitch className={'mx-1'} color={'dark'} checked={customField.status == 2? false : true} />
+                                                        <AppSwitch className={'mx-1'} color={'dark'} checked={customField.status == 2? false : true} data-idfieldcastp={customField.idfieldcastp} onChange={this.statusSwitch} />
                                                     </td>
                                                 </tr>
                                             )

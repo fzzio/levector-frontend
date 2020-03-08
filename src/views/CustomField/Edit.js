@@ -139,7 +139,7 @@ class Edit extends Component {
             modal:{
                 modalType : 'danger',                
                 modalTitle : labels.LVT_MODAL_DEFAULT_ERROR_TITLE,
-                modalBody : error_message,
+                modalBody : "No se puede actualizar este campo. "+error_message,
                 modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
                 okFunctionState: null
             }

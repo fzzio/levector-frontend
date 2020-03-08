@@ -80,7 +80,7 @@ class LevectorDashboard extends Component {
       <div className="animated fadeIn">
         <Row>
           <Col xs="12" sm="6" lg="4">
-            <Widget02 header={summaryCasting.totalPersons + ""} mainText="Personas" icon="fa fa-users" color="primary" />
+            <Widget02 header={(summaryCasting.totalPersons || 0) + ""} mainText="Personas" icon="fa fa-users" color="primary" />
           </Col>
           <Col xs="12" sm="6" lg="4">
             <Widget02 header="0" mainText="Locaciones" icon="fa fa-map-marker" color="info" />
@@ -104,30 +104,30 @@ class LevectorDashboard extends Component {
                         <div className="progress-group-header">
                           <i className="icon-user progress-group-icon"></i>
                           <span className="title">Masculino</span>
-                          <span className="ml-auto font-weight-bold">{summaryCasting.percentMale} %</span>
+                          <span className="ml-auto font-weight-bold">{parseFloat(summaryCasting.percentMale).toFixed(2)} %</span>
                         </div>
                         <div className="progress-group-bars">
-                          <Progress className="progress-xs" color="warning" value={summaryCasting.percentMale} />
+                          <Progress className="progress-xs" color="warning" value={parseFloat(summaryCasting.percentMale).toFixed(2)} />
                         </div>
                       </div>
                       <div className="progress-group">
                         <div className="progress-group-header">
                           <i className="icon-user-female progress-group-icon"></i>
                           <span className="title">Femenino</span>
-                          <span className="ml-auto font-weight-bold">{summaryCasting.percentFemale} %</span>
+                          <span className="ml-auto font-weight-bold">{parseFloat(summaryCasting.percentFemale).toFixed(2)} %</span>
                         </div>
                         <div className="progress-group-bars">
-                          <Progress className="progress-xs" color="warning" value={summaryCasting.percentFemale} />
+                          <Progress className="progress-xs" color="warning" value={parseFloat(summaryCasting.percentFemale).toFixed(2)} />
                         </div>
                       </div>
                       <div className="progress-group mb-5">
                         <div className="progress-group-header">
                           <i className="icon-emotsmile progress-group-icon"></i>
                           <span className="title">Otros</span>
-                          <span className="ml-auto font-weight-bold">{summaryCasting.percentOthers} %</span>
+                          <span className="ml-auto font-weight-bold">{parseFloat(summaryCasting.percentOthers).toFixed(2)} %</span>
                         </div>
                         <div className="progress-group-bars">
-                          <Progress className="progress-xs" color="warning" value={summaryCasting.percentOthers} />
+                          <Progress className="progress-xs" color="warning" value={parseFloat(summaryCasting.percentOthers).toFixed(2)} />
                         </div>
                       </div>
                     </ul>

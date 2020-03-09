@@ -8,3 +8,5 @@ exports.LVT_MODAL_DEFAULT_DELETION_SUCCESS_TEXT = 'Registro eliminado existosame
 exports.LVT_MODAL_DEFAULT_ERROR_TITLE = 'Error';
 exports.LVT_MODAL_DEFAULT_ERROR_MESSAGE = 'Accion no pudo realizarse. Por favor nuevamente.';
 exports.LVT_ERROR_FIELDS_MESSAGE = 'Existe uno o más campos inválidos, por favor verifique';
+exports.LVT_LABEL_UTILERIA = 'Utilería';
+exports.LVT_LABEL_VESTUARIO = 'Vestuario';

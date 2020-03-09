@@ -73,22 +73,22 @@ export default {
       children: [
         {
           name: 'Ver todos',
-          url: '',
+          url: '/props/list',
         },
         {
           name: 'Agregar',
-          url: '',
+          url: '/props/create',
         },
         {
           name: 'Campos',
           children: [
             {
               name: 'Agregar',
-              url: '',
+              url: '/customProps/create',
             },
             {
               name: 'Ver todas',
-              url: '',
+              url: '/customProps/list',
             },
           ],
         },

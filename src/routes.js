@@ -49,6 +49,14 @@ const personList = React.lazy(() => import('./views/Persons/List'));
 const personCreate = React.lazy(() => import('./views/Persons/Create'));
 const personView = React.lazy(() => import('./views/Persons/View'));
 
+// Utileria
+const propsList = React.lazy(() => import('./views/Props/List'));
+const propsCreate = React.lazy(() => import('./views/Props/Create'));
+const customPropsCreate = React.lazy(() => import('./views/CustomProps/Create'));
+const customPropsList = React.lazy(() => import('./views/CustomProps/List'));
+
+
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -105,6 +113,13 @@ const routes = [
   { path: '/person/create', exact: true, name: 'Agregar Personas', component: personCreate},
   { path: '/person/edit/:id', exact: true, name: 'Editar Persona', component: personCreate},
   { path: '/person/:id', exact: true, name: 'Persona', component: personView },
+  // Utileria
+  { path: '/props/list', exact: true, name: 'Utileria', component: propsList},
+  { path: '/props/create', exact: true, name: 'Agregar Utileria', component: propsCreate},
+  { path: '/customProps/create', exact: true, name: 'Campo dinámico', component: customPropsCreate},
+  { path: '/customProps/list', exact: true, name: 'Campo dinámico', component: customPropsList},
+  
+  
 ];
 
 export default routes;

@@ -59,7 +59,7 @@ function GenderRadioOption(props){
 
 const RUG_RULES = { limit: 10, size: 20000 };
 const RUG_ACCEPT = ['jpg', 'jpeg', 'png'];
-const RUG_ACTION = defines.API_DOMAIN + '/uploadimages';
+const RUG_ACTION = defines.API_DOMAIN + '/uploadcastingimages';
 
 class Create extends Component {
   constructor(props) {
@@ -408,7 +408,7 @@ class Create extends Component {
         throw new Error( JSON.stringify( {status: responseCustomFields.status, error: responseCustomFields.data.data.msg} ) );
       }
 
-      if( responses[2] && responses[2].status==200){ 
+      if( responses[2] && responses[2].status === 200){
         const personaData = responses[2].data.data[0];
         let f = '';
         let v = '';
@@ -887,7 +887,7 @@ class Create extends Component {
                           allowMultiple={true}
                           allowDrop={false}
                           acceptedFileTypes={['video/*']}
-                          server={defines.API_DOMAIN + '/uploadvideo'}
+                          server={defines.API_DOMAIN + '/uploadcastingvideos'}
                           oninit={() => this.handleInitUpload()}
                           onprocessfile = {(error, file) => {
                             console.log('file processed: ', file)
@@ -977,6 +977,7 @@ class Create extends Component {
     }
     return field;
   }
+
   parsePersonData( field, value ){ 
     switch (field) {
       case 'dob':
@@ -1004,8 +1005,8 @@ class Create extends Component {
     }
     return field;
   }
-  parseCustomFields (customData){
 
+  parseCustomFields (customData){
     let formCustoms = this.state.customFieldsData;
     let editCustomValues = this.state.editCustomValues;
     customData.map((f)=>{
@@ -1020,18 +1021,10 @@ class Create extends Component {
   }
 
   parsePhotos = ( photos) =>{
-
     photos.map((photo)=>{
-      
-      photo['name'] = photo.url;
-      photo['source'] = defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + photo.thumbnail;
-      photo['path'] = defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + photo.thumbnail;
-      photo['imgThumbnail'] = photo.thumbnail;
-      photo['imgOptimized'] = photo.optimized;
-      let original = photo.optimized;
-      original = original.split('_').slice(1,original.length);
-      original = original.join('_');
-      photo['imgOriginal'] = original;
+      photo['name'] = photo.imgId;
+      photo['source'] = photo.imgThumbnail;
+      return photo;
     })
     console.log('photo:', photos)
     return photos ;
@@ -1085,7 +1078,8 @@ class Create extends Component {
     let arrImages = this.state.lvtImages
     arrImages.push({
       "uid": imageUploaded.uid,
-      "path": defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + '/' + imageUploaded.source.imgThumbnail,
+      "name": imageUploaded.name,
+      "source": imageUploaded.source.imgThumbnail,
       "imgThumbnail": imageUploaded.source.imgThumbnail,
       "imgOptimized": imageUploaded.source.imgOptimized,
       "imgOriginal": imageUploaded.source.imgOriginal
@@ -1096,7 +1090,7 @@ class Create extends Component {
   rugOnConfirmDelete = (currentImage, images) => {
     console.log(' currentImage: ', currentImage)
     console.log(' currentImage to delete : ', currentImage.source)
-    return window.confirm(`¿Seguro que desea eliminar '${currentImage.source.originalname}'?`)
+    return window.confirm(`¿Seguro que desea eliminar '${currentImage.name}'?`)
   }
 
   rugOnDeleted = (deletedImage, images) => {

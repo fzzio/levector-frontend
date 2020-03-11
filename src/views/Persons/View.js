@@ -116,9 +116,8 @@ class View extends Component {
                 let personData = responsePerson.data.data[0]
                 let personImagesGallery = personData.photo.map(function(photo) {
                     return {
-                        original: defines.API_DOMAIN + defines.PERSON_PATH_IMG_OPTIMIZED + photo.optimized,
-                        thumbnail: defines.API_DOMAIN + defines.PERSON_PATH_IMG_THUMBNAIL + photo.thumbnail,
-                        fullscreen: defines.API_DOMAIN + defines.PERSON_PATH_IMG_ORIGINAL + photo.url,
+                        original: photo.imgOptimized,
+                        thumbnail: photo.imgThumbnail,
                         originalAlt: personData.dni,
                         thumbnailAlt: personData.dni,
                     }
@@ -278,7 +277,7 @@ class View extends Component {
                                 {( person.videos || []).map((itemVideo, index) =>
                                     <div className="border p-2 mb-3" key={index}>
                                         <Player>
-                                            <source src={defines.API_DOMAIN + defines.PERSON_PATH_VID + itemVideo.url} />
+                                            <source src={itemVideo.url} />
                                         </Player>
                                     </div>
                                 )}

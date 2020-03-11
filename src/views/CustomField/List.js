@@ -57,12 +57,16 @@ class List extends Component {
         }))
         .catch( (error) => {
             if (error.response) { 
-                this.setState({ 
-                    error: true,
-                    errorCode: error.response.status,
-                    errorMessage: error.response.data.data.msg,
-                });
-                console.log(this.state);
+                if(error.response.data.data){
+                    this.setState({
+                        error: true,
+                        errorCode: error.response.status,
+                        errorMessage: error.response.data.data.msg
+                    });
+                    console.log(this.state.errorMessage);
+                }else{
+                    console.log(error.response);
+                }
             } else if (error.request) {
                 console.log(error.request);
             } else {
@@ -263,10 +267,9 @@ class List extends Component {
                                                         }
                                                     </td>
                                                     <td>
-                                                        
                                                         { customField.status == 1 &&
                                                             <React.Fragment>
-                                                                <Link to={`/customfield/${customField.idfieldcastp}/edit`} outline className="btn btn-dark btn-sm" size="sm">
+                                                                <Link to={`/customfield/${customField.idfieldcastp}/edit`} outline="true" className="btn btn-dark btn-sm" size="sm">
                                                                     <i className="fa fa-edit"></i>
                                                                 </Link>
                                                                 <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfieldcastp)}>
@@ -274,8 +277,6 @@ class List extends Component {
                                                                 </Button>
                                                             </React.Fragment>
                                                         }
-                                                        
-                                    
                                                     </td>
                                                     <td>
                                                         <AppSwitch className={'mx-1'} color={'dark'} checked={customField.status == 2? false : true} data-idfieldcastp={customField.idfieldcastp} onChange={this.statusSwitch} />

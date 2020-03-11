@@ -16,11 +16,50 @@ import labels from '../../labels';
 import CustomModal from '../Notifications/Modals/CustomModal';
 
 const TEMP_UTILITY_LIST = [
-    {"idfieldcastp":1, "idfieldtype":1, "idfieldcategory":2, "type":"Text", "fieldoption":"Marca", "helptext":"Marca de la prenda", "appendtext":"", "status":1, "values":[]},
-    {"idfieldcastp":2, "idfieldtype":1, "idfieldcategory":2, "type":"Text", "fieldoption":"Talla", "helptext":"Talla de la prenda de vestir ", "appendtext":"", "status":1, "values":[]},
-    {"idfieldcastp":3, "idfieldtype":3, "idfieldcategory":1, "type":"Combo Box", "fieldoption":"Ambiente", "helptext":"Ambiente del lugar", "appendtext":"", "status":1, "values":[
-        {"idfieldopcastp":1, "value":"Sala"}, {"idfieldopcastp":2, "value":"Comedor"}, {"idfieldopcastp":3, "value":"Cocina"}, {"idfieldopcastp":4, "value":"Patio"}
-    ]}]
+    {
+        "idfieldcastp": 1,
+        "idfieldtype": 1,
+        "idfieldcategory": 2,
+        "type": "Text",
+        "fieldoption": "Marca",
+        "helptext": "Marca de la prenda",
+        "appendtext": "",
+        "status": 1,
+        "values": []
+    }, {
+        "idfieldcastp": 2,
+        "idfieldtype": 1,
+        "idfieldcategory": 2,
+        "type": "Text",
+        "fieldoption": "Talla",
+        "helptext": "Talla de la prenda de vestir ",
+        "appendtext": "",
+        "status": 1,
+        "values": []
+    }, {
+        "idfieldcastp": 3,
+        "idfieldtype": 3,
+        "idfieldcategory": 1,
+        "type": "Combo Box",
+        "fieldoption": "Ambiente",
+        "helptext": "Ambiente del lugar",
+        "appendtext": "",
+        "status": 1,
+        "values": [{
+            "idfieldopcastp": 1,
+            "value": "Sala"
+        }, {
+            "idfieldopcastp": 2,
+            "value": "Comedor"
+        }, {
+            "idfieldopcastp": 3,
+            "value": "Cocina"
+        }, {
+            "idfieldopcastp": 4,
+            "value": "Patio"
+        }]
+    }
+];
 
 class List extends Component {
     constructor(props) {
@@ -228,8 +267,9 @@ class List extends Component {
                                     <tr>
                                         <th scope="col">No.</th>
                                         <th scope="col">Nombre</th>
-                                        <th scope="col">Utilería</th>
                                         <th scope="col">Tipo</th>
+                                        <th scope="col">Categoría</th>
+                                        <th scope="col">Tipo de Campo</th>
                                         <th scope="col">Ayuda</th>
                                         <th scope="col">Unidades</th>
                                         <th scope="col">Items</th>
@@ -244,7 +284,17 @@ class List extends Component {
                                                 <tr key={index}>
                                                     <th>{index + 1}</th>
                                                     <td>{customField.fieldoption}</td>
-                                                    <td>{customField.idfieldcategory == 1 ? labels.LVT_LABEL_UTILERIA : labels.LVT_LABEL_VESTUARIO}</td>
+                                                    <td>{customField.idfieldcategory === 1 ? labels.LVT_LABEL_UTILERIA : labels.LVT_LABEL_VESTUARIO}</td>
+                                                    <td>
+                                                        <ul>
+                                                            <li>
+                                                                {customField.idfieldcategory === 1 ? 'Casa' : 'Hombre'}
+                                                            </li>
+                                                            <li>
+                                                                {customField.idfieldcategory === 1 ? 'Oficina' : 'Niño'}
+                                                            </li>
+                                                        </ul>
+                                                    </td>
                                                     <td className="text-center">
                                                         {
                                                             (customField.idfieldtype === defines.CUSTOM_FIELD_TEXT) ?

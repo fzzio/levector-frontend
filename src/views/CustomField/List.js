@@ -19,6 +19,7 @@ class List extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            module: (this.props.match.params.module) ? parseInt(this.props.match.params.module): defines.LVT_CASTING,
             customFields: [],
             limit: 8,
             offset: 0,
@@ -42,7 +43,7 @@ class List extends Component {
 
     componentDidMount() {
         // fetch all API data
-        const requestCustomFields = axios.get( defines.API_DOMAIN + '/allfieldcastopp' );
+        const requestCustomFields = axios.get( defines.API_DOMAIN + '/field?offset=0&limit=10&module=' + this.state.module );
         axios.all([requestCustomFields]).then(axios.spread((...responses) => {
             const responseCustomFields = responses[0];
         
@@ -75,11 +76,11 @@ class List extends Component {
         });
     }
 
-    handleDelete(idfieldcastp){
+    handleDelete(idfield){
         // TODO @fzzio call api to delete
         this.setState({
             modalVisible:true,
-            idtodelete:idfieldcastp,
+            idtodelete:idfield,
             modal:{
                 modalType : 'danger',
                 modalBody : 'Esta seguro de eliminar a registro?',
@@ -93,9 +94,9 @@ class List extends Component {
     }
 
     statusSwitch =( e )=>{
-        let idfieldcastp = e.target.dataset.idfieldcastp;
+        let idfield = e.target.dataset.idfield;
         let ischecked = e.target.checked;
-        console.log('----switch id: ', idfieldcastp)
+        console.log('----switch id: ', idfield)
         console.log('----switch id: ', ischecked)
     }
 
@@ -118,13 +119,13 @@ class List extends Component {
                 this.confirmDeletedField(resp.data.data.status || 3);
                 if (resp.data.data.status == 3) {
                     this.setState({
-                        customFields: this.state.customFields.filter(customField => parseInt(customField.idfieldcastp) !== parseInt(that.state.idtodelete))
+                        customFields: this.state.customFields.filter(customField => parseInt(customField.idfield) !== parseInt(that.state.idtodelete))
                     })    
                 }else{
                     let temp_fields = this.state.customFields;
                     
                     temp_fields.map((field)=>{
-                        if(field.idfieldcastp == that.state.idtodelete){
+                        if(field.idfield == that.state.idtodelete){
                             field.status = resp.data.data.status;
                         }
                     })
@@ -174,6 +175,29 @@ class List extends Component {
 
     render() {
         const customFieldList = this.state.customFields;
+        const moduleId = this.state.module;
+        let moduleName = '';
+        switch (moduleId) {
+            case defines.LVT_CASTING:
+                moduleName = labels.LVT_LABEL_PERSON;
+                break;
+
+            case defines.LVT_PROPS:
+                moduleName = labels.LVT_LABEL_PROPS;
+                break;
+
+            case defines.LVT_VESTRY:
+                moduleName = labels.LVT_LABEL_VESTRY;
+                break;
+
+            case defines.LVT_LOCATIONS:
+                moduleName = labels.LVT_LABEL_LOCATIONS;
+                break;
+
+            default:
+                moduleName = labels.LVT_LABEL_PERSON;
+                break;
+        }
         console.log('---- customFieldList: ', customFieldList)
         if (this.state.error) {
             return(
@@ -211,7 +235,7 @@ class List extends Component {
                 <Col xl={12}>
                     <Card>
                         <CardHeader>
-                            <i className="fa fa-align-justify"></i> Dinámicos <small className="text-muted">Campos personalizados para el usuario</small>
+                            <i className="fa fa-align-justify"></i> Dinámicos <small className="text-muted">Campos personalizados para {moduleName}</small>
                         </CardHeader>
                         <CardBody>
                             <Table responsive hover bordered>
@@ -223,6 +247,7 @@ class List extends Component {
                                         <th scope="col">Ayuda</th>
                                         <th scope="col">Unidades</th>
                                         <th scope="col">Items</th>
+                                        <th scope="col">Categorías</th>
                                         <th scope="col">Acciones</th>
                                         <th scope="col">Estado</th>
                                     </tr>
@@ -267,19 +292,32 @@ class List extends Component {
                                                         }
                                                     </td>
                                                     <td>
-                                                        { customField.status == 1 &&
+                                                        {
+                                                            ( customField.categories ) ?
+                                                                <ul>
+                                                                    {customField.categories.map((customFieldCategory, indexCategory) =>
+                                                                        <li key={indexCategory}>
+                                                                            {customFieldCategory.value.split('||').join(',')}
+                                                                        </li>
+                                                                    )}
+                                                                </ul>
+                                                            :   ''
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        { customField.idstatus === 1 &&
                                                             <React.Fragment>
-                                                                <Link to={`/customfield/${customField.idfieldcastp}/edit`} outline="true" className="btn btn-dark btn-sm" size="sm">
+                                                                <Link to={`/customfield/${moduleId}/${customField.idfield}/edit`} outline="true" className="btn btn-dark btn-sm" size="sm">
                                                                     <i className="fa fa-edit"></i>
                                                                 </Link>
-                                                                <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfieldcastp)}>
+                                                                <Button outline color="dark" size="sm" className="ml-1" onClick={() => this.handleDelete(customField.idfield)}>
                                                                     <i className="fa fa-trash"></i>
                                                                 </Button>
                                                             </React.Fragment>
                                                         }
                                                     </td>
                                                     <td>
-                                                        <AppSwitch className={'mx-1'} color={'dark'} checked={customField.status == 2? false : true} data-idfieldcastp={customField.idfieldcastp} onChange={this.statusSwitch} />
+                                                        <AppSwitch className={'mx-1'} color={'dark'} checked={customField.status === 2? false : true} data-idfield={customField.idfield} onChange={this.statusSwitch} />
                                                     </td>
                                                 </tr>
                                             )

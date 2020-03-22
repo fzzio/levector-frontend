@@ -1,3 +1,5 @@
+import defines from '../src/defines'
+
 export default {
   items: [
     {
@@ -30,11 +32,65 @@ export default {
           children: [
             {
               name: 'Agregar',
-              url: '/customfield/create',
+              url: '/customfield/' + defines.LVT_CASTING + '/create',
             },
             {
               name: 'Ver todas',
-              url: '/customfield/list',
+              url: '/customfield/' + defines.LVT_CASTING + '/list',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'Utilería',
+      icon: 'icon-umbrella',
+      children: [
+        {
+          name: 'Ver todos',
+          url: '/props/list',
+        },
+        {
+          name: 'Agregar',
+          url: '/props/create',
+        },
+        {
+          name: 'Campos',
+          children: [
+            {
+              name: 'Agregar',
+              url: '/customfield/' + defines.LVT_PROPS + '/create',
+            },
+            {
+              name: 'Ver todas',
+              url: '/customfield/' + defines.LVT_PROPS + '/list',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'Vestuario',
+      icon: 'icon-mustache',
+      children: [
+        {
+          name: 'Ver todos',
+          url: '/props/list',
+        },
+        {
+          name: 'Agregar',
+          url: '/props/create',
+        },
+        {
+          name: 'Campos',
+          children: [
+            {
+              name: 'Agregar',
+              url: '/customfield/' + defines.LVT_VESTRY + '/create',
+            },
+            {
+              name: 'Ver todas',
+              url: '/customfield/' + defines.LVT_VESTRY + '/list',
             },
           ],
         },
@@ -57,38 +113,11 @@ export default {
           children: [
             {
               name: 'Agregar',
-              url: '',
+              url: '/customfield/' + defines.LVT_LOCATIONS + '/create',
             },
             {
               name: 'Ver todas',
-              url: '',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: 'Utilería y vestuario',
-      icon: 'icon-mustache',
-      children: [
-        {
-          name: 'Ver todos',
-          url: '/props/list',
-        },
-        {
-          name: 'Agregar',
-          url: '/props/create',
-        },
-        {
-          name: 'Campos',
-          children: [
-            {
-              name: 'Agregar',
-              url: '/customProps/create',
-            },
-            {
-              name: 'Ver todas',
-              url: '/customProps/list',
+              url: '/customfield/' + defines.LVT_LOCATIONS + '/list',
             },
           ],
         },

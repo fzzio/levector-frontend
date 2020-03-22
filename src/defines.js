@@ -3,6 +3,13 @@
 */
 exports.API_DOMAIN = 'http://ec2-3-86-160-83.compute-1.amazonaws.com:3000';
 // exports.API_DOMAIN = 'http://localhost:3000';
+
+// MODULE IDENTIFIERS
+exports.LVT_CASTING = 1;
+exports.LVT_PROPS = 2;
+exports.LVT_VESTRY = 3;
+exports.LVT_LOCATIONS = 4;
+
 exports.CUSTOM_FIELD_TEXT = 1;
 exports.CUSTOM_FIELD_TEXTAREA = 2;
 exports.CUSTOM_FIELD_COMBOBOX = 3;

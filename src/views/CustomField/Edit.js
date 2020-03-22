@@ -24,11 +24,14 @@ class Edit extends Component {
         super(props);
     
         this.state = {
+            module: (this.props.match.params.module) ? parseInt(this.props.match.params.module): defines.LVT_CASTING,
             lvtCustomFieldName: '',
             lvtCustomFieldType: '0',
+            lvtCustomFieldCategories: [],
             lvtHelpText: '',
             lvtAppendText: '',
             fieldTypes: [],
+            categories: [],
             isEnableCustomFieldOptions: false,
             lvtCusmtomFieldOptions: [],            
             loading: false,
@@ -52,6 +55,7 @@ class Edit extends Component {
         this.inputTypeHandler = this.inputTypeHandler.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.inputCategoryHandler = this.inputCategoryHandler.bind(this);
         this.inputOptionChangeHandler = this.inputOptionChangeHandler.bind(this);       
     }
 
@@ -104,6 +108,27 @@ class Edit extends Component {
         }
 
         return isEnableCustomFieldOptions;
+    }
+
+    inputCategoryHandler(e){
+        let itemValue = parseInt(e.target.value);
+        let isChecked = e.target.checked;
+        let lvtCustomFieldCategories = this.state.lvtCustomFieldCategories;
+
+        let indexItemValue = lvtCustomFieldCategories.indexOf( parseInt( itemValue ) );
+        if(indexItemValue === -1){
+            // the item does not exist, then if it is checked it is added
+            if(isChecked){
+                lvtCustomFieldCategories.push( parseInt( itemValue ) )
+            }
+        }else{
+            // the item exists, then if it is not checked it is deleted
+            if(!isChecked){
+                lvtCustomFieldCategories.splice(indexItemValue, 1);
+            }
+        }
+        lvtCustomFieldCategories.sort()
+        this.setState({lvtCustomFieldCategories: lvtCustomFieldCategories});
     }
 
     inputTypeHandler(e) {
@@ -179,16 +204,27 @@ class Edit extends Component {
             appendtext: this.state.lvtAppendText,
             options: []
         }
+
+        // Get options
         if( customFieldOptions.length ){
-            customFormFieldata['options'] = customFieldOptions
+            customFormFieldata['options'] = customFieldOptions;
+        }
+
+        // Get Categories
+        if( this.state.lvtCustomFieldCategories.length ){
+            customFormFieldata['categories'] = this.state.lvtCustomFieldCategories.map(function(customFieldCategory) {
+                return {
+                  idcategory: customFieldCategory,
+                }
+            });
         }
     
-        console.log(customFormFieldata)
+        console.log(JSON.stringify(customFormFieldata));
 
         this.setState({ loading: true });
 
         axios.put(
-            defines.API_DOMAIN + '/fieldcastp/' + this.state.customFieldId, 
+            defines.API_DOMAIN + '/field/update/?id=' + this.state.customFieldId,
             customFormFieldata
         )
         .then( (response) => {
@@ -246,8 +282,8 @@ class Edit extends Component {
     }
 
     componentDidMount() {
-        //obtain customField
-        const requestCustomField = axios.get( defines.API_DOMAIN + '/fieldcastp/' + this.props.match.params.customfieldId);
+        // Obtain customField
+        const requestCustomField = axios.get( defines.API_DOMAIN + '/field?id=' + this.props.match.params.customfieldId + '&module=' + this.state.module );
         axios.all([requestCustomField]).then(axios.spread((...responses) => {
             const responseCustomField = responses[0];
             if(responseCustomField.status === 200 ) {             
@@ -280,14 +316,25 @@ class Edit extends Component {
 
         // fetch all API data
         const requestFieldTypes = axios.get( defines.API_DOMAIN + '/fieldtype' );
-        axios.all([requestFieldTypes]).then(axios.spread((...responses) => {
+        // Request Categories
+        const requestCategories = axios.get( defines.API_DOMAIN + '/category?module=' + this.state.module );
+        axios.all([requestFieldTypes, requestCategories]).then(axios.spread((...responses) => {
             const responseFieldTypes = responses[0];
+            const responseCategories = responses[1];
             if(responseFieldTypes.status === 200 ) {
                 this.setState({ 
                     fieldTypes: responseFieldTypes.data.data,
                 });
             }else{
                 throw new Error( JSON.stringify( {status: responseFieldTypes.status, error: responseFieldTypes.data.data.msg} ) );
+            }
+
+            if(responseCategories.status === 200 ) {
+                this.setState({
+                    categories: responseCategories.data.data,
+                });
+            }else{
+                throw new Error( JSON.stringify( {status: responseCategories.status, error: responseCategories.data.data.msg} ) );
             }
         }))
         .catch( (error) => {
@@ -327,10 +374,34 @@ class Edit extends Component {
 
     render() {
         const fieldTypeList = this.state.fieldTypes;
+        const categoryList = this.state.categories;
+        const moduleId = this.state.module;
         const isEnableCustomFieldOptions = this.state.isEnableCustomFieldOptions;
+        let moduleName = '';
+        switch (moduleId) {
+            case defines.LVT_CASTING:
+                moduleName = labels.LVT_LABEL_PERSON;
+                break;
+
+            case defines.LVT_PROPS:
+                moduleName = labels.LVT_LABEL_PROPS;
+                break;
+
+            case defines.LVT_VESTRY:
+                moduleName = labels.LVT_LABEL_VESTRY;
+                break;
+
+            case defines.LVT_LOCATIONS:
+                moduleName = labels.LVT_LABEL_LOCATIONS;
+                break;
+
+            default:
+                moduleName = labels.LVT_LABEL_PERSON;
+                break;
+        }
         
         if (this.state.redirect) {
-            return <Redirect to='/customfield/list'/>;
+            return <Redirect to={`/customfield/${moduleId}/list`}/>;
         }
         
         if (this.state.loading) {
@@ -363,7 +434,7 @@ class Edit extends Component {
                         <Col xs="12" md="6">
                             <Card>
                                 <CardHeader>
-                                    <strong>Campo dinámico</strong> Información
+                                    <strong>Campo dinámico</strong>  {moduleName}
                                 </CardHeader>
                                 <CardBody>
                                     <FormGroup row>
@@ -403,6 +474,35 @@ class Edit extends Component {
                                             <FormText color="muted">Tipo de campo</FormText>
                                         </Col>
                                     </FormGroup>
+                                    {(categoryList.length > 0) ?
+                                        <FormGroup row>
+                                            <Col md="3">
+                                                <Label htmlFor="lvtCustomCategories">Categorías</Label>
+                                            </Col>
+                                            <Col xs="12" md="9">
+                                                {categoryList.map((category, index) =>
+                                                    <FormGroup check className="checkbox" key={index}>
+                                                        <Input
+                                                            className="form-check-input"
+                                                            type="checkbox"
+                                                            id={"lvtCategoryOption_" + category.idcategory}
+                                                            name="lvtCustomCategories"
+                                                            value={parseInt(category.idcategory)}
+                                                            style={{ textTransform: 'capitalize'}}
+                                                            onChange={(e) => this.inputCategoryHandler.call(this, e)}
+                                                            // checked={this.state.lvtCustomFieldCategories.indexOf( parseInt( category.idcategory ) ) > -1 ? true: false}
+                                                        />
+                                                        <Label check className="form-check-label" htmlFor={`lvtCategoryOption_` + category.idcategory}>
+                                                            {category.name.split('||').join(',')}
+                                                        </Label>
+                                                    </FormGroup>
+                                                )}
+                                                <FormText color="muted">Categorías del campo.</FormText>
+                                            </Col>
+                                        </FormGroup>
+                                        :
+                                        ''
+                                    }
                                     <FormGroup row>
                                         <Col md="3">
                                             <Label htmlFor="lvtHelpText">Texto de ayuda</Label>

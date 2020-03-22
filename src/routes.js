@@ -105,9 +105,10 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', component: LevectorDashboard },
 
   //CustomField
-  { path: '/customfield/list', exact: true, name: 'Campo dinámico', component: customFieldList},
-  { path: '/customfield/create', exact: true, name: 'Campo dinámico', component: customFieldCreate},
-  { path: '/customfield/:customfieldId/edit', exact: true, name: 'Campo dinámico', component: customFieldEdit},
+  { path: '/customfield/:module/list', exact: true, name: 'Campo dinámico', component: customFieldList},
+  { path: '/customfield/:module/create', exact: true, name: 'Campo dinámico', component: customFieldCreate},
+  { path: '/customfield/:module/:customfieldId/edit', exact: true, name: 'Campo dinámico', component: customFieldEdit},
+
   // Person
   { path: '/person/list', exact: true, name: 'Personas', component: personList},
   { path: '/person/create', exact: true, name: 'Agregar Personas', component: personCreate},

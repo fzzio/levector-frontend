@@ -165,27 +165,31 @@ class Create extends Component {
 
         // Get Categories
         if( this.state.lvtCustomFieldCategories.length ){
-            customFormFieldata['categories'] = this.state.lvtCustomFieldCategories.map(function(customFieldCategory) {
-                return {
-                  idcategory: customFieldCategory,
-                }
-            });
+            customFormFieldata['categories'] = this.state.lvtCustomFieldCategories;
         }
     
+        console.log("--- customFormFieldata ---");
         console.log(JSON.stringify(customFormFieldata));
+        console.log("------");
         this.setState({ loading: true });
         axios.post(
             defines.API_DOMAIN + '/field/',
             customFormFieldata
         )
         .then( (response) => {
-            if(response.status === 200 ) {
+            console.log("--- response ---");
+            console.log(JSON.stringify(response));
+            console.log("------");
+            if(response.status === 201 ) {
                 this.setState({ loading: false });
                 this.confirmFieldCreated();
             }else{
                 throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
             }
         }).catch( (error) => {
+            console.log("--- error ---");
+            console.log(JSON.stringify(error));
+            console.log("------");
             if (error.response) { 
                 console.log(error.response.data);
             } else if (error.request) {

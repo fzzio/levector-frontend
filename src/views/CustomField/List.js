@@ -258,7 +258,7 @@ class List extends Component {
                                             customFieldList.map((customField, index) =>
                                                 <tr key={index}>
                                                     <th>{index + 1}</th>
-                                                    <td>{customField.fieldoption}</td>
+                                                    <td>{customField.field}</td>
                                                     <td className="text-center">
                                                         {
                                                             (customField.idfieldtype === defines.CUSTOM_FIELD_TEXT) ?
@@ -280,9 +280,9 @@ class List extends Component {
                                                     <td>{customField.appendtext}</td>
                                                     <td>
                                                         {
-                                                            ( customField.values.length ) ?
+                                                            ( customField.fieldoptions.length ) ?
                                                                 <ul>
-                                                                    {customField.values.map((customFieldItem, indexItem) =>
+                                                                    {customField.fieldoptions.map((customFieldItem, indexItem) =>
                                                                         <li key={indexItem}>
                                                                             {customFieldItem.value.split('||').join(',')}
                                                                         </li>

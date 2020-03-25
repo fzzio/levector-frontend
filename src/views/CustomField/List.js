@@ -371,7 +371,7 @@ class List extends Component {
                 <Card>
                     <CardFooter>
                         <Link to={`/customfield/${moduleId}/create`} size="sm" color="primary" className="btn btn-primary btn-sm">
-                            <i className="fa fa-plus-circle"></i> Añadir {moduleName}
+                            <i className="fa fa-plus-circle"></i> Añadir campo para {moduleName}
                         </Link>
                     </CardFooter>
                 </Card>

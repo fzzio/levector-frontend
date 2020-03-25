@@ -94,7 +94,7 @@ class Edit extends Component {
         });
     }
 
-    isCustomFilesEnabled() {
+    isCustomFieldEnabled() {
         let inputType = this.state.lvtCustomFieldType;
         let isEnableCustomFieldOptions = false
         if (
@@ -135,7 +135,7 @@ class Edit extends Component {
 
         this.setState({
             lvtCustomFieldType: inputType,
-            isEnableCustomFieldOptions: this.isCustomFilesEnabled(),
+            isEnableCustomFieldOptions: this.isCustomFieldEnabled(),
             lvtCusmtomFieldOptions: lvtCusmtomFieldOptions,
         });
     }
@@ -174,7 +174,7 @@ class Edit extends Component {
         event.preventDefault();
         console.log(this.state.lvtCusmtomFieldOptions);
 
-        let isEnableCustomFieldOptions = this.isCustomFilesEnabled();
+        let isEnableCustomFieldOptions = this.isCustomFieldEnabled();
         console.log("enable" + isEnableCustomFieldOptions);
 
         let customFieldOptions = this.state.lvtCusmtomFieldOptions.filter(function (customFieldOption) {
@@ -296,7 +296,7 @@ class Edit extends Component {
                         lvtAppendText: customfield.appendtext,
                         lvtCusmtomFieldOptions: this.mapCustomFieldOptions(customfield.fieldoptions),
                         lvtCustomFieldCategories: this.mapCusmtomFieldCategories(customfield.categories),
-                        isEnableCustomFieldOptions: this.isCustomFilesEnabled(),
+                        isEnableCustomFieldOptions: this.isCustomFieldEnabled(),
                         customFieldId: customfield.idfield
                     });
                 } else {
@@ -557,7 +557,7 @@ class Edit extends Component {
                             </Card>
                         </Col>
                         {
-                            (this.isCustomFilesEnabled()) ?
+                            (this.isCustomFieldEnabled()) ?
                                 <Col xs="12" md="6">
                                     <Card>
                                         <CardHeader>

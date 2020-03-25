@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router'
+import { Link } from 'react-router-dom'
 import axios from 'axios';
 import defines from '../../defines'
 import labels from '../../labels';
@@ -470,6 +471,8 @@ class Create extends Component {
                         <CardFooter>
                             <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-dot-circle-o"></i> Guardar</Button>
                             {/* <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Limpiar</Button> */}
+                            {' '}
+                            <Link to={`/customfield/${moduleId}/list`} size="sm" className="btn" color="link">Cancelar</Link>
                         </CardFooter>
                     </Card>
                 </Form>

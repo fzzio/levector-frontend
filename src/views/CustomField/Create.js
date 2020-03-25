@@ -24,7 +24,7 @@ class Create extends Component {
         super(props);
 
         this.state = {
-            module: (this.props.match.params.module) ? parseInt(this.props.match.params.module): defines.LVT_CASTING,
+            module: (this.props.match.params.module) ? parseInt(this.props.match.params.module) : defines.LVT_CASTING,
             lvtCustomFieldName: '',
             lvtCustomFieldType: '',
             lvtCustomFieldCategories: [],
@@ -38,14 +38,14 @@ class Create extends Component {
             error: false,
             redirect: false,
             modalForm: false,
-            modalVisible:false,
-            modal:{
-                modalType:'',
-                modalTitle:'',
-                modalBody:'',
-                modalOkButton:'',
-                modalCancelButton:'',
-                okFunctionState:null,
+            modalVisible: false,
+            modal: {
+                modalType: '',
+                modalTitle: '',
+                modalBody: '',
+                modalOkButton: '',
+                modalCancelButton: '',
+                okFunctionState: null,
                 cancelFunctionState: this.cancelFunctionState
             }
         }
@@ -56,13 +56,13 @@ class Create extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    cancelFunctionState =()=>{
+    cancelFunctionState = () => {
         console.log('----handle cancel ----')
-        this.setState({modalVisible:false})
+        this.setState({ modalVisible: false })
     }
 
-    enableRedirect=()=>{
-        console.log('OK CLICKED');this.setState({modalVisible:false,redirect: true})
+    enableRedirect = () => {
+        console.log('OK CLICKED'); this.setState({ modalVisible: false, redirect: true })
     }
 
     inputChangeHandler(e) {
@@ -78,14 +78,14 @@ class Create extends Component {
             value: ''
         })
         this.setState({
-            lvtCusmtomFieldOptions : lvtCusmtomFieldOptions
+            lvtCusmtomFieldOptions: lvtCusmtomFieldOptions
         });
     }
 
     inputOptionChangeHandler(e) {
         let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
         let index = lvtCusmtomFieldOptions.findIndex(item => (item.name === e.target.name));
-        if( index >= 0 ){
+        if (index >= 0) {
             lvtCusmtomFieldOptions[index].value = e.target.value;
         }
         this.setState({
@@ -93,38 +93,38 @@ class Create extends Component {
         });
     }
 
-    inputCategoryHandler(e){
+    inputCategoryHandler(e) {
         let itemValue = parseInt(e.target.value);
         let isChecked = e.target.checked;
         let lvtCustomFieldCategories = this.state.lvtCustomFieldCategories;
 
-        let indexItemValue = lvtCustomFieldCategories.indexOf( parseInt( itemValue ) );
-        if(indexItemValue === -1){
+        let indexItemValue = lvtCustomFieldCategories.indexOf(parseInt(itemValue));
+        if (indexItemValue === -1) {
             // the item does not exist, then if it is checked it is added
-            if(isChecked){
-                lvtCustomFieldCategories.push( parseInt( itemValue ) )
+            if (isChecked) {
+                lvtCustomFieldCategories.push(parseInt(itemValue))
             }
-        }else{
+        } else {
             // the item exists, then if it is not checked it is deleted
-            if(!isChecked){
+            if (!isChecked) {
                 lvtCustomFieldCategories.splice(indexItemValue, 1);
             }
         }
         lvtCustomFieldCategories.sort()
-        this.setState({lvtCustomFieldCategories: lvtCustomFieldCategories});
+        this.setState({ lvtCustomFieldCategories: lvtCustomFieldCategories });
     }
 
     inputTypeHandler(e) {
         let inputType = parseInt(e.target.value)
         let isEnableCustomFieldOptions = false
         let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
-        if( 
-            inputType === defines.CUSTOM_FIELD_CHECKBOX ||  
-            inputType === defines.CUSTOM_FIELD_COMBOBOX ||  
-            inputType === defines.CUSTOM_FIELD_RADIO 
-        ){
+        if (
+            inputType === defines.CUSTOM_FIELD_CHECKBOX ||
+            inputType === defines.CUSTOM_FIELD_COMBOBOX ||
+            inputType === defines.CUSTOM_FIELD_RADIO
+        ) {
             isEnableCustomFieldOptions = true
-        }else{
+        } else {
             isEnableCustomFieldOptions = false
             lvtCusmtomFieldOptions = []
         }
@@ -134,19 +134,19 @@ class Create extends Component {
             lvtCusmtomFieldOptions: lvtCusmtomFieldOptions,
         });
     }
-    
-    handleSubmit(event){
+
+    handleSubmit(event) {
         event.preventDefault();
 
         // Get options for this field
-        let customFieldOptions = this.state.lvtCusmtomFieldOptions.filter(function(customFieldOption) {
-            if( customFieldOption.value === null || customFieldOption.value === undefined || customFieldOption.value === '' ){
-              return false; // skip
+        let customFieldOptions = this.state.lvtCusmtomFieldOptions.filter(function (customFieldOption) {
+            if (customFieldOption.value === null || customFieldOption.value === undefined || customFieldOption.value === '') {
+                return false; // skip
             }
             return true;
-        }).map(function(customFieldOption) {
+        }).map(function (customFieldOption) {
             return {
-              name: customFieldOption.value,
+                name: customFieldOption.value,
             }
         });
 
@@ -159,15 +159,15 @@ class Create extends Component {
         }
 
         // Get options
-        if( customFieldOptions.length ){
+        if (customFieldOptions.length) {
             customFormFieldata['options'] = customFieldOptions
         }
 
         // Get Categories
-        if( this.state.lvtCustomFieldCategories.length ){
+        if (this.state.lvtCustomFieldCategories.length) {
             customFormFieldata['categories'] = this.state.lvtCustomFieldCategories;
         }
-    
+
         console.log("--- customFormFieldata ---");
         console.log(JSON.stringify(customFormFieldata));
         console.log("------");
@@ -176,76 +176,88 @@ class Create extends Component {
             defines.API_DOMAIN + '/field/',
             customFormFieldata
         )
-        .then( (response) => {
-            console.log("--- response ---");
-            console.log(JSON.stringify(response));
-            console.log("------");
-            if(response.status === 201 ) {
-                this.setState({ loading: false });
-                this.confirmFieldCreated();
-            }else{
-                throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
-            }
-        }).catch( (error) => {
-            console.log("--- error ---");
-            console.log(JSON.stringify(error));
-            console.log("------");
-            if (error.response) { 
-                console.log(error.response.data);
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log('Error', error.message);
-            }
-            this.setState({ loading: false, error: true });
-        });
+            .then((response) => {
+                if (response.status === 201) {
+                    this.setState({ loading: false });
+                    this.confirmFieldCreated();
+                } else {
+                    throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
+                }
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response.data);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+                this.setState({ loading: false, error: true });
+            });
     }
 
-    confirmFieldCreated = () =>{
+    confirmFieldCreated = () => {
         console.log('--- confirm to redirect ----')
         this.setState({
-            modalVisible:true,
-            modal:{
-                modalType : 'primary',
-                modalBody : labels.LVT_MODAL_DEFAULT_CREATION_SUCCESS_TEXT,
-                modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
+            modalVisible: true,
+            modal: {
+                modalType: 'primary',
+                modalBody: labels.LVT_MODAL_DEFAULT_CREATION_SUCCESS_TEXT,
+                modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
                 modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
                 okFunctionState: this.enableRedirect
             }
         });
     }
-    
+
     componentDidMount() {
-        // fetch all API data
-        const requestFieldTypes = axios.get( defines.API_DOMAIN + '/fieldtype' );
-        const requestCategories = axios.get( defines.API_DOMAIN + '/category?module=' + this.state.module );
-        axios.all([requestFieldTypes, requestCategories]).then(axios.spread((...responses) => {
-            const responseFieldTypes = responses[0];
-            const responseCategories = responses[1];
-            if(responseFieldTypes.status === 200 ) {
-                this.setState({ 
-                    fieldTypes: responseFieldTypes.data.data,
-                });
-            }else{
-                throw new Error( JSON.stringify( {status: responseFieldTypes.status, error: responseFieldTypes.data.data.msg} ) );
-            }
-            if(responseCategories.status === 200 ) {
-                this.setState({
-                    categories: responseCategories.data.data,
-                });
-            }else{
-                throw new Error( JSON.stringify( {status: responseCategories.status, error: responseCategories.data.data.msg} ) );
-            }
-        }))
-        .catch( (error) => {
-            if (error.response) { 
-                console.log(error.response.data);
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log('Error', error.message);
-            }
-        });
+        // fetch fieltypes
+        const requestFieldTypes = axios.get(defines.API_DOMAIN + '/fieldtype');
+        axios.all([requestFieldTypes])
+            .then(axios.spread((...responses) => {
+                const responseFieldTypes = responses[0];
+                if (responseFieldTypes.status === 200) {
+                    this.setState({
+                        fieldTypes: responseFieldTypes.data.data,
+                    });
+                } else {
+                    throw new Error(JSON.stringify({ status: responseFieldTypes.status, error: responseFieldTypes.data.data.msg }));
+                }
+            }))
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response.data);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+            });
+
+        // Get Categories
+        axios.get(defines.API_DOMAIN + '/category?module=' + this.state.module)
+            .then((response) => {
+                if (response.status === 200) {
+                    this.setState({
+                        categories: response.data.data,
+                    });
+                } else {
+                    throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
+                }
+            })
+            .catch((error) => {
+                if (error.response) {
+                    if(error.response.status === 404){
+                        console.log(error.response.data.error);
+                    }else{
+                        console.log(error.response.data);
+                    }
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+            });
     }
 
     render() {
@@ -277,10 +289,10 @@ class Create extends Component {
         }
 
         if (this.state.redirect) {
-            return <Redirect to={`/customfield/${moduleId}/list`}/>;
+            return <Redirect to={`/customfield/${moduleId}/list`} />;
         }
         if (this.state.loading) {
-            return(
+            return (
                 <div>
                     <p> Loading... </p>
                 </div>
@@ -288,18 +300,18 @@ class Create extends Component {
         }
         return (
             <div className="animated fadeIn">
-                { 
+                {
                     (this.state.modalVisible) ?
                         <CustomModal
-                            modalType = {this.state.modal.modalType}
-                            modalTitle = {this.state.modal.modalTitle}
-                            modalBody = {this.state.modal.modalBody}
-                            labelOkButton = {this.state.modal.modalOkButton}
-                            labelCancelButton = {this.state.modal.modalCancelButton}
-                            okFunction = {this.state.modal.okFunctionState}
-                            cancelFunction = {this.state.modal.cancelFunctionState}
+                            modalType={this.state.modal.modalType}
+                            modalTitle={this.state.modal.modalTitle}
+                            modalBody={this.state.modal.modalBody}
+                            labelOkButton={this.state.modal.modalOkButton}
+                            labelCancelButton={this.state.modal.modalCancelButton}
+                            okFunction={this.state.modal.okFunctionState}
+                            cancelFunction={this.state.modal.cancelFunctionState}
                         />
-                    : ''
+                        : ''
                 }
 
                 <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-person" onSubmit={this.handleSubmit} >
@@ -332,11 +344,11 @@ class Create extends Component {
                                             <Label htmlFor="lvtCustomFieldType">Tipo</Label>
                                         </Col>
                                         <Col xs="12" md="9">
-                                            <Input 
-                                                type="select" 
-                                                name="lvtCustomFieldType" 
-                                                id="lvtCustomFieldType" 
-                                                style={{ textTransform: 'capitalize'}}
+                                            <Input
+                                                type="select"
+                                                name="lvtCustomFieldType"
+                                                id="lvtCustomFieldType"
+                                                style={{ textTransform: 'capitalize' }}
                                                 onChange={(e) => this.inputTypeHandler.call(this, e)}
                                             >
                                                 <option value="0">-- Seleccione --</option>
@@ -363,9 +375,9 @@ class Create extends Component {
                                                             id={"lvtCategoryOption_" + category.idcategory}
                                                             name="lvtCustomCategories"
                                                             value={parseInt(category.idcategory)}
-                                                            style={{ textTransform: 'capitalize'}}
+                                                            style={{ textTransform: 'capitalize' }}
                                                             onChange={(e) => this.inputCategoryHandler.call(this, e)}
-                                                            // checked={this.state.lvtCustomFieldCategories.indexOf( parseInt( category.idcategory ) ) > -1 ? true: false}
+                                                        // checked={this.state.lvtCustomFieldCategories.indexOf( parseInt( category.idcategory ) ) > -1 ? true: false}
                                                         />
                                                         <Label check className="form-check-label" htmlFor={`lvtCategoryOption_` + category.idcategory}>
                                                             {category.name.split('||').join(',')}
@@ -416,14 +428,14 @@ class Create extends Component {
                             </Card>
                         </Col>
                         {
-                            ( isEnableCustomFieldOptions ) ?
+                            (isEnableCustomFieldOptions) ?
                                 <Col xs="12" md="6">
                                     <Card>
                                         <CardHeader>
                                             <strong>Opciones</strong> a agregar
                                         </CardHeader>
                                         <CardBody>
-                                            {this.state.lvtCusmtomFieldOptions.map((customFieldOption, indexOption) => 
+                                            {this.state.lvtCusmtomFieldOptions.map((customFieldOption, indexOption) =>
                                                 <FormGroup row key={indexOption}>
                                                     <Col md="3">
                                                         <Label htmlFor={customFieldOption.name}>Opción {indexOption + 1}</Label>
@@ -443,13 +455,13 @@ class Create extends Component {
                                             )}
                                         </CardBody>
                                         <CardFooter>
-                                            <Button size="sm" color="primary" onClick={ () => this.appendInput() } >
+                                            <Button size="sm" color="primary" onClick={() => this.appendInput()} >
                                                 <i className="fa fa-plus-circle"></i> Añadir
                                             </Button>
                                         </CardFooter>
                                     </Card>
                                 </Col>
-                            :   ''
+                                : ''
                         }
                     </Row>
                     <Card>

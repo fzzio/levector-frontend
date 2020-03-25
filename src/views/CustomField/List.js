@@ -43,7 +43,7 @@ class List extends Component {
 
     componentDidMount() {
         // fetch all API data
-        const requestCustomFields = axios.get(defines.API_DOMAIN + '/field?offset=0&limit=10&module=' + this.state.module);
+        const requestCustomFields = axios.get(defines.API_DOMAIN + '/field?allstatus=1&module=' + this.state.module);
         axios.all([requestCustomFields])
             .then(axios.spread((...responses) => {
                 const responseCustomFields = responses[0];

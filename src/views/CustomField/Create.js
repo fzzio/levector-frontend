@@ -211,22 +211,24 @@ class Create extends Component {
     }
 
     componentDidMount() {
-        // fetch fieltypes
-        const requestFieldTypes = axios.get(defines.API_DOMAIN + '/fieldtype');
-        axios.all([requestFieldTypes])
-            .then(axios.spread((...responses) => {
-                const responseFieldTypes = responses[0];
-                if (responseFieldTypes.status === 200) {
+        // Get Field Types
+        axios.get(defines.API_DOMAIN + '/fieldtype')
+            .then((response) => {
+                if (response.status === 200) {
                     this.setState({
-                        fieldTypes: responseFieldTypes.data.data,
+                        fieldTypes: response.data.data,
                     });
                 } else {
-                    throw new Error(JSON.stringify({ status: responseFieldTypes.status, error: responseFieldTypes.data.data.msg }));
+                    throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
                 }
-            }))
+            })
             .catch((error) => {
                 if (error.response) {
-                    console.log(error.response.data);
+                    if (error.response.status === 404) {
+                        console.log(error.response.data.error);
+                    } else {
+                        console.log(error.response.data);
+                    }
                 } else if (error.request) {
                     console.log(error.request);
                 } else {
@@ -247,9 +249,9 @@ class Create extends Component {
             })
             .catch((error) => {
                 if (error.response) {
-                    if(error.response.status === 404){
+                    if (error.response.status === 404) {
                         console.log(error.response.data.error);
-                    }else{
+                    } else {
                         console.log(error.response.data);
                     }
                 } else if (error.request) {

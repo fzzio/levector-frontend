@@ -606,7 +606,7 @@ class Edit extends Component {
                             <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-dot-circle-o"></i> Guardar</Button>
                             {/* <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Limpiar</Button> */}
                             {' '}
-                            <Link to={`/customfield/${moduleId}/list`} size="sm" className="btn" color="link">Cancelar</Link>
+                            <Link to={`/customfield/${moduleId}/list`} size="sm" className="btn btn-secondary btn-sm" color="link">Cancelar</Link>
                         </CardFooter>
                     </Card>
                 </Form>

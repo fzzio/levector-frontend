@@ -5,6 +5,7 @@ import {
     Card,
     CardBody,
     CardHeader,
+    CardFooter,
     Col,
     Table,
     Row,
@@ -97,7 +98,7 @@ class List extends Component {
         this.setState({ modalVisible: false });
         let idfield = e.target.dataset.idfield;
         let ischecked = e.target.checked;
-        
+
         let actionStatus = defines.LVT_STATUS_ACTIVE;
         if(!ischecked){
             actionStatus = defines.LVT_STATUS_INACTIVE;
@@ -367,6 +368,13 @@ class List extends Component {
                         </Card>
                     </Col>
                 </Row>
+                <Card>
+                    <CardFooter>
+                        <Link to={`/customfield/${moduleId}/create`} size="sm" color="primary" className="btn btn-primary btn-sm">
+                            <i className="fa fa-plus-circle"></i> Añadir {moduleName}
+                        </Link>
+                    </CardFooter>
+                </Card>
             </div>
         )
 

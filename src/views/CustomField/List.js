@@ -78,7 +78,6 @@ class List extends Component {
     }
 
     handleDelete(idfield) {
-        // TODO @fzzio call api to delete
         this.setState({
             modalVisible: true,
             idtodelete: idfield,
@@ -95,10 +94,46 @@ class List extends Component {
     }
 
     statusSwitch = (e) => {
+        this.setState({ modalVisible: false });
         let idfield = e.target.dataset.idfield;
         let ischecked = e.target.checked;
+
         console.log('----switch id: ', idfield)
         console.log('----switch id: ', ischecked)
+
+        axios.put(defines.API_DOMAIN + '/field/updatestatus?status=' + defines.LVT_STATUS_INACTIVE + '&module=' + this.state.module + '&id=' + idfield)
+            .then((response) => {
+                if (response.status === 200) {
+                    console.log('--- confirm deleted ----')
+                    console.log(response.data.data);
+                } else {
+                    throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
+                }
+            })
+            .catch((error) => {
+                if (error.response) {
+                    if (error.response.status === 404) {
+                        this.setState({
+                            modalVisible: true,
+                            loading: false,
+                            modal: {
+                                modalType: 'warning',
+                                modalBody: error.response.data.error,
+                                modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
+                                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+                                okFunctionState: this.okFunction
+                            }
+                        });
+                    } else {
+                        console.log(error.response.data);
+                    }
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+
+            });
     }
 
     cancelFunctionState = () => {
@@ -108,9 +143,9 @@ class List extends Component {
 
     deletCall = () => {
         let that = this;
-        this.setState({ modalVisible: false })
+        this.setState({ modalVisible: false });
 
-        const deleteFieldRequest = axios.put(defines.API_DOMAIN + '/deletefieldcastp/' + this.state.idtodelete);
+        const deleteFieldRequest = axios.put(defines.API_DOMAIN + '/field/updatestatus?status=' + defines.LVT_STATUS_REMOVED + '&module=' + this.state.module + '&id=' + this.state.idtodelete);
 
         axios.all([deleteFieldRequest])
             .then(axios.spread((...responses) => {
@@ -118,8 +153,8 @@ class List extends Component {
 
                 if (resp.status === 200) {
                     console.log('=== data:', resp.data)
-                    this.confirmDeletedField(resp.data.data.status || 3);
-                    if (resp.data.data.status == 3) {
+                    this.confirmDeletedField(resp.data.data.status || defines.LVT_STATUS_REMOVED);
+                    if (resp.data.data.status === defines.LVT_STATUS_REMOVED) {
                         this.setState({
                             customFields: this.state.customFields.filter(customField => parseInt(customField.idfield) !== parseInt(that.state.idtodelete))
                         })
@@ -127,7 +162,7 @@ class List extends Component {
                         let temp_fields = this.state.customFields;
 
                         temp_fields.map((field) => {
-                            if (field.idfield == that.state.idtodelete) {
+                            if (field.idfield === that.state.idtodelete) {
                                 field.status = resp.data.data.status;
                             }
                         })
@@ -319,7 +354,7 @@ class List extends Component {
                                                             }
                                                         </td>
                                                         <td>
-                                                            <AppSwitch className={'mx-1'} color={'dark'} checked={customField.status === 2 ? false : true} data-idfield={customField.idfield} onChange={this.statusSwitch} />
+                                                            <AppSwitch className={'mx-1'} color={'dark'} checked={customField.idstatus === defines.LVT_STATUS_INACTIVE ? false : true} data-idfield={customField.idfield} onChange={this.statusSwitch} />
                                                         </td>
                                                     </tr>
                                                 )

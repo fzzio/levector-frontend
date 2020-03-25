@@ -97,11 +97,12 @@ class List extends Component {
         this.setState({ modalVisible: false });
         let idfield = e.target.dataset.idfield;
         let ischecked = e.target.checked;
-
-        console.log('----switch id: ', idfield)
-        console.log('----switch id: ', ischecked)
-
-        axios.put(defines.API_DOMAIN + '/field/updatestatus?status=' + defines.LVT_STATUS_INACTIVE + '&module=' + this.state.module + '&id=' + idfield)
+        
+        let actionStatus = defines.LVT_STATUS_ACTIVE;
+        if(!ischecked){
+            actionStatus = defines.LVT_STATUS_INACTIVE;
+        }
+        axios.put(defines.API_DOMAIN + '/field/updatestatus?status=' + actionStatus + '&module=' + this.state.module + '&id=' + idfield)
             .then((response) => {
                 if (response.status === 200) {
                     console.log('--- confirm deleted ----')

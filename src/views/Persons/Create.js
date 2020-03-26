@@ -246,7 +246,6 @@ class Create extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-
     this.checkFormFields();
 
     // Get data from Custom field
@@ -256,13 +255,25 @@ class Create extends Component {
       }
       return true;
     }).map(function (customFieldData) {
-      console.log(customFieldData);
-      return {
-        idfield: customFieldData.idfield,
-        idfieldop: customFieldData.idfieldcastp,
-        value: customFieldData.value,
+      if (customFieldData.idfieldtype === defines.CUSTOM_FIELD_TEXT || customFieldData.idfieldtype === defines.CUSTOM_FIELD_TEXTAREA) {
+        // If the fields are of text or textarea type
+        return {
+          idfield: customFieldData.idfield,
+          idfieldop: '',
+          value: customFieldData.value,
+        }
+      } else {
+        // We build the options array
+        let arrCustomOptions = customFieldData.value.split(',').map(function (idCustomFieldOption) {
+          return {
+            idfield: customFieldData.idfield,
+            idfieldop: parseInt(idCustomFieldOption),
+            value: '',
+          }
+        });
+        return arrCustomOptions;
       }
-    })
+    });
 
     // Get images uploaded
     let imagesPerson = this.state.lvtImages.map(function (imagePerson) {
@@ -276,14 +287,14 @@ class Create extends Component {
     // Get video uploaded
     let videosPerson = this.state.lvtVideos.map(function (videoPerson) {
       return {
-        path: videoPerson.filename,
+        url: videoPerson.filename,
       }
     });
 
     // Setting data to request
     const personData = {
       idmodule: defines.LVT_CASTING,
-      defaultfields: {
+      defaultfields: [{
         dni: this.state.formFields.lvtDNI,
         firstname: this.state.formFields.lvtFirstname,
         lastname: this.state.formFields.lvtLastname,
@@ -299,23 +310,21 @@ class Create extends Component {
         observations: this.state.formFields.lvtObservations,
         createdby: 1,
         idcity: 1,
-      },
+      }],
       customfields: customfields,
       images: imagesPerson,
       videos: videosPerson,
     };
 
+    console.log("---- personData ----");
     console.log(JSON.stringify(personData));
 
     if (this.state.errorFields.invalid.length === 0) {
-
       this.setState({ loading: true });
-
       let save_person = axios.post(defines.API_DOMAIN + '/person/', personData);
       if (this.props.match.params && this.props.match.params.id) {
         save_person = axios.put(defines.API_DOMAIN + '/person/' + this.props.match.params.id, personData);
       }
-
       axios.all([save_person])
         .then((response) => {
           let resp = response[0];
@@ -371,9 +380,7 @@ class Create extends Component {
     }
   }
 
-
   componentDidMount() {
-
     // Fetch Gender
     axios.get(defines.API_DOMAIN + '/gender')
       .then((response) => {
@@ -407,6 +414,7 @@ class Create extends Component {
               name: defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfield,
               value: '',
               idfield: responseCustomField.idfield,
+              idfieldtype: responseCustomField.idfieldtype
             };
             return customFieldElement;
           });

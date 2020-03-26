@@ -3,7 +3,7 @@ import { Redirect } from 'react-router'
 import axios from 'axios';
 import defines from '../../defines'
 import CustomField from '../CustomField/CustomField';
-import RUG, { DragArea, DropArea} from 'react-upload-gallery'
+import RUG, { DragArea, DropArea } from 'react-upload-gallery'
 import CustomModal from '../Notifications/Modals/CustomModal';
 import 'react-upload-gallery/dist/style.css'
 import labels from '../../labels'
@@ -38,10 +38,10 @@ const inputParsers = {
   },
 };
 
-function GenderRadioOption(props){
+function GenderRadioOption(props) {
   const gender = props.gender;
-  
-  return(
+
+  return (
     <FormGroup check inline>
       <Input
         className="form-check-input"
@@ -67,20 +67,21 @@ class Create extends Component {
 
     this.state = {
       formFields: {
-        lvtDNI : '',
-        lvtFirstname : '',
-        lvtLastname : '',
-        lvtDateOfBirth : '',
-        lvtGender : '',
-        lvtHeight : '',
-        lvtWeight : '',
-        lvtRUC : '',
-        lvtEmail : '',
-        lvtCellphone : '',
-        lvtPhone : '',
-        lvtAddress : '',
-        lvtVideo : '',
-        lvtObservations : '',
+        module: defines.LVT_CASTING,
+        lvtDNI: '',
+        lvtFirstname: '',
+        lvtLastname: '',
+        lvtDateOfBirth: '',
+        lvtGender: '',
+        lvtHeight: '',
+        lvtWeight: '',
+        lvtRUC: '',
+        lvtEmail: '',
+        lvtCellphone: '',
+        lvtPhone: '',
+        lvtAddress: '',
+        lvtVideo: '',
+        lvtObservations: '',
       },
       loading: false,
       error: false,
@@ -91,19 +92,19 @@ class Create extends Component {
       lvtImages: [],
       lvtVideos: [],
       modalVisible: false,
-      modalData:{
-        modalType : 'primary',
-        modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
-        modalBody : 'Body',
-        modalOkButton : labels.LVT_MODAL_DEFAULT_BUTTON_OK,
-        modalCancelButton : labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
-        okFunctionState:null
+      modalData: {
+        modalType: 'primary',
+        modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
+        modalBody: 'Body',
+        modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+        modalCancelButton: labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
+        okFunctionState: null
       },
       errorFields: {
         valid: [],
         invalid: []
       },
-      editCustomValues:{}
+      editCustomValues: {}
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -114,7 +115,7 @@ class Create extends Component {
     this.parsePersonField = this.parsePersonField.bind(this);
     this.parseCustomFields = this.parseCustomFields.bind(this);
     this.enableRedirect = this.enableRedirect.bind(this);
-    
+
   }
 
   handleInitUpload() {
@@ -123,14 +124,14 @@ class Create extends Component {
   }
 
   inputChangeHandler(e) {
-    let formFields = {...this.state.formFields};
+    let formFields = { ...this.state.formFields };
     formFields[e.target.name] = e.target.value;
-    this.setState({ 
-      formFields:formFields
+    this.setState({
+      formFields: formFields
     });
   }
 
-  inputRadioHandler(e){
+  inputRadioHandler(e) {
     let formFields = this.state.formFields;
     formFields[e.target.name] = parseInt(e.target.value);
     this.setState({ formFields });
@@ -139,110 +140,109 @@ class Create extends Component {
   customInputChangeHandler(e) {
     let customFieldsData = this.state.customFieldsData;
     const index = customFieldsData.findIndex(item => (item.name === e.target.name));
-    if( index >= 0 ){
+    if (index >= 0) {
       customFieldsData[index].value = e.target.value;
-      this.setState({editCustomValues:{[customFieldsData[index].name] : e.target.value}});
+      this.setState({ editCustomValues: { [customFieldsData[index].name]: e.target.value } });
     }
     // console.log('---- customFieldsData change: ', editCustomValues);
     this.setState({ customFieldsData: customFieldsData });
   }
 
   addFormError(fieldError) {
-    if( this.state.errorFields.invalid.indexOf(fieldError) <= -1 ){
+    if (this.state.errorFields.invalid.indexOf(fieldError) <= -1) {
       let invalidErrorFields = this.state.errorFields.invalid;
       let validErrorFields = this.state.errorFields.valid;
-      validErrorFields.splice( validErrorFields.indexOf(fieldError), 1 )
+      validErrorFields.splice(validErrorFields.indexOf(fieldError), 1)
       invalidErrorFields.push(fieldError);
       this.setState({
-        errorFields:{
-          valid : validErrorFields,
-          invalid : invalidErrorFields,
+        errorFields: {
+          valid: validErrorFields,
+          invalid: invalidErrorFields,
         }
       });
     }
   }
   removeFormError(fieldError) {
-    if( this.state.errorFields.invalid.indexOf(fieldError) > -1 ){
+    if (this.state.errorFields.invalid.indexOf(fieldError) > -1) {
       let invalidErrorFields = this.state.errorFields.invalid;
       let validErrorFields = this.state.errorFields.valid;
-      invalidErrorFields.splice( invalidErrorFields.indexOf(fieldError), 1 )
+      invalidErrorFields.splice(invalidErrorFields.indexOf(fieldError), 1)
       validErrorFields.push(fieldError);
       this.setState({
-        errorFields:{
-          valid : validErrorFields,
-          invalid : invalidErrorFields,
+        errorFields: {
+          valid: validErrorFields,
+          invalid: invalidErrorFields,
         }
       });
     }
   }
 
-  checkFormFields(){
-    if ( this.state.formFields.lvtDNI === '' ){
+  checkFormFields() {
+    if (this.state.formFields.lvtDNI === '') {
       this.addFormError('lvtDNI');
-    }else{
+    } else {
       this.removeFormError('lvtDNI');
     }
-    if ( this.state.formFields.lvtFirstname === '' ){
+    if (this.state.formFields.lvtFirstname === '') {
       this.addFormError('lvtFirstname');
-    }else{
+    } else {
       this.removeFormError('lvtFirstname');
     }
-    if ( this.state.formFields.lvtLastname === '' ){
+    if (this.state.formFields.lvtLastname === '') {
       this.addFormError('lvtLastname');
-    }else{
+    } else {
       this.removeFormError('lvtLastname');
     }
-    if ( this.state.formFields.lvtDateOfBirth === '' ){
+    if (this.state.formFields.lvtDateOfBirth === '') {
       this.addFormError('lvtDateOfBirth');
-    }else{
+    } else {
       this.removeFormError('lvtDateOfBirth');
     }
-    if ( this.state.formFields.lvtDateOfBirth === '' ){
+    if (this.state.formFields.lvtDateOfBirth === '') {
       this.addFormError('lvtDateOfBirth');
-    }else{
+    } else {
       this.removeFormError('lvtDateOfBirth');
     }
-    if ( this.state.formFields.lvtGender === '' ){
+    if (this.state.formFields.lvtGender === '') {
       this.addFormError('lvtGender');
-    }else{
+    } else {
       this.removeFormError('lvtGender');
     }
-    if ( this.state.formFields.lvtHeight === '' ){
+    if (this.state.formFields.lvtHeight === '') {
       this.addFormError('lvtHeight');
-    }else{
+    } else {
       this.removeFormError('lvtHeight');
     }
-    if ( this.state.formFields.lvtWeight === '' ){
+    if (this.state.formFields.lvtWeight === '') {
       this.addFormError('lvtWeight');
-    }else{
+    } else {
       this.removeFormError('lvtWeight');
     }
-    if ( this.state.formFields.lvtRUC === '' ){
+    if (this.state.formFields.lvtRUC === '') {
       this.addFormError('lvtRUC');
-    }else{
+    } else {
       this.removeFormError('lvtRUC');
     }
-    if ( this.state.formFields.lvtEmail === '' ){
+    if (this.state.formFields.lvtEmail === '') {
       this.addFormError('lvtEmail');
-    }else{
+    } else {
       this.removeFormError('lvtEmail');
     }
-    if ( this.state.formFields.lvtCellphone === '' ){
+    if (this.state.formFields.lvtCellphone === '') {
       this.addFormError('lvtCellphone');
-    }else{
+    } else {
       this.removeFormError('lvtCellphone');
     }
-    if ( this.state.formFields.lvtAddress === '' ){
+    if (this.state.formFields.lvtAddress === '') {
       this.addFormError('lvtAddress');
-    }else{
+    } else {
       this.removeFormError('lvtAddress');
     }
   }
 
-  enableRedirect(){
-    this.setState({redirect: true})
+  enableRedirect() {
+    this.setState({ redirect: true })
   }
-
 
   handleSubmit(event) {
     event.preventDefault();
@@ -250,117 +250,121 @@ class Create extends Component {
     this.checkFormFields();
 
     // Get data from Custom field
-    let formcastp = this.state.customFieldsData.filter(function(customFieldData) {
-      if( customFieldData.value === null || customFieldData.value === undefined || customFieldData.value === '' ){
+    let customfields = this.state.customFieldsData.filter(function (customFieldData) {
+      if (customFieldData.value === null || customFieldData.value === undefined || customFieldData.value === '') {
         return false; // skip
       }
       return true;
-    }).map(function(customFieldData) {
+    }).map(function (customFieldData) {
+      console.log(customFieldData);
       return {
-        idfieldcastp: customFieldData.idfieldcastp,
-        idfieldopcastp: customFieldData.idfieldcastp,
+        idfield: customFieldData.idfield,
+        idfieldop: customFieldData.idfieldcastp,
         value: customFieldData.value,
       }
     })
 
     // Get images uploaded
-    let imagesPerson = this.state.lvtImages.map(function(imagePerson) {
+    let imagesPerson = this.state.lvtImages.map(function (imagePerson) {
       return {
         thumbnail: imagePerson.imgThumbnail,
         optimized: imagePerson.imgOptimized,
         original: imagePerson.imgOriginal
       }
     });
-    
+
     // Get video uploaded
-    let videosPerson = this.state.lvtVideos.map(function(videoPerson) {
+    let videosPerson = this.state.lvtVideos.map(function (videoPerson) {
       return {
         path: videoPerson.filename,
       }
     });
-    
+
     // Setting data to request
     const personData = {
-      dni: this.state.formFields.lvtDNI,
-      firstname: this.state.formFields.lvtFirstname,
-      lastname: this.state.formFields.lvtLastname,
-      dob: this.state.formFields.lvtDateOfBirth,
-      idgender: this.state.formFields.lvtGender,
-      height: parseInt( this.state.formFields.lvtHeight ),
-      weight: parseInt( this.state.formFields.lvtWeight ),
-      ruc: this.state.formFields.lvtRUC,
-      email: this.state.formFields.lvtEmail,
-      phone1: this.state.formFields.lvtCellphone,
-      phone2: this.state.formFields.lvtPhone,
-      address: this.state.formFields.lvtAddress,
-      observations: this.state.formFields.lvtObservations,
-      formcastp: formcastp,
+      idmodule: defines.LVT_CASTING,
+      defaultfields: {
+        dni: this.state.formFields.lvtDNI,
+        firstname: this.state.formFields.lvtFirstname,
+        lastname: this.state.formFields.lvtLastname,
+        dob: this.state.formFields.lvtDateOfBirth,
+        idgender: this.state.formFields.lvtGender,
+        height: parseInt(this.state.formFields.lvtHeight),
+        weight: parseInt(this.state.formFields.lvtWeight),
+        ruc: this.state.formFields.lvtRUC,
+        email: this.state.formFields.lvtEmail,
+        phone1: this.state.formFields.lvtCellphone,
+        phone2: this.state.formFields.lvtPhone,
+        address: this.state.formFields.lvtAddress,
+        observations: this.state.formFields.lvtObservations,
+        createdby: 1,
+        idcity: 1,
+      },
+      customfields: customfields,
       images: imagesPerson,
       videos: videosPerson,
-      createdby: 1,
-      idcity: 1,
     };
 
     console.log(JSON.stringify(personData));
 
-    if( this.state.errorFields.invalid.length === 0 ){
+    if (this.state.errorFields.invalid.length === 0) {
 
       this.setState({ loading: true });
 
-      let save_person = axios.post(defines.API_DOMAIN + '/person/', personData );
-      if(this.props.match.params && this.props.match.params.id){
-        save_person = axios.put( defines.API_DOMAIN + '/person/'+ this.props.match.params.id, personData);
+      let save_person = axios.post(defines.API_DOMAIN + '/person/', personData);
+      if (this.props.match.params && this.props.match.params.id) {
+        save_person = axios.put(defines.API_DOMAIN + '/person/' + this.props.match.params.id, personData);
       }
 
-      axios.all( [save_person] )
-      .then( (response) => {
-        let resp = response[0];
-        if(resp.status === 200 ) {
-          this.setState({
-            modalData:{
-              modalType : 'primary',
-              modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
-              modalBody : "Person  guardada exitosamente",
-              modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
-              okFunctionState : this.enableRedirect
-            },
-            
-            loading: false,
-            modalVisible: true
-          });
-          // this.setState({ loading: false, redirect: true });
-        }else{
-          console.log('----- THROW ERROR create person -------')
-          throw new Error( JSON.stringify( {status: resp.status, error: resp.data.data.msg} ) );
-        }
-      })
-      .catch( (error) => {
-        if (error.response) {
-          this.setState({
-            modalVisible: true,
-            modalData:{
-              modalType : 'danger',
-              modalBody : error.response.data.data.msg,
-              modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
-              modalOkButton : labels.LVT_MODAL_DEFAULT_BUTTON_OK
-            }
-          });
-          console.log(error.response.data);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log('Error', error.message);
-        }
-        this.setState({ loading: false, error: true  });
-      });
+      axios.all([save_person])
+        .then((response) => {
+          let resp = response[0];
+          if (resp.status === 200) {
+            this.setState({
+              modalData: {
+                modalType: 'primary',
+                modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
+                modalBody: "Person  guardada exitosamente",
+                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+                okFunctionState: this.enableRedirect
+              },
+
+              loading: false,
+              modalVisible: true
+            });
+            // this.setState({ loading: false, redirect: true });
+          } else {
+            console.log('----- THROW ERROR create person -------')
+            throw new Error(JSON.stringify({ status: resp.status, error: resp.data.data.msg }));
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            this.setState({
+              modalVisible: true,
+              modalData: {
+                modalType: 'danger',
+                modalBody: error.response.data.data.msg,
+                modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
+                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK
+              }
+            });
+            console.log(error.response.data);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+          this.setState({ loading: false, error: true });
+        });
     } else {
       this.setState({
-        modalData:{
-          modalType : 'danger',
-          modalTitle : labels.LVT_MODAL_DEFAULT_TITLE,
-          modalBody : labels.LVT_ERROR_FIELDS_MESSAGE,
-          modalOkButton : labels.LVT_MODAL_DEFAULT_BUTTON_OK,
-          modalCancelButton : labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
+        modalData: {
+          modalType: 'danger',
+          modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
+          modalBody: labels.LVT_ERROR_FIELDS_MESSAGE,
+          modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+          modalCancelButton: labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
         }
       });
       this.setState({ loading: false, error: true, modalVisible: true });
@@ -370,83 +374,117 @@ class Create extends Component {
 
   componentDidMount() {
 
-    // fetch all API data
-    const requestGender = axios.get( defines.API_DOMAIN + '/gender' );
-    const requestCustomFields = axios.get( defines.API_DOMAIN + '/allfieldcastopp' );
-    
-
-    let initialRequestList = [requestGender, requestCustomFields]
-    if(this.props.match.params && this.props.match.params.id){
-      const requestPersonData = axios.get( defines.API_DOMAIN + '/person/'+ this.props.match.params.id);
-      initialRequestList.push(requestPersonData);
-    }
-
-    axios.all( initialRequestList ).then(axios.spread((...responses) => {
-      const responseGender = responses[0];
-      const responseCustomFields = responses[1];
-      if(responseGender.status === 200 ) {
-        this.setState({ genders: responseGender.data.data })
-      }else{
-        throw new Error( JSON.stringify( {status: responseGender.status, error: responseGender.data.data.msg} ) );
-      }
-
-      if(responseCustomFields.status === 200 ) {
-        let customFieldElements = responseCustomFields.data.data.map( ( responseCustomField ) => {
-          let customFieldElement = {
-            name: defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfieldcastp,
-            value: '',
-            idfieldcastp: responseCustomField.idfieldcastp,
-          };
-          return customFieldElement;
-        } );
-
-        this.setState({ 
-          customFields: responseCustomFields.data.data,
-          customFieldsData: customFieldElements
-        });
-      }else{
-        throw new Error( JSON.stringify( {status: responseCustomFields.status, error: responseCustomFields.data.data.msg} ) );
-      }
-
-      if( responses[2] && responses[2].status === 200){
-        const personaData = responses[2].data.data[0];
-        let f = '';
-        let v = '';
-        for (let field of Object.keys(personaData)) {
-            let formFields = {...this.state.formFields};
-            f =this.parsePersonField(field);
-            v = this.parsePersonData(field, personaData[field]);
-
-            // console.log(f+':', v);
-            
-            if(f == 'customfields'){
-              this.parseCustomFields(v)
-            } else if(f == 'lvtImages' ){
-              v = this.parsePhotos(v);
-              this.setState({[f]:v});
-            } else if( f == 'lvtVideos' ){
-              v = this.parseVideos(v);
-              this.setState({[f]:v});
-              console.log(f+':', v);
-            } else {
-              formFields[f] = v;
-              this.setState( {formFields} );
-            }
-            f = ''; v = '';
+    // Fetch Gender
+    axios.get(defines.API_DOMAIN + '/gender')
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({ genders: response.data.data })
+        } else {
+          throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
         }
-      }
+      })
+      .catch((error) => {
+        console.log("Error fetching genders.");
+        if (error.response) {
+          if (error.response.status === 404) {
+            console.log(error.response.data.error);
+          } else {
+            console.log(error.response.data);
+          }
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error', error.message);
+        }
+      });
+
+    // Fetch custom fields
+    axios.get(defines.API_DOMAIN + '/field?&module=' + defines.LVT_CASTING)
+      .then((response) => {
+        if (response.status === 200) {
+          let customFieldElements = response.data.data.map((responseCustomField) => {
+            let customFieldElement = {
+              name: defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfield,
+              value: '',
+              idfield: responseCustomField.idfield,
+            };
+            return customFieldElement;
+          });
+          this.setState({
+            customFields: response.data.data,
+            customFieldsData: customFieldElements
+          });
+        } else {
+          throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
+        }
+      })
+      .catch((error) => {
+        console.log("Error fetching Custom fields.");
+        if (error.response) {
+          if (error.response.status === 404) {
+            console.log(error.response.data.error);
+          } else {
+            console.log(error.response.data);
+          }
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error', error.message);
+        }
+      });
 
 
-    }))
-    .catch( (error) => {
-      if (error.response) { 
-        console.log(error.response.data);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        console.log('Error', error.message);
-      }
-    });
+    // Fetch Person Data
+
+    if (this.props.match.params && this.props.match.params.id) {
+      axios.get(defines.API_DOMAIN + '/person/' + this.props.match.params.id)
+        .then((response) => {
+          if (response.status === 200) {
+            const personaData = response.data.data[0];
+            let f = '';
+            let v = '';
+            for (let field of Object.keys(personaData)) {
+              let formFields = { ...this.state.formFields };
+              f = this.parsePersonField(field);
+              v = this.parsePersonData(field, personaData[field]);
+
+              // console.log(f+':', v);
+
+              if (f == 'customfields') {
+                this.parseCustomFields(v)
+              } else if (f == 'lvtImages') {
+                v = this.parsePhotos(v);
+                this.setState({ [f]: v });
+              } else if (f == 'lvtVideos') {
+                v = this.parseVideos(v);
+                this.setState({ [f]: v });
+                console.log(f + ':', v);
+              } else {
+                formFields[f] = v;
+                this.setState({ formFields });
+              }
+              f = ''; v = '';
+            }
+          } else {
+            throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
+          }
+        })
+        .catch((error) => {
+          console.log("Error fetching genders.");
+          if (error.response) {
+            if (error.response.status === 404) {
+              console.log(error.response.data.error);
+            } else {
+              console.log(error.response.data);
+            }
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+        });
+
+    }
   }
 
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
@@ -455,13 +493,13 @@ class Create extends Component {
     const gendersList = this.state.genders;
     let customFieldList = this.state.customFields;
     let lvtVideos = this.state.lvtVideos;
-    console.log('render lvtVideos: ',  lvtVideos)
-    
+    console.log('render lvtVideos: ', lvtVideos)
+
     if (this.state.redirect) {
-      return <Redirect to='/person/list'/>;
+      return <Redirect to='/person/list' />;
     }
     if (this.state.loading) {
-      return(
+      return (
         <div>
           <p> Loading... </p>
         </div>
@@ -470,17 +508,17 @@ class Create extends Component {
 
     return (
       <div className="animated fadeIn">
-        { 
+        {
           (this.state.modalVisible) ?
             <CustomModal
-              modalType = {this.state.modalData.modalType}
-              modalTitle = {this.state.modalData.modalTitle}
-              modalBody = {this.state.modalData.modalBody}
-              labelOkButton = {this.state.modalData.modalOkButton}
-              labelCancelButton = {this.state.modalData.modalCancelButton}
-              okFunction = {this.state.modalData.okFunctionState}
+              modalType={this.state.modalData.modalType}
+              modalTitle={this.state.modalData.modalTitle}
+              modalBody={this.state.modalData.modalBody}
+              labelOkButton={this.state.modalData.modalOkButton}
+              labelCancelButton={this.state.modalData.modalCancelButton}
+              okFunction={this.state.modalData.okFunctionState}
             />
-          : ''
+            : ''
         }
         <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-person" onSubmit={this.handleSubmit} >
           <Row>
@@ -503,8 +541,8 @@ class Create extends Component {
                         autoComplete="nope"
                         value={this.state.formFields.lvtDNI}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
-                        valid = { this.state.errorFields.valid.indexOf("lvtDNI") > -1 }
-                        invalid = { this.state.errorFields.invalid.indexOf("lvtDNI") > -1 }
+                        valid={this.state.errorFields.valid.indexOf("lvtDNI") > -1}
+                        invalid={this.state.errorFields.invalid.indexOf("lvtDNI") > -1}
                       />
                       <FormText color="muted">Cédula/DNI/Pasaporte </FormText>
                     </Col>
@@ -523,8 +561,8 @@ class Create extends Component {
                         autoComplete="nope"
                         value={this.state.formFields.lvtFirstname}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
-                        valid = { this.state.errorFields.valid.indexOf("lvtFirstname") > -1 }
-                        invalid = { this.state.errorFields.invalid.indexOf("lvtFirstname") > -1 }
+                        valid={this.state.errorFields.valid.indexOf("lvtFirstname") > -1}
+                        invalid={this.state.errorFields.invalid.indexOf("lvtFirstname") > -1}
                       />
                       <FormText color="muted">Nombres de la persona</FormText>
                     </Col>
@@ -534,7 +572,7 @@ class Create extends Component {
                       <Label htmlFor="lvtLastname">Apellidos</Label>
                     </Col>
                     <Col xs="12" md="9">
-                      <Input 
+                      <Input
                         type="text"
                         id="lvtLastname"
                         name="lvtLastname"
@@ -542,8 +580,8 @@ class Create extends Component {
                         autoComplete="nope"
                         value={this.state.formFields.lvtLastname}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
-                        valid = { this.state.errorFields.valid.indexOf("lvtLastname") > -1 }
-                        invalid = { this.state.errorFields.invalid.indexOf("lvtLastname") > -1 }
+                        valid={this.state.errorFields.valid.indexOf("lvtLastname") > -1}
+                        invalid={this.state.errorFields.invalid.indexOf("lvtLastname") > -1}
                       />
                       <FormText color="muted">Apellidos de la persona</FormText>
                     </Col>
@@ -567,8 +605,8 @@ class Create extends Component {
                           placeholder=""
                           value={this.state.formFields.lvtDateOfBirth}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid = { this.state.errorFields.valid.indexOf("lvtDateOfBirth") > -1 }
-                          invalid = { this.state.errorFields.invalid.indexOf("lvtDateOfBirth") > -1 }
+                          valid={this.state.errorFields.valid.indexOf("lvtDateOfBirth") > -1}
+                          invalid={this.state.errorFields.invalid.indexOf("lvtDateOfBirth") > -1}
                         />
                       </InputGroup>
                     </Col>
@@ -580,11 +618,11 @@ class Create extends Component {
                     </Col>
                     <Col md="9">
                       {gendersList.map((gender, index) =>
-                        <GenderRadioOption 
-                          key={index} 
+                        <GenderRadioOption
+                          key={index}
                           gender={gender}
-                          genderValue = {this.state.formFields.lvtGender}
-                          onGenderFieldChange = {(e) => this.inputRadioHandler.call(this, e)}
+                          genderValue={this.state.formFields.lvtGender}
+                          onGenderFieldChange={(e) => this.inputRadioHandler.call(this, e)}
                         />
                       )}
                     </Col>
@@ -603,8 +641,8 @@ class Create extends Component {
                         autoComplete="nope"
                         value={this.state.formFields.lvtRUC}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
-                        valid = { this.state.errorFields.valid.indexOf("lvtRUC") > -1 }
-                        invalid = { this.state.errorFields.invalid.indexOf("lvtRUC") > -1 }
+                        valid={this.state.errorFields.valid.indexOf("lvtRUC") > -1}
+                        invalid={this.state.errorFields.invalid.indexOf("lvtRUC") > -1}
                       />
                       <FormText color="muted">Dato para facturación</FormText>
                     </Col>
@@ -632,13 +670,13 @@ class Create extends Component {
                         autoComplete="nope"
                         value={this.state.formFields.lvtEmail}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
-                        valid = { this.state.errorFields.valid.indexOf("lvtEmail") > -1 }
-                        invalid = { this.state.errorFields.invalid.indexOf("lvtEmail") > -1 }
+                        valid={this.state.errorFields.valid.indexOf("lvtEmail") > -1}
+                        invalid={this.state.errorFields.invalid.indexOf("lvtEmail") > -1}
                       />
                       <FormText className="help-block">Ingrese correo electrónico</FormText>
                     </Col>
                   </FormGroup>
-                  
+
                   <FormGroup row>
                     <Col md="3">
                       <Label htmlFor="lvtCellphone">Celular</Label>
@@ -658,20 +696,20 @@ class Create extends Component {
                           autoComplete="nope"
                           value={this.state.formFields.lvtCellphone}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid = { this.state.errorFields.valid.indexOf("lvtCellphone") > -1 }
-                          invalid = { this.state.errorFields.invalid.indexOf("lvtCellphone") > -1 }
+                          valid={this.state.errorFields.valid.indexOf("lvtCellphone") > -1}
+                          invalid={this.state.errorFields.invalid.indexOf("lvtCellphone") > -1}
                         />
                       </InputGroup>
                       <FormText color="muted">Teléfono celular</FormText>
                     </Col>
                   </FormGroup>
-                  
+
                   <FormGroup row>
                     <Col md="3">
                       <Label htmlFor="lvtPhone">Teléfono</Label>
                     </Col>
                     <Col xs="12" md="9">
-                    <InputGroup>
+                      <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
                             <i className="fa fa-phone"></i>
@@ -685,8 +723,8 @@ class Create extends Component {
                           autoComplete="nope"
                           value={this.state.formFields.lvtPhone}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid = { this.state.errorFields.valid.indexOf("lvtPhone") > -1 }
-                          invalid = { this.state.errorFields.invalid.indexOf("lvtPhone") > -1 }
+                          valid={this.state.errorFields.valid.indexOf("lvtPhone") > -1}
+                          invalid={this.state.errorFields.invalid.indexOf("lvtPhone") > -1}
                         />
                       </InputGroup>
                       <FormText color="muted">Teléfono fijo principal</FormText>
@@ -706,8 +744,8 @@ class Create extends Component {
                         placeholder="Urdesa Central, Cedros 215 y Victor Emilio Estrada"
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                         value={this.state.formFields.lvtAddress}
-                        valid = { this.state.errorFields.valid.indexOf("lvtAddress") > -1 }
-                        invalid = { this.state.errorFields.invalid.indexOf("lvtAddress") > -1 }
+                        valid={this.state.errorFields.valid.indexOf("lvtAddress") > -1}
+                        invalid={this.state.errorFields.invalid.indexOf("lvtAddress") > -1}
                       />
                       <FormText color="muted">Dirección de domicilio o de contacto principal</FormText>
                     </Col>
@@ -715,7 +753,7 @@ class Create extends Component {
                 </CardBody>
               </Card>
             </Col>
-            
+
             <Col xs="12" md="6">
               <Card>
                 <CardHeader>
@@ -723,30 +761,30 @@ class Create extends Component {
                 </CardHeader>
                 <CardBody>
                   <FormGroup row>
-                      <Col md="3">
-                        <Label htmlFor="lvtHeight">Estatura</Label>
-                      </Col>
-                      <Col xs="12" md="9">
-                        <InputGroup>
-                          <Input
-                            type="number"
-                            id="lvtHeight"
-                            name="lvtHeight"
-                            placeholder="170"
-                            value={this.state.formFields.lvtHeight}
-                            onChange={(e) => this.inputChangeHandler.call(this, e)}
-                            valid = { this.state.errorFields.valid.indexOf("lvtHeight") > -1 }
-                            invalid = { this.state.errorFields.invalid.indexOf("lvtHeight") > -1 }
-                          />
-                          <InputGroupAddon addonType="append">
-                            <InputGroupText>
-                              {defines.LVT_HEIGHT_UNIT}
-                            </InputGroupText>
-                          </InputGroupAddon>
-                        </InputGroup>
-                        <FormText color="muted">Escribe cuánto mide la persona</FormText>
-                      </Col>
-                    </FormGroup>
+                    <Col md="3">
+                      <Label htmlFor="lvtHeight">Estatura</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <InputGroup>
+                        <Input
+                          type="number"
+                          id="lvtHeight"
+                          name="lvtHeight"
+                          placeholder="170"
+                          value={this.state.formFields.lvtHeight}
+                          onChange={(e) => this.inputChangeHandler.call(this, e)}
+                          valid={this.state.errorFields.valid.indexOf("lvtHeight") > -1}
+                          invalid={this.state.errorFields.invalid.indexOf("lvtHeight") > -1}
+                        />
+                        <InputGroupAddon addonType="append">
+                          <InputGroupText>
+                            {defines.LVT_HEIGHT_UNIT}
+                          </InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
+                      <FormText color="muted">Escribe cuánto mide la persona</FormText>
+                    </Col>
+                  </FormGroup>
                   <FormGroup row>
                     <Col md="3">
                       <Label htmlFor="lvtWeight">Peso</Label>
@@ -760,8 +798,8 @@ class Create extends Component {
                           placeholder="63"
                           value={this.state.formFields.lvtWeight}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid = { this.state.errorFields.valid.indexOf("lvtWeight") > -1 }
-                          invalid = { this.state.errorFields.invalid.indexOf("lvtWeight") > -1 }
+                          valid={this.state.errorFields.valid.indexOf("lvtWeight") > -1}
+                          invalid={this.state.errorFields.invalid.indexOf("lvtWeight") > -1}
                         />
                         <InputGroupAddon addonType="append">
                           <InputGroupText>
@@ -772,21 +810,21 @@ class Create extends Component {
                       <FormText color="muted">Escribe cuánto pesa la persona</FormText>
                     </Col>
                   </FormGroup>
-                  {( customFieldList || []).map((customFieldObj, index) =>
-                    <CustomField 
+                  {(customFieldList || []).map((customFieldObj, index) =>
+                    <CustomField
                       key={index}
                       customFieldObj={customFieldObj}
-                      defineas = {defines.CUSTOM_FIELD_PREFIX}
-                      customFieldsData= {this.state.customFieldsData}
-                      customFieldValue = {this.state.editCustomValues[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
-                      onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
-                      errorFields = { this.state.errorFields }
+                      defineas={defines.CUSTOM_FIELD_PREFIX}
+                      customFieldsData={this.state.customFieldsData}
+                      customFieldValue={this.state.editCustomValues[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield]}
+                      onCustomFieldChange={(e) => this.customInputChangeHandler.call(this, e)}
+                      errorFields={this.state.errorFields}
                     />
                   )}
                 </CardBody>
               </Card>
             </Col>
-            
+
             <Col xs="12" md="6">
               <Card>
                 <CardHeader>
@@ -806,8 +844,8 @@ class Create extends Component {
                         placeholder="Ingrese observaciones de la persona"
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                         value={this.state.formFields.lvtObservations}
-                        valid = { this.state.errorFields.valid.indexOf("lvtObservations") > -1 }
-                        invalid = { this.state.errorFields.invalid.indexOf("lvtObservations") > -1 }
+                        valid={this.state.errorFields.valid.indexOf("lvtObservations") > -1}
+                        invalid={this.state.errorFields.invalid.indexOf("lvtObservations") > -1}
                       />
                       <FormText color="muted">Comentarios y observaciones referentes a la ficha ingresada</FormText>
                     </Col>
@@ -830,34 +868,34 @@ class Create extends Component {
                         this.state.lvtImages.length > 0 ?
                           <div>
                             <RUG
-                              rules = {RUG_RULES}
-                              accept = {RUG_ACCEPT}
-                              action = {RUG_ACTION}
+                              rules={RUG_RULES}
+                              accept={RUG_ACCEPT}
+                              action={RUG_ACTION}
                               // This propperty seems to be loaded once. It is not reactive to a state.
                               // so, the entire elemente must be loaded to make it work
-                              initialState = { this.state.lvtImages }
-                              
-                              source = {this.rugSource}
-                              onWarning = {this.rugOnWarning}
-                              onSuccess = {this.rugOnSuccess}
-                              onConfirmDelete = {this.rugOnConfirmDelete}
+                              initialState={this.state.lvtImages}
+
+                              source={this.rugSource}
+                              onWarning={this.rugOnWarning}
+                              onSuccess={this.rugOnSuccess}
+                              onConfirmDelete={this.rugOnConfirmDelete}
                               onDeleted={this.rugOnDeleted}
                             />
                           </div>
-                        :
+                          :
                           <RUG
-                            rules = {RUG_RULES}
-                            accept = {RUG_ACCEPT}
-                            action = {RUG_ACTION}
-                            
-                            source = {this.rugSource}
-                            onWarning = {this.rugOnWarning}
-                            onSuccess = {this.rugOnSuccess}
-                            onConfirmDelete = {this.rugOnConfirmDelete}
+                            rules={RUG_RULES}
+                            accept={RUG_ACCEPT}
+                            action={RUG_ACTION}
+
+                            source={this.rugSource}
+                            onWarning={this.rugOnWarning}
+                            onSuccess={this.rugOnSuccess}
+                            onConfirmDelete={this.rugOnConfirmDelete}
                             onDeleted={this.rugOnDeleted}
                           />
                       }
-                        
+
                     </Col>
                   </FormGroup>
 
@@ -865,7 +903,7 @@ class Create extends Component {
               </Card>
             </Col>
           </Row>
-          
+
           <Row>
             <Col xs="12" md="6">
               <Card>
@@ -878,34 +916,34 @@ class Create extends Component {
                       <Label htmlFor="lvtVideo">Vídeo</Label>
                     </Col>
                     <Col xs="12" md="9">
-                        <FilePond
-                          ref={ref => (this.pond = ref)}
-                          // files={this.state.lvtVideos}
-                          // files={
-                          //   [{source:defines.API_DOMAIN + '/uploadvideo/1582595290262-video2020-02-2420-35-35.mp4'}]
-                          // }
-                          allowMultiple={true}
-                          allowDrop={false}
-                          acceptedFileTypes={['video/*']}
-                          server={defines.API_DOMAIN + '/uploadcastingvideos'}
-                          oninit={() => this.handleInitUpload()}
-                          onprocessfile = {(error, file) => {
-                            console.log('file processed: ', file)
-                            let processedFile = JSON.parse(file.serverId);
-                            let arrVideos = this.state.lvtVideos;
-                            arrVideos.push({
-                              "filename": processedFile.video,
-                            })
-                            this.setState({ lvtVideos: arrVideos })
-                          }}
+                      <FilePond
+                        ref={ref => (this.pond = ref)}
+                        // files={this.state.lvtVideos}
+                        // files={
+                        //   [{source:defines.API_DOMAIN + '/uploadvideo/1582595290262-video2020-02-2420-35-35.mp4'}]
+                        // }
+                        allowMultiple={true}
+                        allowDrop={false}
+                        acceptedFileTypes={['video/*']}
+                        server={defines.API_DOMAIN + '/uploadcastingvideos'}
+                        oninit={() => this.handleInitUpload()}
+                        onprocessfile={(error, file) => {
+                          console.log('file processed: ', file)
+                          let processedFile = JSON.parse(file.serverId);
+                          let arrVideos = this.state.lvtVideos;
+                          arrVideos.push({
+                            "filename": processedFile.video,
+                          })
+                          this.setState({ lvtVideos: arrVideos })
+                        }}
 
-                          // onupdatefiles={(fileItems) => {
-                          //   this.setState({
-                          //     lvtVideos: fileItems.map(fileItem => fileItem.filename)
-                          //   });
-                          //   console.log(this.state.lvtVideos);
-                          // }}
-                        />
+                      // onupdatefiles={(fileItems) => {
+                      //   this.setState({
+                      //     lvtVideos: fileItems.map(fileItem => fileItem.filename)
+                      //   });
+                      //   console.log(this.state.lvtVideos);
+                      // }}
+                      />
                       <FormText color="muted">Vídeo a mostrar</FormText>
                     </Col>
                   </FormGroup>
@@ -925,7 +963,7 @@ class Create extends Component {
     );
   }
 
-  parsePersonField( field ){ 
+  parsePersonField(field) {
     switch (field) {
       case 'dni':
         return 'lvtDNI'
@@ -978,25 +1016,25 @@ class Create extends Component {
     return field;
   }
 
-  parsePersonData( field, value ){ 
+  parsePersonData(field, value) {
     switch (field) {
       case 'dob':
-        console.log('value:',value);
+        console.log('value:', value);
         let temp_date = new Date(value)
         let y = temp_date.getFullYear();
-        let d = temp_date.getDate()+1;
-        d = d<10 ? ("0" + d).slice(-2) : d;
-        let m = temp_date.getMonth()+1;
-        m = m<10 ? ("0" + m).slice(-2) : m;
-        let date = y+'-'+m+'-'+d;
+        let d = temp_date.getDate() + 1;
+        d = d < 10 ? ("0" + d).slice(-2) : d;
+        let m = temp_date.getMonth() + 1;
+        m = m < 10 ? ("0" + m).slice(-2) : m;
+        let date = y + '-' + m + '-' + d;
         return date
         break;
       case 'gender':
-        if(value=='Femenino')
+        if (value == 'Femenino')
           return 2;
-        else if(value=='Masculino')
+        else if (value == 'Masculino')
           return 1;
-        else if(value=='Otros')
+        else if (value == 'Otros')
           return 3;
         break;
       default:
@@ -1006,33 +1044,33 @@ class Create extends Component {
     return field;
   }
 
-  parseCustomFields (customData){
+  parseCustomFields(customData) {
     let formCustoms = this.state.customFieldsData;
     let editCustomValues = this.state.editCustomValues;
-    customData.map((f)=>{
-      formCustoms.map((obj)=>{
-        if(f.idfieldcastp == obj.idfieldcastp){
+    customData.map((f) => {
+      formCustoms.map((obj) => {
+        if (f.idfieldcastp == obj.idfieldcastp) {
           obj.value = f.idoptions;
           editCustomValues[defines.CUSTOM_FIELD_PREFIX + f.idfieldcastp] = f.idoptions
         }
       })
     });
-    this.setState({editCustomValues});
+    this.setState({ editCustomValues });
   }
 
-  parsePhotos = ( photos) =>{
-    photos.map((photo)=>{
+  parsePhotos = (photos) => {
+    photos.map((photo) => {
       photo['name'] = photo.imgId;
       photo['source'] = photo.imgThumbnail;
       return photo;
     })
     console.log('photo:', photos)
-    return photos ;
+    return photos;
   }
 
-  parseVideos = ( videos ) => {
-    videos.map((video)=>{
-      video['filename']=video.url
+  parseVideos = (videos) => {
+    videos.map((video) => {
+      video['filename'] = video.url
     })
     return videos;
   }
@@ -1047,7 +1085,7 @@ class Create extends Component {
   }
 
   rugOnWarning = (type, rules) => {
-    switch(type) {
+    switch (type) {
       case 'accept':
         console.log(`Only ${rules.accept.join(', ')}`)
         break;
@@ -1094,14 +1132,14 @@ class Create extends Component {
   }
 
   rugOnDeleted = (deletedImage, images) => {
-    let arrImages = this.state.lvtImages.filter(function(item) {
-      if(item.imgThumbnail !== deletedImage.imgThumbnail){
+    let arrImages = this.state.lvtImages.filter(function (item) {
+      if (item.imgThumbnail !== deletedImage.imgThumbnail) {
         return true
       }
       return false;
     })
-    
-    if ( deletedImage.selected && images.length ) {
+
+    if (deletedImage.selected && images.length) {
       images[0].select()
     }
 

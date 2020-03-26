@@ -38,21 +38,21 @@ class CustomSelect extends Component {
         return(
             <FormGroup row>
                 <Col md="3">
-                    <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}>
-                        {customFieldObj.fieldoption}
+                    <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield}>
+                        {customFieldObj.field}
                     </Label>
                 </Col>
                 <Col md="9">
                     <Input
                         type="select" 
-                        name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-                        id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
+                        name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield}
+                        id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield}
                         onChange = {(e) => this.handleChange.call(this, e)} 
                         value = {this.state.customOptionValue}
                         >
                         <option value="">Seleccione</option>
-                        {customFieldObj.values.map((customOption, index) =>
-                            <option key={index} value = { parseInt(customOption.idfieldopcastp) }>
+                        {customFieldObj.fieldoptions.map((customOption, index) =>
+                            <option key={index} value = { parseInt(customOption.idfieldop) }>
                                 {customOption.value.split('||').join(',')}
                             </option>
                         )}

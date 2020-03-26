@@ -100,7 +100,7 @@ class List extends Component {
         let ischecked = e.target.checked;
 
         let actionStatus = defines.LVT_STATUS_ACTIVE;
-        if(!ischecked){
+        if (!ischecked) {
             actionStatus = defines.LVT_STATUS_INACTIVE;
         }
         axios.put(defines.API_DOMAIN + '/field/updatestatus?status=' + actionStatus + '&module=' + this.state.module + '&id=' + idfield)
@@ -134,7 +134,6 @@ class List extends Component {
                 } else {
                     console.log('Error', error.message);
                 }
-
             });
     }
 

@@ -35,10 +35,10 @@ class CustomText extends Component {
         let appendInput = null;
         let inputCustomText = <Input
                                 type="text"
-                                id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-                                name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
+                                id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield}
+                                name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield}
                                 placeholder={customFieldValue}
-                                idfieldcastp = {customFieldObj.idfieldcastp}
+                                idfield = {customFieldObj.idfield}
                                 value = {customFieldValue}
                                 onChange = {this.handleChange}
                                 autoComplete="nope"
@@ -57,8 +57,8 @@ class CustomText extends Component {
         return(
             <FormGroup row>
                 <Col md="3">
-                    <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}>
-                        {customFieldObj.fieldoption}
+                    <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield}>
+                        {customFieldObj.field}
                     </Label>
                 </Col>
                 <Col xs="12" md="9">

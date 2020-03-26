@@ -68,24 +68,24 @@ class CustomCheckbox extends Component {
         return(
             <FormGroup row>
                 <Col md="3">
-                    <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}>
-                        {customFieldObj.fieldoption}
+                    <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield}>
+                        {customFieldObj.field}
                     </Label>
                 </Col>
                 <Col md="9">
-                    {(customFieldObj.values.length > 0) ?
-                        customFieldObj.values.map((customOption, index) =>
+                    {(customFieldObj.fieldoptions.length > 0) ?
+                        customFieldObj.fieldoptions.map((customOption, index) =>
                             <FormGroup check className="checkbox" key={index}>
                                 <Input
                                     className="form-check-input"
                                     type="checkbox"
-                                    id={"lvtCustomCheckboxOption_" + customOption.idfieldopcastp}
-                                    name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-                                    value={parseInt(customOption.idfieldopcastp)}
-                                    checked={this.state.checkedIDs.indexOf( parseInt( customOption.idfieldopcastp ) ) > -1 ? true: false}
+                                    id={"lvtCustomCheckboxOption_" + customOption.idfieldop}
+                                    name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield}
+                                    value={parseInt(customOption.idfieldop)}
+                                    checked={this.state.checkedIDs.indexOf( parseInt( customOption.idfieldop ) ) > -1 ? true: false}
                                     onChange={(e) => this.handleChange.call(this, e)}
                                 />
-                                <Label check className="form-check-label" htmlFor={`lvtCustomCheckboxOption_` + customOption.idfieldopcastp}>
+                                <Label check className="form-check-label" htmlFor={`lvtCustomCheckboxOption_` + customOption.idfieldop}>
                                     {customOption.value.split('||').join(',')}
                                 </Label>
                             </FormGroup>

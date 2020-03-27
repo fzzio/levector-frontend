@@ -85,6 +85,9 @@ class Create extends Component {
 
     inputOptionChangeHandler(e) {
         let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
+        console.log('lvtCusmtomFieldOptions: ', lvtCusmtomFieldOptions);
+        console.log('name: ', e.target.name);
+        console.log('value: ', e.target.value);
         let index = lvtCusmtomFieldOptions.findIndex(item => (item.name === e.target.name));
         if (index >= 0) {
             lvtCusmtomFieldOptions[index].value = e.target.value;
@@ -327,7 +330,7 @@ class Create extends Component {
                                 <CardBody>
                                     <FormGroup row>
                                         <Col md="3">
-                                            <Label htmlFor="lvtCustomFieldName">Nombre</Label>
+                                            <Label htmlFor="lvtCustomFieldName">Nomb vbvfre</Label>
                                         </Col>
                                         <Col xs="12" md="9">
                                             <Input

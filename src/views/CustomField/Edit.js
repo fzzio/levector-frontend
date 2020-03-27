@@ -73,9 +73,11 @@ class Edit extends Component {
 
     appendInput() {
         let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
+        
         lvtCusmtomFieldOptions.push({
-            name: '',
-            idfieldop: `lvtCustomFieldOption_${this.state.lvtCusmtomFieldOptions.length}`,
+            name: `lvtCustomFieldOption_${this.state.lvtCusmtomFieldOptions.length}`,
+            idfieldop:'' ,
+            value:'',
             status: defines.STATUS_CREATE_CUSTOM_FIELD_OP
         })
         this.setState({
@@ -85,6 +87,11 @@ class Edit extends Component {
 
     inputOptionChangeHandler(e) {
         let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
+
+        console.log('lvtCusmtomFieldOptions: ', lvtCusmtomFieldOptions);
+        console.log('name: ', e.target.name);
+        console.log('value: ', e.target.value);
+        
         let index = lvtCusmtomFieldOptions.findIndex(item => (item.name === e.target.name));
         if (index >= 0) {
             lvtCusmtomFieldOptions[index].value = e.target.value;
@@ -262,13 +269,15 @@ class Edit extends Component {
     mapCustomFieldOptions(customOptions) {
         let cumtomOptionsAct = [];
         if ((Array.isArray(customOptions) && customOptions.length)) {
-            customOptions.map((itm, itmIdx) =>
+            customOptions.map((itm, itmIdx) =>{
+                console.log('mapping: ',itm )
                 cumtomOptionsAct.push({
                     idfieldop: itm.idfieldop,
-                    name: itm.value,
+                    value: itm.value,
+                    name:'lvtCustomFieldOption_'+itmIdx,
                     status: defines.STATUS_UPDATE_CUSTOM_FIELD_OP
                 })
-            );
+            });
         }
         return cumtomOptionsAct;
     }
@@ -429,6 +438,7 @@ class Edit extends Component {
                 </div>
             )
         }
+        console.log('this.state.lvtCusmtomFieldOptions:', this.state.lvtCusmtomFieldOptions)
         return (
             <div className="animated fadeIn">
 
@@ -578,7 +588,7 @@ class Edit extends Component {
                                                                 name={`lvtCustomFieldOption_${indexOption}`}
                                                                 placeholder={'Item ' + (indexOption + 1)}
                                                                 autoComplete="off"
-                                                                value={customFieldOption.name.split('||').join(',')}
+                                                                value={customFieldOption.value.split('||').join(',')}
                                                                 onChange={(e) => this.inputOptionChangeHandler.call(this, e, customFieldOption)}
                                                             />
                                                         </Col>

@@ -86,12 +86,7 @@ class Edit extends Component {
     }
 
     inputOptionChangeHandler(e) {
-        let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions
-
-        console.log('lvtCusmtomFieldOptions: ', lvtCusmtomFieldOptions);
-        console.log('name: ', e.target.name);
-        console.log('value: ', e.target.value);
-        
+        let lvtCusmtomFieldOptions = this.state.lvtCusmtomFieldOptions        
         let index = lvtCusmtomFieldOptions.findIndex(item => (item.name === e.target.name));
         if (index >= 0) {
             lvtCusmtomFieldOptions[index].value = e.target.value;
@@ -195,7 +190,7 @@ class Edit extends Component {
         }).map(function (customFieldOption) {
             return {
                 id: customFieldOption.status === defines.STATUS_CREATE_CUSTOM_FIELD_OP ? '' : customFieldOption.idfieldop,
-                name: customFieldOption.name,
+                name: customFieldOption.value,
                 status: isEnableCustomFieldOptions ? customFieldOption.status : defines.STATUS_DELETE_CUSTOM_FIELD_OP
             }
         });
@@ -383,20 +378,22 @@ class Edit extends Component {
 
         if (!(index > 0 && index < lvtCusmtomFieldOptions.length)) {
             return;
-        }
-
+        }   
+        
         if (customFieldOption.status === defines.STATUS_CREATE_CUSTOM_FIELD_OP) {
-            lvtCusmtomFieldOptions = lvtCusmtomFieldOptions.filter(x => x.idfieldop !== customFieldOption.idfieldop)
+            lvtCusmtomFieldOptions = lvtCusmtomFieldOptions.filter(x => x.name !== customFieldOption.name)            
             this.setState({
                 lvtCusmtomFieldOptions: lvtCusmtomFieldOptions
             });
             return;
-        }
+            
+        }else{
+            lvtCusmtomFieldOptions[index].status = defines.STATUS_DELETE_CUSTOM_FIELD_OP;
+            this.setState({
+                lvtCusmtomFieldOptions: lvtCusmtomFieldOptions
+            })
 
-        lvtCusmtomFieldOptions[index].status = defines.STATUS_DELETE_CUSTOM_FIELD_OP;
-        this.setState({
-            lvtCusmtomFieldOptions: lvtCusmtomFieldOptions
-        })
+        }
     }
 
     render() {
@@ -588,7 +585,7 @@ class Edit extends Component {
                                                                 name={`lvtCustomFieldOption_${indexOption}`}
                                                                 placeholder={'Item ' + (indexOption + 1)}
                                                                 autoComplete="off"
-                                                                value={customFieldOption.value.split('||').join(',')}
+                                                                value={customFieldOption.value ? customFieldOption.value.split('||').join(',') : ''}
                                                                 onChange={(e) => this.inputOptionChangeHandler.call(this, e, customFieldOption)}
                                                             />
                                                         </Col>

@@ -322,7 +322,7 @@ class List extends Component {
                                                                     <ul>
                                                                         {customField.fieldoptions.map((customFieldItem, indexItem) =>
                                                                             <li key={indexItem}>
-                                                                                {customFieldItem.value.split('||').join(',')}
+                                                                                {customFieldItem.value ? customFieldItem.value.split('||').join(',') : ''}
                                                                             </li>
                                                                         )}
                                                                     </ul>

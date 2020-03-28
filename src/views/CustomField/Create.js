@@ -26,6 +26,7 @@ class Create extends Component {
 
         this.state = {
             module: (this.props.match.params.module) ? parseInt(this.props.match.params.module) : defines.LVT_CASTING,
+            modulename:'',
             lvtCustomFieldName: '',
             lvtCustomFieldType: '',
             lvtCustomFieldCategories: [],
@@ -55,6 +56,8 @@ class Create extends Component {
         this.inputTypeHandler = this.inputTypeHandler.bind(this);
         this.inputCategoryHandler = this.inputCategoryHandler.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.baseState = this.state ;
     }
 
     cancelFunctionState = () => {
@@ -214,6 +217,14 @@ class Create extends Component {
         });
     }
 
+    componentWillReceiveProps(np){
+        if(np.match.params.module != this.state.module){
+            this.setState(this.baseState)
+            this.setState({module:np.match.params.module})
+            this.callPerModule(np.match.params.module)
+        }
+    }
+
     componentDidMount() {
         // Get Field Types
         axios.get(defines.API_DOMAIN + '/fieldtype')
@@ -240,8 +251,12 @@ class Create extends Component {
                 }
             });
 
+           this.callPerModule(this.state.module)
+    }
+
+    callPerModule = (module_id)=>{
         // Get Categories
-        axios.get(defines.API_DOMAIN + '/category?module=' + this.state.module)
+        axios.get(defines.API_DOMAIN + '/category?module=' + module_id)
             .then((response) => {
                 if (response.status === 200) {
                     this.setState({
@@ -264,15 +279,15 @@ class Create extends Component {
                     console.log('Error', error.message);
                 }
             });
+        
+        this.setState({modulename: this.findModuleName(module_id)})
     }
 
-    render() {
-        const fieldTypeList = this.state.fieldTypes;
-        const categoryList = this.state.categories;
-        const moduleId = this.state.module;
-        const isEnableCustomFieldOptions = this.state.isEnableCustomFieldOptions;
-        let moduleName = '';
-        switch (moduleId) {
+    findModuleName = (module_id) =>{
+        module_id = parseInt(module_id)
+        let moduleName = labels.LVT_LABEL_PERSON;
+        
+        switch (module_id) {
             case defines.LVT_CASTING:
                 moduleName = labels.LVT_LABEL_PERSON;
                 break;
@@ -293,6 +308,16 @@ class Create extends Component {
                 moduleName = labels.LVT_LABEL_PERSON;
                 break;
         }
+        return moduleName;
+    }
+
+    render() {
+        const fieldTypeList = this.state.fieldTypes;
+        const categoryList = this.state.categories;
+        const moduleId = this.state.module;
+        const isEnableCustomFieldOptions = this.state.isEnableCustomFieldOptions;
+        let moduleName = '';
+        
 
         if (this.state.redirect) {
             return <Redirect to={`/customfield/${moduleId}/list`} />;
@@ -325,12 +350,12 @@ class Create extends Component {
                         <Col xs="12" md="6">
                             <Card>
                                 <CardHeader>
-                                    <strong>Campo dinámico</strong> {moduleName}
+                                    <strong>Campo dinámico</strong> {this.state.modulename}
                                 </CardHeader>
                                 <CardBody>
                                     <FormGroup row>
                                         <Col md="3">
-                                            <Label htmlFor="lvtCustomFieldName">Nomb vbvfre</Label>
+                                            <Label htmlFor="lvtCustomFieldName">Nombre</Label>
                                         </Col>
                                         <Col xs="12" md="9">
                                             <Input

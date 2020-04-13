@@ -104,7 +104,7 @@ class LevectorDashboard extends Component {
                         <div className="progress-group-header">
                           <i className="icon-user progress-group-icon"></i>
                           <span className="title">Masculino</span>
-                          <span className="ml-auto font-weight-bold">{parseFloat(summaryCasting.percentMale).toFixed(2)} %</span>
+                          <span className="ml-auto font-weight-bold">{parseInt(summaryCasting.percentMale)} %</span>
                         </div>
                         <div className="progress-group-bars">
                           <Progress className="progress-xs" color="warning" value={parseFloat(summaryCasting.percentMale).toFixed(2)} />
@@ -114,7 +114,7 @@ class LevectorDashboard extends Component {
                         <div className="progress-group-header">
                           <i className="icon-user-female progress-group-icon"></i>
                           <span className="title">Femenino</span>
-                          <span className="ml-auto font-weight-bold">{parseFloat(summaryCasting.percentFemale).toFixed(2)} %</span>
+                          <span className="ml-auto font-weight-bold">{parseInt(summaryCasting.percentFemale)} %</span>
                         </div>
                         <div className="progress-group-bars">
                           <Progress className="progress-xs" color="warning" value={parseFloat(summaryCasting.percentFemale).toFixed(2)} />
@@ -124,7 +124,7 @@ class LevectorDashboard extends Component {
                         <div className="progress-group-header">
                           <i className="icon-emotsmile progress-group-icon"></i>
                           <span className="title">Otros</span>
-                          <span className="ml-auto font-weight-bold">{parseFloat(summaryCasting.percentOthers).toFixed(2)} %</span>
+                          <span className="ml-auto font-weight-bold">{parseInt(summaryCasting.percentOthers)} %</span>
                         </div>
                         <div className="progress-group-bars">
                           <Progress className="progress-xs" color="warning" value={parseFloat(summaryCasting.percentOthers).toFixed(2)} />

@@ -74,7 +74,7 @@ class View extends Component {
     }
 
     deletePerson = () => {
-        const deletePerson = axios.put(defines.API_DOMAIN + '/deleteperson/' + this.props.match.params.id);
+        const deletePerson = axios.put(defines.API_DOMAIN + '/person/delete?module=' + defines.LVT_CASTING + "&id=" + this.props.match.params.id);
         axios.all([deletePerson]).then(axios.spread((...responses) => {
             const responseDeletePerson = responses[0];
             if (responseDeletePerson.status === 200) {

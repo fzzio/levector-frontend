@@ -328,7 +328,7 @@ class Create extends Component {
       axios.all([save_person])
         .then((response) => {
           let resp = response[0];
-          if (resp.status === 200) {
+          if (resp.status === 201) {
             this.setState({
               modalData: {
                 modalType: 'primary',

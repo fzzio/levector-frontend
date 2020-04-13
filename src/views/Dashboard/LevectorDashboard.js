@@ -45,7 +45,7 @@ class LevectorDashboard extends Component {
 
   componentDidMount() {
     // fetch all API data
-    const requestLastPersons = axios.get( defines.API_DOMAIN + '/person/' + this.state.limit + '/' + this.state.offset );
+    const requestLastPersons = axios.get( defines.API_DOMAIN + '/person?module=1&limit=' + this.state.limit + '&offset=' + this.state.offset );
     const requestSummary = axios.get( defines.API_DOMAIN + '/casting-summary/' );
     axios.all([requestLastPersons, requestSummary]).then(axios.spread((...responses) => {
         const responseLastPersons = responses[0];

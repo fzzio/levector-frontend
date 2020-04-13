@@ -273,7 +273,7 @@ class Create extends Component {
         });
         return arrCustomOptions;
       }
-    });
+    }).flat();
 
     // Get images uploaded
     let imagesPerson = this.state.lvtImages.map(function (imagePerson) {
@@ -293,7 +293,7 @@ class Create extends Component {
 
     // Setting data to request
     const personData = {
-      idmodule: defines.LVT_CASTING,
+      module: defines.LVT_CASTING,
       defaultfields: [{
         dni: this.state.formFields.lvtDNI,
         firstname: this.state.formFields.lvtFirstname,
@@ -406,7 +406,7 @@ class Create extends Component {
       });
 
     // Fetch custom fields
-    axios.get(defines.API_DOMAIN + '/field?&module=' + defines.LVT_CASTING)
+    axios.get(defines.API_DOMAIN + '/field?module=' + defines.LVT_CASTING)
       .then((response) => {
         if (response.status === 200) {
           let customFieldElements = response.data.data.map((responseCustomField) => {

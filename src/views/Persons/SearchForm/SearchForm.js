@@ -14,7 +14,7 @@ import {
     Input,
     Label,
     Row,
-  } from 'reactstrap';
+} from 'reactstrap';
 import moment from 'moment';
 import defines from '../../../defines'
 import CustomField from '../../CustomField/CustomField';
@@ -28,22 +28,22 @@ const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const Range = createSliderWithTooltip(Slider.Range);
 // const Handle = Slider.Handle;
 
-function GenderRadioOption(props){
+function GenderRadioOption(props) {
     const gender = props.gender;
-    
-    return(
-      <FormGroup check>
-        <Input
-            className="form-check-input"
-            type="radio"
-            id={"lvtGender_" + gender.idgender}
-            name="lvtGender"
-            value={gender.idgender}
-            checked={gender.idgender === props.genderValue}
-            onChange={props.onGenderFieldChange}
-        />
-        <Label className="form-check-label" check htmlFor={`lvtGender_` + gender.idgender}>{gender.name}</Label>
-      </FormGroup>
+
+    return (
+        <FormGroup check>
+            <Input
+                className="form-check-input"
+                type="radio"
+                id={"lvtGender_" + gender.idgender}
+                name="lvtGender"
+                value={gender.idgender}
+                checked={gender.idgender === props.genderValue}
+                onChange={props.onGenderFieldChange}
+            />
+            <Label className="form-check-label" check htmlFor={`lvtGender_` + gender.idgender}>{gender.name}</Label>
+        </FormGroup>
     );
 }
 
@@ -53,16 +53,16 @@ class SearchForm extends Component {
 
         this.state = {
             formFields: {
-                lvtId : '',
-                lvtDni : '',
-                lvtFirstname : '',
-                lvtLastname : '',
-                lvtGender : '',
+                lvtId: '',
+                lvtDni: '',
+                lvtFirstname: '',
+                lvtLastname: '',
+                lvtGender: '',
             },
             // lvtAge : { min: defines.LVT_AGE_MIN, max: defines.LVT_AGE_MAX },
-            lvtAge : { min: 18, max: 35 },
-            lvtHeight : { min: defines.LVT_HEIGHT_MIN, max: defines.LVT_HEIGHT_MAX },
-            lvtWeight : { min: defines.LVT_WEIGHT_MIN, max: defines.LVT_WEIGHT_MAX },
+            lvtAge: { min: 18, max: 35 },
+            lvtHeight: { min: defines.LVT_HEIGHT_MIN, max: defines.LVT_HEIGHT_MAX },
+            lvtWeight: { min: defines.LVT_WEIGHT_MIN, max: defines.LVT_WEIGHT_MAX },
             genders: [],
             customFields: [],
             customFieldsData: [],
@@ -87,45 +87,45 @@ class SearchForm extends Component {
 
     componentDidMount() {
         // fetch all API data
-        const requestGender = axios.get( defines.API_DOMAIN + '/gender' );
-        const requestCustomFields = axios.get( defines.API_DOMAIN + '/allfieldcastopp' );
+        const requestGender = axios.get(defines.API_DOMAIN + '/gender');
+        const requestCustomFields = axios.get(defines.API_DOMAIN + '/field?module=' + defines.LVT_CASTING);
         axios.all([requestGender, requestCustomFields]).then(axios.spread((...responses) => {
             const responseGender = responses[0];
             const responseCustomFields = responses[1];
-            if(responseGender.status === 200 ) {
+            if (responseGender.status === 200) {
                 this.setState({ genders: responseGender.data.data })
-            }else{
-                throw new Error( JSON.stringify( {status: responseGender.status, error: responseGender.data.data.msg} ) );
+            } else {
+                throw new Error(JSON.stringify({ status: responseGender.status, error: responseGender.data.data.msg }));
             }
-        
-            if(responseCustomFields.status === 200 ) {
-                let customFieldElements = responseCustomFields.data.data.map( ( responseCustomField ) => {
+
+            if (responseCustomFields.status === 200) {
+                let customFieldElements = responseCustomFields.data.data.map((responseCustomField) => {
                     let customFieldElement = {
                         name: defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfieldcastp,
                         value: '',
-                        idfieldtype : responseCustomField.idfieldtype,
+                        idfieldtype: responseCustomField.idfieldtype,
                         idfieldcastp: responseCustomField.idfieldcastp,
                     };
                     return customFieldElement;
-                } );
-        
-                this.setState({ 
+                });
+
+                this.setState({
                     customFields: responseCustomFields.data.data,
                     customFieldsData: customFieldElements
                 });
-            }else{
-                throw new Error( JSON.stringify( {status: responseCustomFields.status, error: responseCustomFields.data.data.msg} ) );
+            } else {
+                throw new Error(JSON.stringify({ status: responseCustomFields.status, error: responseCustomFields.data.data.msg }));
             }
         }))
-        .catch( (error) => {
-            if (error.response) { 
-                console.log(error.response.data);
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log('Error', error.message);
-            }
-        });
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response.data);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+            });
     }
 
     inputChangeHandler(e) {
@@ -134,7 +134,7 @@ class SearchForm extends Component {
         this.setState({ formFields });
     }
 
-    customInputRadioHandler(e){
+    customInputRadioHandler(e) {
         let formFields = this.state.formFields;
         formFields[e.target.name] = parseInt(e.target.value);
         this.setState({ formFields });
@@ -143,32 +143,32 @@ class SearchForm extends Component {
     customInputChangeHandler(e) {
         let customFieldsData = this.state.customFieldsData;
         const index = customFieldsData.findIndex(item => (item.name === e.target.name));
-        if( index >= 0 ){
+        if (index >= 0) {
             customFieldsData[index].value = e.target.value;
         }
         this.setState({ customFieldsData });
     }
 
-    rangeAgeChangeHandler(e){
-        this.setState({ lvtAge: {min: e[0], max: e[1]} })
+    rangeAgeChangeHandler(e) {
+        this.setState({ lvtAge: { min: e[0], max: e[1] } })
     }
-    rangeHeightChangeHandler(e){
-        this.setState({ lvtHeight: {min: e[0], max: e[1]} })
+    rangeHeightChangeHandler(e) {
+        this.setState({ lvtHeight: { min: e[0], max: e[1] } })
     }
-    rangeWeightChangeHandler(e){
-        this.setState({ lvtWeight: {min: e[0], max: e[1]} })
+    rangeWeightChangeHandler(e) {
+        this.setState({ lvtWeight: { min: e[0], max: e[1] } })
     }
 
     handleSubmit(event) {
         event.preventDefault();
 
         // Get data from Custom field
-        let formcastp = this.state.customFieldsData.filter(function(customFieldData) {
-            if( customFieldData.value === null || customFieldData.value === undefined || customFieldData.value === '' ){
+        let formcastp = this.state.customFieldsData.filter(function (customFieldData) {
+            if (customFieldData.value === null || customFieldData.value === undefined || customFieldData.value === '') {
                 return false; // skip
             }
             return true;
-        }).map(function(customFieldData) {
+        }).map(function (customFieldData) {
             return {
                 idfieldcastp: customFieldData.idfieldcastp,
                 value: customFieldData.value,
@@ -182,7 +182,7 @@ class SearchForm extends Component {
             dni: this.state.formFields.lvtDni,
             firstname: this.state.formFields.lvtFirstname,
             lastname: this.state.formFields.lvtLastname,
-            minAge: this.state.lvtAge.min>0 ? this.state.lvtAge.min :1,
+            minAge: this.state.lvtAge.min > 0 ? this.state.lvtAge.min : 1,
             maxAge: this.state.lvtAge.max,
             minHeight: this.state.lvtHeight.min,
             maxHeight: this.state.lvtHeight.max,
@@ -197,40 +197,40 @@ class SearchForm extends Component {
 
         this.setState({ loading: true });
         axios.post(
-            defines.API_DOMAIN + '/searchperson/', 
+            defines.API_DOMAIN + '/searchperson/',
             personSearchData
-          )
-          .then( (response) => {
-            if(response.status === 200 ) {
-                this.setState({ 
-                    loading: false,
-                });
-                this.props.handleResults( response.data.data );
-            }else{
-                throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
-            }
-          })
-          .catch( (error) => {
-            if (error.response) { 
-                console.log(error.response.data);
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log('Error', error.message);
-            }
-            this.setState({ loading: false, error: true });
-          });
+        )
+            .then((response) => {
+                if (response.status === 200) {
+                    this.setState({
+                        loading: false,
+                    });
+                    this.props.handleResults(response.data.data);
+                } else {
+                    throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
+                }
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response.data);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+                this.setState({ loading: false, error: true });
+            });
     }
 
     render() {
         const gendersList = this.state.genders;
-        const customFieldList = this.state.customFields.filter(function(customFieldObj) {
-            if( customFieldObj.idfieldtype === defines.CUSTOM_FIELD_TEXT || customFieldObj.idfieldtype === defines.CUSTOM_FIELD_TEXTAREA ){
+        const customFieldList = this.state.customFields.filter(function (customFieldObj) {
+            if (customFieldObj.idfieldtype === defines.CUSTOM_FIELD_TEXT || customFieldObj.idfieldtype === defines.CUSTOM_FIELD_TEXTAREA) {
                 return false; // skip
             }
             return true;
         });
-        return(
+        return (
             <Row>
                 <Col xl={12}>
                     <Form action="" method="post" className="form-horizontal" id="lvt-form-search" >
@@ -250,8 +250,8 @@ class SearchForm extends Component {
                                             <FormGroup row>
                                                 <Col md="3">
                                                     <Label htmlFor="lvtId">Código</Label>
-                                                    </Col>
-                                                    <Col xs="12" md="9">
+                                                </Col>
+                                                <Col xs="12" md="9">
                                                     <Input
                                                         type="text"
                                                         id="lvtId"
@@ -266,8 +266,8 @@ class SearchForm extends Component {
                                             <FormGroup row>
                                                 <Col md="3">
                                                     <Label htmlFor="lvtDni">Cédula</Label>
-                                                    </Col>
-                                                    <Col xs="12" md="9">
+                                                </Col>
+                                                <Col xs="12" md="9">
                                                     <Input
                                                         type="text"
                                                         id="lvtDni"
@@ -280,7 +280,7 @@ class SearchForm extends Component {
                                                 </Col>
                                             </FormGroup>
                                         </Col>
-                                        
+
                                         <Col md="4">
                                             <FormGroup row>
                                                 <Col md="3">
@@ -302,7 +302,7 @@ class SearchForm extends Component {
                                                     <Label htmlFor="lvtLastname">Apellidos</Label>
                                                 </Col>
                                                 <Col xs="12" md="9">
-                                                    <Input 
+                                                    <Input
                                                         type="text"
                                                         id="lvtLastname"
                                                         name="lvtLastname"
@@ -318,17 +318,17 @@ class SearchForm extends Component {
                                                 </Col>
                                                 <Col md="9">
                                                     {gendersList.map((gender, index) =>
-                                                        <GenderRadioOption 
-                                                            key={index} 
+                                                        <GenderRadioOption
+                                                            key={index}
                                                             gender={gender}
-                                                            genderValue = {this.state.formFields.lvtGender}
-                                                            onGenderFieldChange = {(e) => this.customInputRadioHandler.call(this, e)}
+                                                            genderValue={this.state.formFields.lvtGender}
+                                                            onGenderFieldChange={(e) => this.customInputRadioHandler.call(this, e)}
                                                         />
                                                     )}
                                                 </Col>
                                             </FormGroup>
                                         </Col>
-                                        
+
                                         <Col md="4">
                                             <FormGroup row>
                                                 <Col md="3">
@@ -339,13 +339,13 @@ class SearchForm extends Component {
                                                         min={defines.LVT_AGE_MIN}
                                                         max={defines.LVT_AGE_MAX}
                                                         defaultValue={[18, 35]}
-                                                        marks={{ 
+                                                        marks={{
                                                             0: defines.LVT_AGE_MIN,
                                                             100: defines.LVT_AGE_MAX,
                                                         }}
                                                         tipFormatter={value => `${value} ${defines.LVT_AGE_UNIT}s`}
-                                                        onChange = {(e) => this.rangeAgeChangeHandler.call(this, e)}
-                                                        allowCross = {false}
+                                                        onChange={(e) => this.rangeAgeChangeHandler.call(this, e)}
+                                                        allowCross={false}
                                                     />
                                                 </Col>
                                             </FormGroup>
@@ -363,8 +363,8 @@ class SearchForm extends Component {
                                                             240: defines.LVT_HEIGHT_MAX,
                                                         }}
                                                         tipFormatter={value => `${value} ${defines.LVT_HEIGHT_UNIT}`}
-                                                        onChange = {(e) => this.rangeHeightChangeHandler.call(this, e)}
-                                                        allowCross = {false}
+                                                        onChange={(e) => this.rangeHeightChangeHandler.call(this, e)}
+                                                        allowCross={false}
                                                     />
                                                 </Col>
                                             </FormGroup>
@@ -377,13 +377,13 @@ class SearchForm extends Component {
                                                         min={defines.LVT_WEIGHT_MIN}
                                                         max={defines.LVT_WEIGHT_MAX}
                                                         defaultValue={[60, 90]}
-                                                        marks={{ 
+                                                        marks={{
                                                             0: defines.LVT_WEIGHT_MIN,
                                                             150: defines.LVT_WEIGHT_MAX,
                                                         }}
                                                         tipFormatter={value => `${value} ${defines.LVT_WEIGHT_UNIT}`}
-                                                        onChange = {(e) => this.rangeWeightChangeHandler.call(this, e)}
-                                                        allowCross = {false}
+                                                        onChange={(e) => this.rangeWeightChangeHandler.call(this, e)}
+                                                        allowCross={false}
                                                     />
                                                 </Col>
                                             </FormGroup>
@@ -396,13 +396,13 @@ class SearchForm extends Component {
                                     </Row>
                                     <Row>
                                         {(customFieldList.length > 0) ?
-                                            customFieldList.map((customFieldObj, index) => 
+                                            customFieldList.map((customFieldObj, index) =>
                                                 <Col md="4" key={index}>
                                                     <CustomField
                                                         customFieldObj={customFieldObj}
-                                                        customFieldValue = {this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
-                                                        onCustomFieldChange = {(e) => this.customInputChangeHandler.call(this, e)}
-                                                        isSearch = { true }
+                                                        customFieldValue={this.state.customFieldsData[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp]}
+                                                        onCustomFieldChange={(e) => this.customInputChangeHandler.call(this, e)}
+                                                        isSearch={true}
                                                     />
                                                 </Col>
                                             )

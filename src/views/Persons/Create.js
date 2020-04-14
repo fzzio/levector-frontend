@@ -445,25 +445,31 @@ class Create extends Component {
     // Fetch Person Data
 
     if (this.props.match.params && this.props.match.params.id) {
-      axios.get(defines.API_DOMAIN + '/person/' + this.props.match.params.id)
+      axios.get(defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + '&id=' + this.props.match.params.id)
         .then((response) => {
+          console.log("data edit response.data.data");
+          console.log(JSON.stringify(response.data.data));
           if (response.status === 200) {
-            const personaData = response.data.data[0];
+            const personaData = response.data.data;
             let f = '';
             let v = '';
             for (let field of Object.keys(personaData)) {
               let formFields = { ...this.state.formFields };
               f = this.parsePersonField(field);
+              console.log("-- f --");
+              console.log(f);
               v = this.parsePersonData(field, personaData[field]);
+              console.log("-- v --");
+              console.log(v);
 
               // console.log(f+':', v);
 
-              if (f == 'customfields') {
+              if (f === 'customfield') {
                 this.parseCustomFields(v)
-              } else if (f == 'lvtImages') {
+              } else if (f === 'lvtImages') {
                 v = this.parsePhotos(v);
                 this.setState({ [f]: v });
-              } else if (f == 'lvtVideos') {
+              } else if (f === 'lvtVideos') {
                 v = this.parseVideos(v);
                 this.setState({ [f]: v });
                 console.log(f + ':', v);
@@ -1038,11 +1044,11 @@ class Create extends Component {
         return date
         break;
       case 'gender':
-        if (value == 'Femenino')
+        if (value === 'Femenino')
           return 2;
-        else if (value == 'Masculino')
+        else if (value === 'Masculino')
           return 1;
-        else if (value == 'Otros')
+        else if (value === 'Otros')
           return 3;
         break;
       default:
@@ -1057,9 +1063,9 @@ class Create extends Component {
     let editCustomValues = this.state.editCustomValues;
     customData.map((f) => {
       formCustoms.map((obj) => {
-        if (f.idfieldcastp == obj.idfieldcastp) {
+        if (f.idfield === obj.idfield) {
           obj.value = f.idoptions;
-          editCustomValues[defines.CUSTOM_FIELD_PREFIX + f.idfieldcastp] = f.idoptions
+          editCustomValues[defines.CUSTOM_FIELD_PREFIX + f.idfield] = f.idoptions
         }
       })
     });

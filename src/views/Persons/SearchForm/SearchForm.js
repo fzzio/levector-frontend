@@ -101,10 +101,10 @@ class SearchForm extends Component {
             if (responseCustomFields.status === 200) {
                 let customFieldElements = responseCustomFields.data.data.map((responseCustomField) => {
                     let customFieldElement = {
-                        name: defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfieldcastp,
+                        name: defines.CUSTOM_FIELD_PREFIX + responseCustomField.idfield,
                         value: '',
                         idfieldtype: responseCustomField.idfieldtype,
-                        idfieldcastp: responseCustomField.idfieldcastp,
+                        idfieldcastp: responseCustomField.idfield,
                     };
                     return customFieldElement;
                 });
@@ -191,8 +191,10 @@ class SearchForm extends Component {
             idgender: this.state.formFields.lvtGender,
             formcastp: formcastp,
             limit: this.props.limit,
-            offset: this.props.offset,
+            offset: 0,
         };
+
+        console.log("-- personSearchData --");
         console.log(JSON.stringify(personSearchData));
 
         this.setState({ loading: true });

@@ -214,7 +214,12 @@ class SearchForm extends Component {
             })
             .catch((error) => {
                 if (error.response) {
-                    console.log(error.response.data);
+                    if (error.response.status === 404) {
+                        this.props.handleResults([]);
+                        console.log(error.response.data.error);
+                    } else {
+                        console.log(error.response.data);
+                    }
                 } else if (error.request) {
                     console.log(error.request);
                 } else {

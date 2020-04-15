@@ -453,32 +453,25 @@ class Create extends Component {
             const personaData = response.data.data;
             let f = '';
             let v = '';
-            for (let field of Object.keys(personaData)) {
+            for (let field of Object.keys(personaData.defaultfields)) {
+
               let formFields = { ...this.state.formFields };
               f = this.parsePersonField(field);
-              console.log("-- f --");
-              console.log(f);
-              v = this.parsePersonData(field, personaData[field]);
-              console.log("-- v --");
-              console.log(v);
-
-              // console.log(f+':', v);
-
-              if (f === 'customfield') {
-                this.parseCustomFields(v)
-              } else if (f === 'lvtImages') {
-                v = this.parsePhotos(v);
-                this.setState({ [f]: v });
-              } else if (f === 'lvtVideos') {
-                v = this.parseVideos(v);
-                this.setState({ [f]: v });
-                console.log(f + ':', v);
-              } else {
-                formFields[f] = v;
-                this.setState({ formFields });
-              }
+              v = this.parsePersonData(field, personaData.defaultfields[field]);
+              // console.log("-- f --", f);
+              // console.log("-- v --", v);
+          
+              formFields[f] = v;
+              this.setState({ formFields });
               f = ''; v = '';
             }
+          
+          
+            this.parseCustomFields(personaData.customfield);
+            this.setState({ ['lvtImages']: this.parsePhotos(personaData.images) });
+            this.setState({ ['lvtVideos']: this.parseVideos(personaData.images) });
+          
+          
           } else {
             throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
           }
@@ -1064,8 +1057,8 @@ class Create extends Component {
     customData.map((f) => {
       formCustoms.map((obj) => {
         if (f.idfield === obj.idfield) {
-          obj.value = f.idoptions;
-          editCustomValues[defines.CUSTOM_FIELD_PREFIX + f.idfield] = f.idoptions
+          obj.value = f.options;
+          editCustomValues[defines.CUSTOM_FIELD_PREFIX + f.idfield] = f.options
         }
       })
     });

@@ -51,9 +51,18 @@ class CustomCheckbox extends Component {
     componentWillReceiveProps(np){
         
         if(np.customFieldValue){
-            let temp_custom_value = np.customFieldValue.split(',');
+            let temp_custom_value = [];
+            if(typeof(np.customFieldValue) == 'string'){
+                temp_custom_value = np.customFieldValue.split(',');
+            }else{
+                temp_custom_value = np.customFieldValue;
+            }
+
             temp_custom_value = temp_custom_value.map((t)=>{
-                t = parseInt(t);
+                if(typeof(t) == 'object')
+                    t = parseInt(t.id);
+                else
+                    t = parseInt(t.id);
                 return t;
             })
             console.log('--- checkbox: ',temp_custom_value )

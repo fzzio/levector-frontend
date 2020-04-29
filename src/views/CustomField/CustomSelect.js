@@ -28,7 +28,12 @@ class CustomSelect extends Component {
     componentWillReceiveProps(np){
         
         if(np.customFieldValue){
-            this.setState({customOptionValue:parseInt(np.customFieldValue)})
+            if( typeof np.customFieldValue  == 'object' ){
+                this.setState({customOptionValue:parseInt(np.customFieldValue[0].id)})
+            }else{
+                this.setState({customOptionValue:parseInt(np.customFieldValue)})
+            }
+            
         }
     }
 

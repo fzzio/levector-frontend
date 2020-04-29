@@ -264,7 +264,16 @@ class Create extends Component {
         }
       } else {
         // We build the options array
-        let arrCustomOptions = customFieldData.value.split(',').map(function (idCustomFieldOption) {
+        let options_selected = customFieldData.value;
+        if( typeof options_selected == 'object'){
+          options_selected = options_selected.map(function (option) {
+            return option.id;
+          })
+        }else{
+          options_selected = options_selected.split(',')
+        }
+
+        let arrCustomOptions = options_selected.map(function (idCustomFieldOption) {
           return {
             idfield: customFieldData.idfield,
             idfieldop: parseInt(idCustomFieldOption),
@@ -316,8 +325,8 @@ class Create extends Component {
       videos: videosPerson,
     };
 
-    console.log("---- personData ----");
-    console.log(JSON.stringify(personData));
+    // console.log("---- personData ----");
+    // console.log(JSON.stringify(personData));
 
     if (this.state.errorFields.invalid.length === 0) {
       this.setState({ loading: true });
@@ -447,8 +456,8 @@ class Create extends Component {
     if (this.props.match.params && this.props.match.params.id) {
       axios.get(defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + '&id=' + this.props.match.params.id)
         .then((response) => {
-          console.log("data edit response.data.data");
-          console.log(JSON.stringify(response.data.data));
+          // console.log("data edit response.data.data");
+          // console.log(JSON.stringify(response.data.data));
           if (response.status === 200) {
             const personaData = response.data.data;
             let f = '';
@@ -500,7 +509,6 @@ class Create extends Component {
     const gendersList = this.state.genders;
     let customFieldList = this.state.customFields;
     let lvtVideos = this.state.lvtVideos;
-    console.log('render lvtVideos: ', lvtVideos)
 
     if (this.state.redirect) {
       return <Redirect to='/person/list' />;

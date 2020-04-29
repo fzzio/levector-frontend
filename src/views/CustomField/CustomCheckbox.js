@@ -65,7 +65,6 @@ class CustomCheckbox extends Component {
                     t = parseInt(t.id);
                 return t;
             })
-            console.log('--- checkbox: ',temp_custom_value )
             
             this.setState({checkedIDs:temp_custom_value})
         }

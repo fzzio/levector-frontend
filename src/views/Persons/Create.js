@@ -1074,9 +1074,10 @@ class Create extends Component {
   }
 
   parsePhotos = (photos) => {
+    console.log('1. photo:', photos)
     photos.map((photo) => {
-      photo['name'] = photo.imgId;
-      photo['source'] = photo.imgThumbnail;
+      photo['name'] = photo.idimage;
+      photo['source'] = photo.thumbnail;
       return photo;
     })
     console.log('photo:', photos)
@@ -1085,7 +1086,7 @@ class Create extends Component {
 
   parseVideos = (videos) => {
     videos.map((video) => {
-      video['filename'] = video.url
+      video['filename'] = video.optimized
     })
     return videos;
   }

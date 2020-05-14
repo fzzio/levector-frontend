@@ -144,7 +144,7 @@ class Create extends Component {
       customFieldsData[index].value = e.target.value;
       this.setState({ editCustomValues: { [customFieldsData[index].name]: e.target.value } });
     }
-    // console.log('---- customFieldsData change: ', editCustomValues);
+    
     this.setState({ customFieldsData: customFieldsData });
   }
 
@@ -330,10 +330,13 @@ class Create extends Component {
 
     if (this.state.errorFields.invalid.length === 0) {
       this.setState({ loading: true });
-      let save_person = axios.post(defines.API_DOMAIN + '/person/', personData);
+      let save_person;
       if (this.props.match.params && this.props.match.params.id) {
-        save_person = axios.put(defines.API_DOMAIN + '/person/' + this.props.match.params.id, personData);
+        let save_person = axios.put(defines.API_DOMAIN + '/person/update/?id=' + this.props.match.params.id, personData);
+      }else{
+        let save_person = axios.post(defines.API_DOMAIN + '/person/', personData);
       }
+      
       axios.all([save_person])
         .then((response) => {
           let resp = response[0];
@@ -362,7 +365,7 @@ class Create extends Component {
               modalVisible: true,
               modalData: {
                 modalType: 'danger',
-                modalBody: error.response.data.data.msg,
+                modalBody: error.response.data.data ? error.response.data.data.msg : "Su requerimiento no pudo procesarse. Intente nuevamente",
                 modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
                 modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK
               }
@@ -467,8 +470,7 @@ class Create extends Component {
               let formFields = { ...this.state.formFields };
               f = this.parsePersonField(field);
               v = this.parsePersonData(field, personaData.defaultfields[field]);
-              // console.log("-- f --", f);
-              // console.log("-- v --", v);
+              
           
               formFields[f] = v;
               this.setState({ formFields });
@@ -478,7 +480,9 @@ class Create extends Component {
           
             this.parseCustomFields(personaData.customfield);
             this.setState({ ['lvtImages']: this.parsePhotos(personaData.images) });
-            this.setState({ ['lvtVideos']: this.parseVideos(personaData.images) });
+            console.log("-- f --", personaData.images);
+              console.log("-- v --", personaData.videos);
+            this.setState({ ['lvtVideos']: this.parseVideos(personaData.videos) });
           
           
           } else {
@@ -933,7 +937,7 @@ class Create extends Component {
                     <Col xs="12" md="9">
                       <FilePond
                         ref={ref => (this.pond = ref)}
-                        // files={this.state.lvtVideos}
+                        files={this.state.lvtVideos}
                         // files={
                         //   [{source:defines.API_DOMAIN + '/uploadvideo/1582595290262-video2020-02-2420-35-35.mp4'}]
                         // }
@@ -1074,19 +1078,17 @@ class Create extends Component {
   }
 
   parsePhotos = (photos) => {
-    console.log('1. photo:', photos)
     photos.map((photo) => {
       photo['name'] = photo.idimage;
       photo['source'] = photo.thumbnail;
       return photo;
     })
-    console.log('photo:', photos)
     return photos;
   }
 
   parseVideos = (videos) => {
     videos.map((video) => {
-      video['filename'] = video.optimized
+      video['filename'] = video.url
     })
     return videos;
   }

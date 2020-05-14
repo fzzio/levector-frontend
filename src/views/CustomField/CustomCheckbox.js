@@ -52,6 +52,9 @@ class CustomCheckbox extends Component {
         
         if(np.customFieldValue){
             let temp_custom_value = [];
+
+            console.log('----- checkbox np.customFieldValue: ', np.customFieldValue);
+
             if(typeof(np.customFieldValue) == 'string'){
                 temp_custom_value = np.customFieldValue.split(',');
             }else{
@@ -62,7 +65,7 @@ class CustomCheckbox extends Component {
                 if(typeof(t) == 'object')
                     t = parseInt(t.id);
                 else
-                    t = parseInt(t.id);
+                    t = parseInt(t);
                 return t;
             })
             

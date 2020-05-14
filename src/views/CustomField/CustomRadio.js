@@ -42,6 +42,7 @@ class CustomRadio extends Component {
     handleChange(e){
         let customOptionValue = this.state.customOptionValue;
         customOptionValue = parseInt(e.target.value);
+        console.log('----- np.handleChange: ', e.target);
         this.setState({ 
             customOptionValue: customOptionValue 
         });
@@ -51,7 +52,11 @@ class CustomRadio extends Component {
     componentWillReceiveProps(np){
         
         if(np.customFieldValue){
-            this.setState({customOptionValue:parseInt(np.customFieldValue)})
+            if( typeof np.customFieldValue == 'string' || typeof np.customFieldValue == 'number')
+                this.setState({customOptionValue:parseInt(np.customFieldValue)})
+            else if(typeof np.customFieldValue.length ){
+                this.setState({customOptionValue:parseInt(np.customFieldValue[0].id)})
+            }
         }
     }
 

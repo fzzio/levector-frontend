@@ -325,8 +325,8 @@ class Create extends Component {
       videos: videosPerson,
     };
 
-    // console.log("---- personData ----");
-    // console.log(JSON.stringify(personData));
+    console.log("---- personData ----");
+    console.log(JSON.stringify(personData));
 
     if (this.state.errorFields.invalid.length === 0) {
       this.setState({ loading: true });

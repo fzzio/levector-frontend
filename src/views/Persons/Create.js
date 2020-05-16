@@ -332,15 +332,15 @@ class Create extends Component {
       this.setState({ loading: true });
       let save_person;
       if (this.props.match.params && this.props.match.params.id) {
-        let save_person = axios.put(defines.API_DOMAIN + '/person/update/?id=' + this.props.match.params.id, personData);
+        save_person = axios.put(defines.API_DOMAIN + '/person/update/?id=' + this.props.match.params.id, personData);
       }else{
-        let save_person = axios.post(defines.API_DOMAIN + '/person/', personData);
+        save_person = axios.post(defines.API_DOMAIN + '/person/', personData);
       }
       
       axios.all([save_person])
         .then((response) => {
           let resp = response[0];
-          if (resp.status === 201) {
+          if (resp.status === 201 || resp.status === 200) {
             this.setState({
               modalData: {
                 modalType: 'primary',

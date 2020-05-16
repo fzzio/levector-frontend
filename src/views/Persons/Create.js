@@ -434,6 +434,12 @@ class Create extends Component {
             customFields: response.data.data,
             customFieldsData: customFieldElements
           });
+
+
+          if (this.props.match.params && this.props.match.params.id) {
+            this.fetchPersonDetail();
+          }
+          
         } else {
           throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
         }
@@ -456,11 +462,12 @@ class Create extends Component {
 
     // Fetch Person Data
 
-    if (this.props.match.params && this.props.match.params.id) {
-      axios.get(defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + '&id=' + this.props.match.params.id)
+   
+  }
+
+  fetchPersonDetail = () => {
+    axios.get(defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + '&id=' + this.props.match.params.id)
         .then((response) => {
-          // console.log("data edit response.data.data");
-          // console.log(JSON.stringify(response.data.data));
           if (response.status === 200) {
             const personaData = response.data.data;
             let f = '';
@@ -471,17 +478,13 @@ class Create extends Component {
               f = this.parsePersonField(field);
               v = this.parsePersonData(field, personaData.defaultfields[field]);
               
-          
               formFields[f] = v;
               this.setState({ formFields });
               f = ''; v = '';
             }
           
-          
             this.parseCustomFields(personaData.customfield);
             this.setState({ ['lvtImages']: this.parsePhotos(personaData.images) });
-            console.log("-- f --", personaData.images);
-              console.log("-- v --", personaData.videos);
             this.setState({ ['lvtVideos']: this.parseVideos(personaData.videos) });
           
           
@@ -503,9 +506,8 @@ class Create extends Component {
             console.log('Error', error.message);
           }
         });
-
-    }
   }
+
 
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
@@ -513,6 +515,8 @@ class Create extends Component {
     const gendersList = this.state.genders;
     let customFieldList = this.state.customFields;
     let lvtVideos = this.state.lvtVideos;
+
+    // console.log('-------customFieldList ------ ', customFieldList)
 
     if (this.state.redirect) {
       return <Redirect to='/person/list' />;

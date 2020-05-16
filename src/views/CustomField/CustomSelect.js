@@ -11,7 +11,7 @@ class CustomSelect extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            customOptionValue: this.props.customFieldValue? parseInt(this.props.customFieldValue): null
+            customOptionValue: this.props.customFieldValue? parseInt(this.props.customFieldValue): ''
         }
         this.handleChange = this.handleChange.bind(this);
     }
@@ -26,13 +26,17 @@ class CustomSelect extends Component {
     }
 
     componentWillReceiveProps(np){
-        
+        let value = '';
         if(np.customFieldValue){
             if( typeof np.customFieldValue  == 'object' ){
-                this.setState({customOptionValue:parseInt(np.customFieldValue[0].id)})
+                value = np.customFieldValue[0].id;
             }else{
-                this.setState({customOptionValue:parseInt(np.customFieldValue)})
+                value = np.customFieldValue;
             }
+            if(value){
+                value = parseInt(value);
+            }   
+            this.setState({customOptionValue:value})
             
         }
     }

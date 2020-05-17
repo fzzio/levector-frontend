@@ -198,11 +198,6 @@ class Create extends Component {
     } else {
       this.removeFormError('lvtDateOfBirth');
     }
-    if (this.state.formFields.lvtDateOfBirth === '') {
-      this.addFormError('lvtDateOfBirth');
-    } else {
-      this.removeFormError('lvtDateOfBirth');
-    }
     if (this.state.formFields.lvtGender === '') {
       this.addFormError('lvtGender');
     } else {

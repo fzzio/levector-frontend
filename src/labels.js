@@ -13,4 +13,6 @@ exports.LVT_LABEL_PERSON = 'Persona';
 exports.LVT_LABEL_PROPS = 'Utilería';
 exports.LVT_LABEL_VESTRY = 'Vestuario';
 exports.LVT_LABEL_LOCATIONS = 'Locaciones';
-exports.LVT_LABEL_PERSONA_GUARDADA_EXITOSAMENTE = 'Persona guardada exitosamente';
+exports.LVT_LABEL_PERSONA_GUARDADA_EXITOSAMENTE = 'Persona guardada exitosamente.';
+exports.LVT_LABEL_CEDULA_EXISTENTE = 'Cedula ya existe en el sistema.';
+exports.LVT_LABEL_DNI_PROPORCIONADO = ' Se le ha proporcionado la siguiente identificacion: ';

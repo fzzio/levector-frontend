@@ -69,17 +69,17 @@ class Create extends Component {
       formFields: {
         module: defines.LVT_CASTING,
         lvtDNI: '',
-        lvtFirstname: '',
-        lvtLastname: '',
-        lvtDateOfBirth: '',
-        lvtGender: '',
-        lvtHeight: '',
-        lvtWeight: '',
-        lvtRUC: '',
-        lvtEmail: '',
-        lvtCellphone: '',
-        lvtPhone: '',
-        lvtAddress: '',
+        lvtFirstname: 'sda',
+        lvtLastname: 'dsada',
+        lvtDateOfBirth: '01/30/1990',
+        lvtGender: '1',
+        lvtHeight: '170',
+        lvtWeight: '65',
+        lvtRUC: '6354560772001',
+        lvtEmail: 'cdfs@mail.com',
+        lvtCellphone: '0985324',
+        lvtPhone: '985492949',
+        lvtAddress: 'sdfsdfsdfsd',
         lvtVideo: '',
         lvtObservations: '',
       },
@@ -178,11 +178,11 @@ class Create extends Component {
   }
 
   checkFormFields() {
-    if (this.state.formFields.lvtDNI === '') {
-      this.addFormError('lvtDNI');
-    } else {
-      this.removeFormError('lvtDNI');
-    }
+    // if (this.state.formFields.lvtDNI === '') {
+    //   this.addFormError('lvtDNI');
+    // } else {
+    //   this.removeFormError('lvtDNI');
+    // }
     if (this.state.formFields.lvtFirstname === '') {
       this.addFormError('lvtFirstname');
     } else {
@@ -243,6 +243,10 @@ class Create extends Component {
   enableRedirect() {
     this.setState({ redirect: true })
   }
+  cancelFunctionState = () => {
+    console.log('----handle cancel ----')
+      this.setState({ modalVisible: false })
+  }
 
   handleSubmit(event) {
     event.preventDefault();
@@ -285,13 +289,18 @@ class Create extends Component {
     }).flat();
 
     // Get images uploaded
-    let imagesPerson = this.state.lvtImages.map(function (imagePerson) {
-      return {
-        thumbnail: imagePerson.imgThumbnail,
-        optimized: imagePerson.imgOptimized,
-        original: imagePerson.imgOriginal
-      }
-    });
+    let imagesPerson = [];
+    if(this.props.match.params && this.props.match.params.id){
+
+    }else{
+      imagesPerson = this.state.lvtImages.map(function (imagePerson) {
+        return {
+          thumbnail: imagePerson.imgThumbnail,
+          optimized: imagePerson.imgOptimized,
+          original: imagePerson.imgOriginal
+        }
+      });
+    }
 
     // Get video uploaded
     let videosPerson = this.state.lvtVideos.map(function (videoPerson) {
@@ -325,35 +334,108 @@ class Create extends Component {
       videos: videosPerson,
     };
 
-    console.log("---- personData ----");
-    console.log(JSON.stringify(personData));
+    // console.log("---- personData ----");
+    // console.log(JSON.stringify(personData));
 
     if (this.state.errorFields.invalid.length === 0) {
+
       this.setState({ loading: true });
       let save_person;
+
+
       if (this.props.match.params && this.props.match.params.id) {
+
         save_person = axios.put(defines.API_DOMAIN + '/person/update/?id=' + this.props.match.params.id, personData);
+        this.saveCall(save_person);
+
+
       }else{
-        save_person = axios.post(defines.API_DOMAIN + '/person/', personData);
+
+        if(this.state.formFields.lvtDNI != '')
+          axios.post(
+              defines.API_DOMAIN + '/searchperson/',
+              { dni: this.state.formFields.lvtDNI, limit: 5,
+                offset: 0, }
+          )
+          .then((response) => {
+            console.log('SEARCH DE PERSONA: ', response)
+            let resp = response[0];
+            
+            this.setState({
+              
+              modalData: {
+                modalType: 'danger',
+                modalBody: labels.LVT_LABEL_CEDULA_EXISTENTE,
+                modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
+                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+                okFunctionState: this.cancelFunctionState
+              },
+              modalVisible: true,
+              loading: false,
+              error: false
+
+            });
+
+          })
+          .catch((error) => {
+            if (error.response) {
+              if (error.response.data.sucess) {
+                save_person = axios.post(defines.API_DOMAIN + '/person/', personData);
+                this.saveCall(save_person);
+              }
+              console.log(error.response.data);
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error', error.message);
+            }
+            this.setState({ loading: false, error: true });
+          });
+
+
+        else{
+          save_person = axios.post(defines.API_DOMAIN + '/person/', personData);
+                this.saveCall(save_person);
+        }
+
       }
       
-      axios.all([save_person])
+      
+
+    } else {
+      this.setState({
+        modalData: {
+          modalType: 'danger',
+          modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
+          modalBody: labels.LVT_ERROR_FIELDS_MESSAGE,
+          modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+          modalCancelButton: labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
+        }
+      });
+      this.setState({ loading: false, error: true, modalVisible: true });
+    }
+  }
+
+  saveCall = (save_person) =>{
+    axios.all([save_person])
         .then((response) => {
           let resp = response[0];
+          // console.log('===== PERSONA GUARDADA :',resp );
           if (resp.status === 201 || resp.status === 200) {
             this.setState({
+              
               modalData: {
                 modalType: 'primary',
                 modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
-                modalBody: labels.LVT_LABEL_PERSONA_GUARDADA_EXITOSAMENTE,
+                modalBody: labels.LVT_LABEL_PERSONA_GUARDADA_EXITOSAMENTE + (this.state.formFields.lvtDNI == '' ? labels.LVT_LABEL_DNI_PROPORCIONADO+ resp.data.data.dni : '' ),
                 modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
                 okFunctionState: this.enableRedirect
               },
-
+              error: false,
               loading: false,
-              modalVisible: true
+              modalVisible: true,
+              
             });
-            // this.setState({ loading: false, redirect: true });
           } else {
             console.log('----- THROW ERROR create person -------')
             throw new Error(JSON.stringify({ status: resp.status, error: resp.data.data.msg }));
@@ -378,18 +460,6 @@ class Create extends Component {
           }
           this.setState({ loading: false, error: true });
         });
-    } else {
-      this.setState({
-        modalData: {
-          modalType: 'danger',
-          modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
-          modalBody: labels.LVT_ERROR_FIELDS_MESSAGE,
-          modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
-          modalCancelButton: labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
-        }
-      });
-      this.setState({ loading: false, error: true, modalVisible: true });
-    }
   }
 
   componentDidMount() {
@@ -516,7 +586,7 @@ class Create extends Component {
     let customFieldList = this.state.customFields;
     let lvtVideos = this.state.lvtVideos;
 
-    // console.log('-------this.state.editCustomValues ------ ', this.state.editCustomValues)
+    console.log('-------this.state.modalData:  ', this.state.modalData)
 
     if (this.state.redirect) {
       return <Redirect to='/person/list' />;

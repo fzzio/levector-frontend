@@ -59,8 +59,8 @@ class SearchForm extends Component {
                 lvtLastname: '',
                 lvtGender: '',
             },
-            // lvtAge : { min: defines.LVT_AGE_MIN, max: defines.LVT_AGE_MAX },
-            lvtAge: { min: 18, max: 35 },
+            lvtAge: { min: defines.LVT_AGE_MIN, max: defines.LVT_AGE_MAX },
+            // lvtAge: { min: 0, max: 100 },
             lvtHeight: { min: defines.LVT_HEIGHT_MIN, max: defines.LVT_HEIGHT_MAX },
             lvtWeight: { min: defines.LVT_WEIGHT_MIN, max: defines.LVT_WEIGHT_MAX },
             genders: [],
@@ -345,7 +345,7 @@ class SearchForm extends Component {
                                                     <Range
                                                         min={defines.LVT_AGE_MIN}
                                                         max={defines.LVT_AGE_MAX}
-                                                        defaultValue={[18, 35]}
+                                                        defaultValue={[0, 100]}
                                                         marks={{
                                                             0: defines.LVT_AGE_MIN,
                                                             100: defines.LVT_AGE_MAX,
@@ -364,7 +364,7 @@ class SearchForm extends Component {
                                                     <Range
                                                         min={defines.LVT_HEIGHT_MIN}
                                                         max={defines.LVT_HEIGHT_MAX}
-                                                        defaultValue={[140, 180]}
+                                                        defaultValue={[0, 240]}
                                                         marks={{
                                                             0: defines.LVT_HEIGHT_MIN,
                                                             240: defines.LVT_HEIGHT_MAX,
@@ -383,7 +383,7 @@ class SearchForm extends Component {
                                                     <Range
                                                         min={defines.LVT_WEIGHT_MIN}
                                                         max={defines.LVT_WEIGHT_MAX}
-                                                        defaultValue={[60, 90]}
+                                                        defaultValue={[0, 150]}
                                                         marks={{
                                                             0: defines.LVT_WEIGHT_MIN,
                                                             150: defines.LVT_WEIGHT_MAX,

@@ -345,7 +345,7 @@ class Create extends Component {
               modalData: {
                 modalType: 'primary',
                 modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
-                modalBody: "Person  guardada exitosamente",
+                modalBody: labels.LVT_LABEL_PERSONA_GUARDADA_EXITOSAMENTE,
                 modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
                 okFunctionState: this.enableRedirect
               },
@@ -516,7 +516,7 @@ class Create extends Component {
     let customFieldList = this.state.customFields;
     let lvtVideos = this.state.lvtVideos;
 
-    // console.log('-------customFieldList ------ ', customFieldList)
+    // console.log('-------this.state.editCustomValues ------ ', this.state.editCustomValues)
 
     if (this.state.redirect) {
       return <Redirect to='/person/list' />;
@@ -1073,8 +1073,14 @@ class Create extends Component {
     customData.map((f) => {
       formCustoms.map((obj) => {
         if (f.idfield === obj.idfield) {
-          obj.value = f.options;
-          editCustomValues[defines.CUSTOM_FIELD_PREFIX + f.idfield] = f.options
+          if(f.options)
+            obj.value = f.options;
+          else if( f.value)
+            obj.value = f.value;
+
+          
+          editCustomValues[defines.CUSTOM_FIELD_PREFIX + f.idfield] = obj.value;
+          // console.log('--- PARSIND DATA: ', editCustomValues[defines.CUSTOM_FIELD_PREFIX + f.idfield]  );
         }
       })
     });

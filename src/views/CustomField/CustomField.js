@@ -36,8 +36,6 @@ class CustomField extends Component {
         const customFieldValue = this.props.customFieldValue;
         const errorFields = this.props.errorFields;
         const isSearch = this.state.isSearch;
-        // console.log('--- customFieldObj: ', customFieldObj)
-        // console.log('--- render customFieldsData: ',this.props.customFieldsData)
 
         switch (customFieldObj.idfieldtype) {
             case defines.CUSTOM_FIELD_TEXT:

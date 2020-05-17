@@ -63,7 +63,7 @@ class View extends Component {
             modalVisible: true,
             modal: {
                 modalType: 'danger',
-                modalBody: 'Esta seguro de eliminar a registro?',
+                modalBody: labels.LVT_WARNING_ELIMINAR_REGISTRO,
                 modalTitle: labels.LVT_MODAL_DEFAULT_CONFIRMATION_TITLE,
                 modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
                 modalCancelButton: labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
@@ -126,6 +126,9 @@ class View extends Component {
                             idimage: image.idimage
                         }
                     })
+
+
+
 
                     this.setState({
                         loading: false,
@@ -282,7 +285,11 @@ class View extends Component {
                                             </Col>
                                             <Col xs="12" md="9">
                                                 <span>
-                                                    {Array.prototype.map.call((customFieldData.options || []), function (item) { return item.value; }).join(", ").split('||').join(",")}
+                                                    {
+                                                        Array.prototype.map.call((customFieldData.options || [{'value':customFieldData.value}]), function (item) { 
+                                                            return item.value; 
+                                                        }) .join(", ").split('||').join(",")
+                                                    }
                                                 </span>
                                             </Col>
                                         </FormGroup>
@@ -360,7 +367,7 @@ class View extends Component {
                                             {personDefaultFields.address}
                                         </dd>
 
-                                        <dt className="col-sm-3">Ciudad</dt>
+                                        {/* <dt className="col-sm-3">Ciudad</dt>
                                         <dd className="col-sm-9">
                                             {personDefaultFields.city}
                                         </dd>
@@ -368,7 +375,7 @@ class View extends Component {
                                         <dt className="col-sm-3">País</dt>
                                         <dd className="col-sm-9">
                                             <i className={'flag-icon flag-icon-' + personDefaultFields.countrycode + ' h4 mb-0'} title={personDefaultFields.countrycode} id={personDefaultFields.countrycode}></i>
-                                        </dd>
+                                        </dd> */}
 
                                         <dt className="col-sm-3">Observaciones</dt>
                                         <dd className="col-sm-9">

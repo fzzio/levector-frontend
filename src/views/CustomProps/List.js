@@ -129,7 +129,7 @@ class List extends Component {
             idtodelete:idfieldcastp,
             modal:{
                 modalType : 'danger',
-                modalBody : 'Esta seguro de eliminar a registro?',
+                modalBody : labels.LVT_WARNING_ELIMINAR_REGISTRO,
                 modalTitle : labels.LVT_MODAL_DEFAULT_CONFIRMATION_TITLE,
                 modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
                 modalCancelButton: labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,

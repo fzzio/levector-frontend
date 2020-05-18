@@ -59,10 +59,10 @@ const vestryList = React.lazy(() => import('./views/Vestry/List'));
 const vestryCreate = React.lazy(() => import('./views/Vestry/Create'));
 const vestryView = React.lazy(() => import('./views/Vestry/View'));
 
-// // Location
-// const locationList = React.lazy(() => import('./views/Location/List'));
-// const locationCreate = React.lazy(() => import('./views/Location/Create'));
-// const locationView = React.lazy(() => import('./views/Location/View'));
+// Location
+const locationList = React.lazy(() => import('./views/Location/List'));
+const locationCreate = React.lazy(() => import('./views/Location/Create'));
+const locationView = React.lazy(() => import('./views/Location/View'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -134,11 +134,11 @@ const routes = [
   { path: '/vestry/edit/:id', exact: true, name: 'Editar Vestuario', component: vestryCreate},
   { path: '/vestry/:id', exact: true, name: 'Vestuario', component: vestryView },
 
-  // // Locations
-  // { path: '/location/list', exact: true, name: 'Locaciones', component: locationList},
-  // { path: '/location/create', exact: true, name: 'Agregar Locación', component: locationCreate},
-  // { path: '/location/edit/:id', exact: true, name: 'Editar Locación', component: locationCreate},
-  // { path: '/location/:id', exact: true, name: 'Locación', component: locationView },
+  // Locations
+  { path: '/location/list', exact: true, name: 'Locaciones', component: locationList},
+  { path: '/location/create', exact: true, name: 'Agregar Locación', component: locationCreate},
+  { path: '/location/edit/:id', exact: true, name: 'Editar Locación', component: locationCreate},
+  { path: '/location/:id', exact: true, name: 'Locación', component: locationView },
 
 ];
 

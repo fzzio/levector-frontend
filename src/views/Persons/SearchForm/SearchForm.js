@@ -208,6 +208,7 @@ class SearchForm extends Component {
                         loading: false,
                     });
                     this.props.handleResults(response.data.data);
+                    this.props.updateActiveSearch(personSearchData);
                 } else {
                     throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
                 }

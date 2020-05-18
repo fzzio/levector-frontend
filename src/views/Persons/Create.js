@@ -67,30 +67,34 @@ class Create extends Component {
 
     this.state = {
       formFields: {
+        lvt_person_id:'',
         module: defines.LVT_CASTING,
         lvtDNI: '',
-        lvtFirstname: 'sda',
-        lvtLastname: 'dsada',
-        lvtDateOfBirth: '01/30/1990',
-        lvtGender: '1',
-        lvtHeight: '170',
-        lvtWeight: '65',
-        lvtRUC: '6354560772001',
-        lvtEmail: 'cdfs@mail.com',
-        lvtCellphone: '0985324',
-        lvtPhone: '985492949',
-        lvtAddress: 'sdfsdfsdfsd',
+        lvtFirstname: '',
+        lvtLastname: '',
+        lvtDateOfBirth: '',
+        lvtGender: '',
+        lvtHeight: '',
+        lvtWeight: '',
+        lvtRUC: '',
+        lvtEmail: '',
+        lvtCellphone: '',
+        lvtPhone: '',
+        lvtAddress: '',
         lvtVideo: '',
         lvtObservations: '',
       },
       loading: false,
       error: false,
       redirect: false,
+      redirect_detail: false,
       genders: [],
       customFields: [],
       customFieldsData: [],
       lvtImages: [],
       lvtVideos: [],
+      lvtDeletedImages: [],
+      lvtDeletedVideos: [],
       modalVisible: false,
       modalData: {
         modalType: 'primary',
@@ -244,7 +248,6 @@ class Create extends Component {
     this.setState({ redirect: true })
   }
   cancelFunctionState = () => {
-    console.log('----handle cancel ----')
       this.setState({ modalVisible: false })
   }
 
@@ -290,7 +293,35 @@ class Create extends Component {
 
     // Get images uploaded
     let imagesPerson = [];
+    let temp_images_deletes = this.state.lvtDeletedImages;
     if(this.props.match.params && this.props.match.params.id){
+      
+      imagesPerson = {}
+      imagesPerson['updated'] = this.state.lvtImages.filter(function (imagePerson) {
+        if(imagePerson.idimage && temp_images_deletes.indexOf(imagePerson.idimage) < 0)
+          return {
+            idimage: imagePerson.idimage,
+            thumbnail: imagePerson.imgThumbnail,
+            optimized: imagePerson.imgOptimized,
+            original: imagePerson.imgOriginal
+          }
+      });
+      imagesPerson['new'] = this.state.lvtImages.filter(function (imagePerson) {
+        if(imagePerson.idimage==undefined){
+            return imagePerson;
+        }
+      });
+      imagesPerson['new'] = imagesPerson['new'].map(function (imagePerson) {
+        return {
+          thumbnail: imagePerson.imgThumbnail,
+          optimized: imagePerson.imgOptimized,
+          original: imagePerson.imgOriginal
+        }
+      });
+
+
+      if(this.state.lvtDeletedImages.length>0)
+        imagesPerson['deleted'] = this.state.lvtDeletedImages
 
     }else{
       imagesPerson = this.state.lvtImages.map(function (imagePerson) {
@@ -301,6 +332,10 @@ class Create extends Component {
         }
       });
     }
+
+    console.log('================== imagesPerson ----:  ', imagesPerson);
+
+    // return false;
 
     // Get video uploaded
     let videosPerson = this.state.lvtVideos.map(function (videoPerson) {
@@ -462,6 +497,11 @@ class Create extends Component {
         });
   }
 
+  componentWillReceiveProps(np){
+    console.log('np.match.params.module: ---- ',np.match.params.id)
+    if(np.match.params.id && np.match.params.id!=this.state.lvt_person_id)
+      this.fetchPersonDetail(np.match.params.id);
+  }
   componentDidMount() {
     // Fetch Gender
     axios.get(defines.API_DOMAIN + '/gender')
@@ -507,7 +547,8 @@ class Create extends Component {
 
 
           if (this.props.match.params && this.props.match.params.id) {
-            this.fetchPersonDetail();
+            this.setState({lvt_person_id:this.props.match.params.id})
+            this.fetchPersonDetail(this.props.match.params.id);
           }
           
         } else {
@@ -535,8 +576,11 @@ class Create extends Component {
    
   }
 
-  fetchPersonDetail = () => {
-    axios.get(defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + '&id=' + this.props.match.params.id)
+  fetchPersonDetail = (lvt_person_id) => {
+    
+    this.setState({ loading: true })
+
+    axios.get(defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + '&id=' + lvt_person_id)
         .then((response) => {
           if (response.status === 200) {
             const personaData = response.data.data;
@@ -556,7 +600,7 @@ class Create extends Component {
             this.parseCustomFields(personaData.customfield);
             this.setState({ ['lvtImages']: this.parsePhotos(personaData.images) });
             this.setState({ ['lvtVideos']: this.parseVideos(personaData.videos) });
-          
+            this.setState({ loading: false })
           
           } else {
             throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
@@ -586,10 +630,13 @@ class Create extends Component {
     let customFieldList = this.state.customFields;
     let lvtVideos = this.state.lvtVideos;
 
-    console.log('-------this.state.modalData:  ', this.state.modalData)
+    // console.log('-------this.state.modalData:  ', this.state.modalData)
 
     if (this.state.redirect) {
       return <Redirect to='/person/list' />;
+    }
+    if (this.state.redirect_detail) {
+      return <Redirect to={'/person/'+this.props.match.params.id} />;
     }
     if (this.state.loading) {
       return (
@@ -1011,7 +1058,7 @@ class Create extends Component {
                     <Col xs="12" md="9">
                       <FilePond
                         ref={ref => (this.pond = ref)}
-                        files={this.state.lvtVideos}
+                        // files={this.state.lvtVideos}
                         // files={
                         //   [{source:defines.API_DOMAIN + '/uploadvideo/1582595290262-video2020-02-2420-35-35.mp4'}]
                         // }
@@ -1026,6 +1073,10 @@ class Create extends Component {
                           let arrVideos = this.state.lvtVideos;
                           arrVideos.push({
                             "filename": processedFile.video,
+                            "source": processedFile.video,
+                            "options": {
+                                type: 'limbo'
+                            }
                           })
                           this.setState({ lvtVideos: arrVideos })
                         }}
@@ -1047,13 +1098,22 @@ class Create extends Component {
 
           <Card>
             <CardFooter>
-              <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-dot-circle-o"></i> Guardar</Button>
-              {/* <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Limpiar</Button> */}
+                <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-dot-circle-o"></i> Guardar</Button>
+              {' '}
+              { this.props.match.params && this.props.match.params.id &&
+                  <Button color="dark" size="sm" onClick={this.handleVolverADetalle}> Volver al detalle </Button>
+              }
+
             </CardFooter>
           </Card>
         </Form>
       </div>
     );
+  }
+
+  handleVolverADetalle = () => {
+
+    this.setState({redirect_detail:true})
   }
 
   parsePersonField(field) {
@@ -1230,8 +1290,10 @@ class Create extends Component {
   }
 
   rugOnDeleted = (deletedImage, images) => {
+    console.log(' deletedImage: ', deletedImage)
+    let temp_images_deletes = this.state.lvtDeletedImages;
     let arrImages = this.state.lvtImages.filter(function (item) {
-      if (item.imgThumbnail !== deletedImage.imgThumbnail) {
+      if (item.imgThumbnail !== deletedImage.imgThumbnail || item.thumbnail != deletedImage.imgThumbnail) {
         return true
       }
       return false;
@@ -1240,8 +1302,8 @@ class Create extends Component {
     if (deletedImage.selected && images.length) {
       images[0].select()
     }
-
-    this.setState({ lvtImages: arrImages })
+    temp_images_deletes.push(deletedImage.idimage);
+    this.setState({ lvtImages: arrImages, lvtDeletedImages: temp_images_deletes })
   }
 }
 

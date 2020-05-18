@@ -27,6 +27,7 @@ class List extends Component {
       error: false,
       errorCode: 0,
       errorMessage: '',
+      active_search:{}
     }
 
     this.handleResults = this.handleResults.bind(this);
@@ -37,24 +38,48 @@ class List extends Component {
     this.setState({ persons: personResults });
   }
 
+  updateActiveSearch = (personSearchData)=>{
+    this.setState({active_search:personSearchData})
+  }
+
   handleLoadMore = () => {
 
+    let server_action = ''
+    if(JSON.stringify(this.state.active_search).length>2){
+      let personSearchData = this.state.active_search;
+      personSearchData['offset'] = this.state.offset;
+      server_action = axios.post(
+          defines.API_DOMAIN + '/searchperson/',
+          personSearchData
+      )
+    }else{
+      server_action = axios.get(
+        defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + "&limit=" + this.state.limit + '&offset=' + this.state.offset
+      )
+    }
+
     this.setState({ loading_more: true });
-    axios.get(
-      defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + "&limit=" + this.state.limit + '&offset=' + this.state.offset
-    )
+    axios.all([server_action])
       .then((response) => {
-        if (response.status === 200) {
+        if (response[0].status === 200 || (response[0].data && response[0].data.sucess)) {
+          let data = [];
+          if(response[0].data){
+            data=response[0].data.data;
+          }else{
+            data=response[0].data.data; 
+          }
+          
+
           let temp_persons = this.state.persons;
           this.setState({
             loading_more: false,
             error: false,
-            persons: temp_persons.concat(response.data.data),
-            offset: this.state.offset + response.data.data.length,
-            // limit: this.state.offset + response.data.data.length
+            persons: temp_persons.concat(data),
+            offset: this.state.offset + data.length,
+            // limit: this.state.offset + data.length
           })
         } else {
-          throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
+          throw new Error(JSON.stringify({ status: response[0].status, error: response[0].data.msg }));
         }
       })
       .catch((error) => {
@@ -72,6 +97,8 @@ class List extends Component {
         }
       });
   }
+
+  
 
   componentDidMount() {
     this.setState({ loading: true });
@@ -141,6 +168,7 @@ class List extends Component {
           offset={this.state.offset}
           personList={this.state.persons}
           handleResults={this.handleResults}
+          updateActiveSearch = {this.updateActiveSearch}
         />
         <Row>
           <Col xl={12}>

@@ -2,7 +2,7 @@
     On this file are the config defines
 */
 exports.API_DOMAIN = 'http://ec2-52-202-112-113.compute-1.amazonaws.com:3000';
-// exports.API_DOMAIN = 'http://localhost:3000';
+// exports.API_DOMAIN = 'http://localhost:3009';
 
 // MODULE IDENTIFIERS
 exports.LVT_CASTING = 1;
@@ -45,6 +45,3 @@ exports.LVT_PAGINATION_OFFSET = 4;
 exports.STATUS_UPDATE_CUSTOM_FIELD_OP = 1;
 exports.STATUS_CREATE_CUSTOM_FIELD_OP = 2;
 exports.STATUS_DELETE_CUSTOM_FIELD_OP = 3;
-exports.UTILERIA_TYPE = [{name:'Utilería', value:1}, {name: 'Vestuario', value:2}]
-exports.UTILERIA_CATEGORIES = [{name:'Casa', value:1}, {name: 'Escolar', value:2}, {name: 'Exterior', value:3}, {name: 'Oficina', value:4}]
-exports.VESTUARIO_CATEGORIES = [{name:'Hombre', value:1}, {name: 'Mujer', value:2}, {name: 'Niña', value:3}, {name: 'Niño', value:4}]

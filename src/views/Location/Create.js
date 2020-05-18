@@ -59,7 +59,7 @@ function GenderRadioOption(props) {
 
 const RUG_RULES = { limit: 10, size: 20000 };
 const RUG_ACCEPT = ['jpg', 'jpeg', 'png'];
-const RUG_ACTION = defines.API_DOMAIN + '/uploadlocationimages';
+const RUG_ACTION = defines.API_DOMAIN + '/uploadlocationsimages';
 
 class Create extends Component {
   constructor(props) {
@@ -569,7 +569,7 @@ class Create extends Component {
                         type="text"
                         id="lvtName"
                         name="lvtName"
-                        placeholder="Juan"
+                        placeholder="Locacion"
                         autoComplete="nope"
                         value={this.state.formFields.lvtName}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
@@ -705,7 +705,7 @@ class Create extends Component {
                         allowMultiple={true}
                         allowDrop={false}
                         acceptedFileTypes={['video/*']}
-                        server={defines.API_DOMAIN + '/uploadlocationvideos'}
+                        server={defines.API_DOMAIN + '/uploadlocationsvideos'}
                         oninit={() => this.handleInitUpload()}
                         onprocessfile={(error, file) => {
                           console.log('file processed: ', file)

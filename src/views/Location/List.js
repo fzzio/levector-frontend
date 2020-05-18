@@ -54,7 +54,7 @@ class List extends Component {
       )
     }else{
       server_action = axios.get(
-        defines.API_DOMAIN + '/location?module=' + defines.LVT_CASTING + "&limit=" + this.state.limit + '&offset=' + this.state.offset
+        defines.API_DOMAIN + '/location?module=' + defines.LVT_LOCATIONS + "&limit=" + this.state.limit + '&offset=' + this.state.offset
       )
     }
 
@@ -103,7 +103,7 @@ class List extends Component {
   componentDidMount() {
     this.setState({ loading: true });
     axios.get(
-      defines.API_DOMAIN + '/location?module=' + defines.LVT_CASTING + "&limit=" + this.state.limit + '&offset=' + this.state.offset
+      defines.API_DOMAIN + '/location?module=' + defines.LVT_LOCATIONS + "&limit=" + this.state.limit + '&offset=' + this.state.offset
     )
       .then((response) => {
         if (response.status === 200) {

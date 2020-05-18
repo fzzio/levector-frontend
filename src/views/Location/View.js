@@ -214,13 +214,13 @@ class View extends Component {
                         <Col xs="12" md="6">
                             <Card>
                                 <CardHeader>
-                                    <strong>Información</strong> Datos personales
+                                    <strong>Información</strong> Locacion
                                 </CardHeader>
                                 <CardBody>
                                     <dl className="row mb-1">
-                                        <dt className="col-sm-3">Nombrs</dt>
+                                        <dt className="col-sm-3">Nombre</dt>
                                         <dd className="col-sm-9">
-                                            {locationDefaultFields.nombre}
+                                            {locationDefaultFields.name}
                                         </dd>
                                     </dl>
                                 </CardBody>
@@ -297,41 +297,10 @@ class View extends Component {
                         <Col xs="12" md="6">
                             <Card>
                                 <CardHeader>
-                                    <strong>Contacto</strong> Datos de contacto
+                                    <strong>Otros</strong> Datos
                                 </CardHeader>
                                 <CardBody>
-
                                     <dl className="row mb-1">
-                                        <dt className="col-sm-3">Email</dt>
-                                        <dd className="col-sm-9">
-                                            <a href={`mailto:${locationDefaultFields.email}`}>{locationDefaultFields.email}</a>
-                                        </dd>
-
-                                        <dt className="col-sm-3">Celular</dt>
-                                        <dd className="col-sm-9">
-                                            {locationDefaultFields.phone1}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Teléfono</dt>
-                                        <dd className="col-sm-9">
-                                            {locationDefaultFields.phone2}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Dirección</dt>
-                                        <dd className="col-sm-9">
-                                            {locationDefaultFields.address}
-                                        </dd>
-
-                                        {/* <dt className="col-sm-3">Ciudad</dt>
-                                        <dd className="col-sm-9">
-                                            {locationDefaultFields.city}
-                                        </dd>
-
-                                        <dt className="col-sm-3">País</dt>
-                                        <dd className="col-sm-9">
-                                            <i className={'flag-icon flag-icon-' + locationDefaultFields.countrycode + ' h4 mb-0'} title={locationDefaultFields.countrycode} id={locationDefaultFields.countrycode}></i>
-                                        </dd> */}
-
                                         <dt className="col-sm-3">Observaciones</dt>
                                         <dd className="col-sm-9">
                                             {

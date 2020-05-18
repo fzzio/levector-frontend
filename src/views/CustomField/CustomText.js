@@ -40,7 +40,7 @@ class CustomText extends Component {
                                 placeholder={customFieldValue}
                                 idfield = {customFieldObj.idfield}
                                 value = {customFieldValue}
-                                onChange = {this.handleChange}
+                                onChange = {(e) => this.handleChange.call(this, e)}
                                 autoComplete="nope"
                             />;
         if( customFieldObj.appendtext !== "" && customFieldObj.appendtext !== null && !isSearch ){

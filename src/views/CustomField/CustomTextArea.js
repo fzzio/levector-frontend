@@ -43,7 +43,7 @@ class CustomTextArea extends Component {
                         placeholder="..."
                         idfield = {customFieldObj.idfield}
                         value = {customFieldValue}
-                        onChange = {this.handleChange}
+                        onChange = {(e) => this.handleChange.call(this, e)}
                         autoComplete="nope"
                     />
                     {helpText}

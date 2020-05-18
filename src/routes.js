@@ -44,18 +44,25 @@ const customFieldList = React.lazy(() => import('./views/CustomField/List'));
 const customFieldCreate = React.lazy(() => import('./views/CustomField/Create'));
 const customFieldEdit = React.lazy(() => import('./views/CustomField/Edit'));
 
-// Persons
+// Person
 const personList = React.lazy(() => import('./views/Persons/List'));
 const personCreate = React.lazy(() => import('./views/Persons/Create'));
 const personView = React.lazy(() => import('./views/Persons/View'));
 
-// Utileria
-const propsList = React.lazy(() => import('./views/Props/List'));
-const propsCreate = React.lazy(() => import('./views/Props/Create'));
-const customPropsCreate = React.lazy(() => import('./views/CustomProps/Create'));
-const customPropsList = React.lazy(() => import('./views/CustomProps/List'));
+// Prop
+const propList = React.lazy(() => import('./views/Prop/List'));
+const propCreate = React.lazy(() => import('./views/Prop/Create'));
+const propView = React.lazy(() => import('./views/Prop/View'));
 
+// // Vestry
+// const vestryList = React.lazy(() => import('./views/Vestry/List'));
+// const vestryCreate = React.lazy(() => import('./views/Vestry/Create'));
+// const vestryView = React.lazy(() => import('./views/Vestry/View'));
 
+// // Location
+// const locationList = React.lazy(() => import('./views/Location/List'));
+// const locationCreate = React.lazy(() => import('./views/Location/Create'));
+// const locationView = React.lazy(() => import('./views/Location/View'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -98,29 +105,41 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', component: Modals },
   { path: '/widgets', name: 'Widgets', component: Widgets },
   { path: '/charts', name: 'Charts', component: Charts },
-  { path: '/users', exact: true,  name: 'Users', component: Users },
+  { path: '/users', exact: true, name: 'Users', component: Users },
   { path: '/users/:id', exact: true, name: 'User Details', component: User },
-  
+
   // Levector
   { path: '/dashboard', name: 'Dashboard', component: LevectorDashboard },
 
-  //CustomField
-  { path: '/customfield/:module/list', exact: true, name: 'Campo dinámico', component: customFieldList},
-  { path: '/customfield/:module/create', exact: true, name: 'Campo dinámico', component: customFieldCreate},
-  { path: '/customfield/:module/:customfieldId/edit', exact: true, name: 'Campo dinámico', component: customFieldEdit},
+  // CustomField
+  { path: '/customfield/:module/list', exact: true, name: 'Campo dinámico', component: customFieldList },
+  { path: '/customfield/:module/create', exact: true, name: 'Campo dinámico', component: customFieldCreate },
+  { path: '/customfield/:module/:customfieldId/edit', exact: true, name: 'Campo dinámico', component: customFieldEdit },
 
   // Person
-  { path: '/person/list', exact: true, name: 'Personas', component: personList},
-  { path: '/person/create', exact: true, name: 'Agregar Personas', component: personCreate},
-  { path: '/person/edit/:id', exact: true, name: 'Editar Persona', component: personCreate},
+  { path: '/person/list', exact: true, name: 'Personas', component: personList },
+  { path: '/person/create', exact: true, name: 'Agregar Persona', component: personCreate },
+  { path: '/person/edit/:id', exact: true, name: 'Editar Persona', component: personCreate },
   { path: '/person/:id', exact: true, name: 'Persona', component: personView },
-  // Utileria
-  { path: '/props/list', exact: true, name: 'Utileria', component: propsList},
-  { path: '/props/create', exact: true, name: 'Agregar Utileria', component: propsCreate},
-  { path: '/customProps/create', exact: true, name: 'Campo dinámico', component: customPropsCreate},
-  { path: '/customProps/list', exact: true, name: 'Campo dinámico', component: customPropsList},
-  
-  
+
+  // Prop
+  { path: '/prop/list', exact: true, name: 'Utilerías', component: propList },
+  { path: '/prop/create', exact: true, name: 'Agregar Utilería', component: propCreate },
+  { path: '/prop/edit/:id', exact: true, name: 'Editar Utilería', component: propCreate },
+  { path: '/prop/:id', exact: true, name: 'Utilería', component: propView }
+
+  // // Vestry
+  // { path: '/vestry/list', exact: true, name: 'Vestuarios', component: vestryList},
+  // { path: '/vestry/create', exact: true, name: 'Agregar Vestuario', component: vestryCreate},
+  // { path: '/vestry/edit/:id', exact: true, name: 'Editar Vestuario', component: vestryCreate},
+  // { path: '/vestry/:id', exact: true, name: 'Vestuario', component: vestryView },
+
+  // // Locations
+  // { path: '/location/list', exact: true, name: 'Locaciones', component: locationList},
+  // { path: '/location/create', exact: true, name: 'Agregar Locación', component: locationCreate},
+  // { path: '/location/edit/:id', exact: true, name: 'Editar Locación', component: locationCreate},
+  // { path: '/location/:id', exact: true, name: 'Locación', component: locationView },
+
 ];
 
 export default routes;

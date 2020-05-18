@@ -48,11 +48,11 @@ export default {
       children: [
         {
           name: 'Ver todos',
-          url: '/props/list',
+          url: '/prop/list',
         },
         {
           name: 'Agregar',
-          url: '/props/create',
+          url: '/prop/create',
         },
         {
           name: 'Campos',
@@ -75,11 +75,11 @@ export default {
       children: [
         {
           name: 'Ver todos',
-          url: '/props/list',
+          url: '/vestry/list',
         },
         {
           name: 'Agregar',
-          url: '/props/create',
+          url: '/vestry/create',
         },
         {
           name: 'Campos',
@@ -102,11 +102,11 @@ export default {
       children: [
         {
           name: 'Ver todos',
-          url: '',
+          url: '/location/list',
         },
         {
           name: 'Agregar',
-          url: '',
+          url: '/location/create',
         },
         {
           name: 'Campos',

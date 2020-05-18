@@ -28,21 +28,23 @@ import {
   } from 'reactstrap';
 import { isNull } from 'util';
 import moment from 'moment';
-import defines from '../../../defines'
-import defaultimg from '../../../assets/img/levector.jpg'
+import defines from '../../defines'
+import defaultimg from '../../assets/img/levector.jpg'
 
-class PersonCard extends Component {
+class PropCard extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            person: {
-                ID: (this.props.person.ID).toString().padStart( defines.LVT_NUM_DIGITS, defines.LVT_PAD_CHARACTER),
-                fullname: this.props.person.firstname + ' ' + this.props.person.lastname,
-                link: `/person/${this.props.person.ID}`,
-                age: ( this.props.person.age > 0 ) ? this.props.person.age : 0,
-                photo: (this.props.person.photo) ? this.props.person.photo : defaultimg,
-                gender: ( this.props.person.gender !== null ) ? this.props.person.gender : 0,
-                modified: moment(this.props.person.modified).format('YYYY-MM-DD'),
+            prop: {
+                ID: (this.props.prop.ID).toString().padStart( defines.LVT_NUM_DIGITS, defines.LVT_PAD_CHARACTER),
+                name: this.props.prop.name,
+                link: `/prop/${this.props.prop.ID}`,
+                width: this.props.prop.width,
+                height: this.props.prop.height,
+                length: this.props.prop.length,
+                weight: this.props.prop.weight,
+                photo: (this.props.prop.photo) ? this.props.prop.photo : defaultimg,
+                modified: moment(this.props.prop.modified).format('YYYY-MM-DD'),
             },
             hasAlert: false,
             alertMessage : '',
@@ -54,12 +56,8 @@ class PersonCard extends Component {
     componentDidMount() {
         let alertMessage = '';
         let hasAlert = false;
-        if( ( this.props.person.age === null || this.props.person.age === -1 ) ){
-            alertMessage += 'Edad incorrecta. ';
-            hasAlert = true;
-        }
-        if( ( this.props.person.gender === null ) ){
-            alertMessage += 'Género incorrecto. ';
+        if( ( this.props.prop.width === null || this.props.prop.width === -1 ) ){
+            alertMessage += 'Peso incorrecto. ';
             hasAlert = true;
         }
 
@@ -70,7 +68,7 @@ class PersonCard extends Component {
     }
 
     render() {
-        const person = this.state.person;
+        const prop = this.state.prop;
         let alertMessage = null;
         if( this.state.hasAlert ){
             alertMessage =  <Row>
@@ -83,21 +81,21 @@ class PersonCard extends Component {
         }
         return (
             <Col xs="12" sm="3" md="3">
-                <Card id={person.ID} className="lvt-card">
+                <Card id={prop.ID} className="lvt-card">
                     <CardBody>
                         <Row>
                             <Col md="12">
                                 <img 
-                                    src={ person.photo } 
+                                    src={ prop.photo } 
                                     className="rounded img-responsive lvt-img" 
-                                    alt={ person.fullname }
+                                    alt={ prop.name }
                                 />
                             </Col>
                             <Col sm="12">
                                 <FormGroup row>
                                     <Col xs="12" md="12">
                                         <p className="lvt-data-value">
-                                            { person.fullname }
+                                            { prop.name }
                                         </p>
                                         <FormText className="lvt-data-field">Nombre</FormText>
                                     </Col>
@@ -105,33 +103,33 @@ class PersonCard extends Component {
                                 <FormGroup row>
                                     <Col sm="6" md="6" lg="4">
                                         <p className="lvt-data-value">
-                                            { person.ID }
+                                            { prop.ID }
                                         </p>
                                         <FormText className="lvt-data-field">ID</FormText>
                                     </Col>
                                     <Col sm="6" md="6" lg="3">
                                         <p className="lvt-data-value">
                                             { 
-                                                person.age
-                                                ?   person.age
+                                                prop.width
+                                                ?   prop.width
                                                 :   <Badge color="warning">
                                                         <i className="fa fa-question fa-lg"></i>
                                                     </Badge>
                                             }
                                         </p>
-                                        <FormText className="lvt-data-field">Edad</FormText>
+                                        <FormText className="lvt-data-field">Ancho</FormText>
                                     </Col>
                                     <Col sm="6" md="6" lg="5">
                                         <p className="lvt-data-value">
                                             { 
-                                                person.gender
-                                                ?   person.gender
+                                                prop.height
+                                                ?   prop.height
                                                 :   <Badge color="warning">
                                                         <i className="fa fa-question fa-lg"></i>
                                                     </Badge>
                                             }
                                         </p>
-                                        <FormText className="lvt-data-field">Género</FormText>
+                                        <FormText className="lvt-data-field">Altura</FormText>
                                     </Col>
                                 </FormGroup>
                             </Col>
@@ -142,12 +140,12 @@ class PersonCard extends Component {
                         <Row>
                             <Col xs="8">
                                 <p className="lvt-data-value">
-                                    { person.modified }
+                                    { prop.modified }
                                 </p>
                                 <FormText className="lvt-data-field">Modificado</FormText>
                             </Col>
                             <Col xs="4">
-                                <Link to={ person.link } className="btn btn-dark btn-sm btn-block"  target="_blank" color="primary" >
+                                <Link to={ prop.link } className="btn btn-dark btn-sm btn-block"  target="_blank" color="primary" >
                                     Ver
                                 </Link>
                             </Col>
@@ -159,4 +157,4 @@ class PersonCard extends Component {
     }
 }
 
-export default PersonCard;
+export default PropCard;

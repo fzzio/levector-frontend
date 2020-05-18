@@ -29,8 +29,8 @@ class View extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            person: [],
-            personImagesGallery: [],
+            prop: [],
+            propImagesGallery: [],
             loading: true,
             error: false,
             redirect: false,
@@ -67,21 +67,21 @@ class View extends Component {
                 modalTitle: labels.LVT_MODAL_DEFAULT_CONFIRMATION_TITLE,
                 modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
                 modalCancelButton: labels.LVT_MODAL_DEFAULT_BUTTON_CANCEL,
-                okFunctionState: this.deletePerson,
+                okFunctionState: this.deleteProp,
                 cancelFunctionState: this.cancelFunctionState
             }
         });
     }
 
-    deletePerson = () => {
-        const deletePerson = axios.put(defines.API_DOMAIN + '/person/delete?module=' + defines.LVT_CASTING + "&id=" + this.props.match.params.id);
-        axios.all([deletePerson]).then(axios.spread((...responses) => {
-            const responseDeletePerson = responses[0];
-            if (responseDeletePerson.status === 200) {
+    deleteProp = () => {
+        const deleteProp = axios.put(defines.API_DOMAIN + '/prop/delete?module=' + defines.LVT_ + "&id=" + this.props.match.params.id);
+        axios.all([deleteProp]).then(axios.spread((...responses) => {
+            const responseDeleteProp = responses[0];
+            if (responseDeleteProp.status === 200) {
                 this.setState({ modalVisible: false, loading: false });
-                this.confirmPersonDeleted()
+                this.confirmPropDeleted()
             } else {
-                throw new Error(JSON.stringify({ status: responseDeletePerson.status, error: responseDeletePerson.data.data.msg }));
+                throw new Error(JSON.stringify({ status: responseDeleteProp.status, error: responseDeleteProp.data.data.msg }));
             }
         }))
             .catch((error) => {
@@ -95,7 +95,7 @@ class View extends Component {
             });
     }
 
-    confirmPersonDeleted = () => {
+    confirmPropDeleted = () => {
         console.log('--- confirm to redirect ----')
         this.setState({
             modalVisible: true,
@@ -112,12 +112,12 @@ class View extends Component {
     componentDidMount() {
         this.setState({ loading: true });
         axios.get(
-            defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + "&id=" + this.props.match.params.id
+            defines.API_DOMAIN + '/prop?module=' + defines.LVT_ + "&id=" + this.props.match.params.id
         )
             .then((response) => {
                 if (response.status === 200) {
-                    let personData = response.data.data;
-                    let personImagesGallery = personData.images.map(function (image) {
+                    let propData = response.data.data;
+                    let propImagesGallery = propData.images.map(function (image) {
                         return {
                             original: image.optimized,
                             thumbnail: image.thumbnail,
@@ -127,14 +127,11 @@ class View extends Component {
                         }
                     })
 
-
-
-
                     this.setState({
                         loading: false,
                         error: false,
-                        person: personData,
-                        personImagesGallery: personImagesGallery,
+                        prop: propData,
+                        propImagesGallery: propImagesGallery,
                     })
                 } else {
                     throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
@@ -159,16 +156,16 @@ class View extends Component {
     loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
     render() {
-        const person = this.state.person;
-        console.log("person");
-        console.log(JSON.stringify(person));
-        const personDefaultFields = person.defaultfields;
-        const personCustomFields = person.customfield;
-        const personImagesGallery = this.state.personImagesGallery;
-        const personVideos = this.state.person.videos;
+        const prop = this.state.prop;
+        console.log("prop");
+        console.log(JSON.stringify(prop));
+        const propDefaultFields = prop.defaultfields;
+        const propCustomFields = prop.customfield;
+        const propImagesGallery = this.state.propImagesGallery;
+        const propVideos = this.state.prop.videos;
 
         if (this.state.redirect) {
-            return <Redirect to='/person/list' />;
+            return <Redirect to='/prop/list' />;
         }
 
         if (this.state.loading) {
@@ -218,43 +215,13 @@ class View extends Component {
                         <Col xs="12" md="6">
                             <Card>
                                 <CardHeader>
-                                    <strong>Información</strong> Datos personales
+                                    <strong>Información</strong> Principal
                                 </CardHeader>
                                 <CardBody>
                                     <dl className="row mb-1">
-                                        <dt className="col-sm-3">Cédula</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.dni}
-                                        </dd>
-
                                         <dt className="col-sm-3">Nombres</dt>
                                         <dd className="col-sm-9">
-                                            {personDefaultFields.firstname}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Apellidos</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.lastname}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Fecha de nacimiento</dt>
-                                        <dd className="col-sm-9">
-                                            {moment(personDefaultFields.dob).format('YYYY-MM-DD')}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Edad</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.age + ' ' + defines.LVT_AGE_UNIT + 's'}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Género</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.gender}
-                                        </dd>
-
-                                        <dt className="col-sm-3">RUC</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.ruc}
+                                            {propDefaultFields.name}
                                         </dd>
                                     </dl>
                                 </CardBody>
@@ -268,17 +235,27 @@ class View extends Component {
                                 </CardHeader>
                                 <CardBody>
                                     <dl className="row mb-1">
-                                        <dt className="col-sm-3">Estatura</dt>
+                                        <dt className="col-sm-3">Width</dt>
                                         <dd className="col-sm-9">
-                                            {personDefaultFields.height + ` (${defines.LVT_DISTANCE_UNIT})`}
+                                            {propDefaultFields.width + ` (${defines.LVT_DISTANCE_UNIT})`}
+                                        </dd>
+
+                                        <dt className="col-sm-3">Alto</dt>
+                                        <dd className="col-sm-9">
+                                            {propDefaultFields.height + ` (${defines.LVT_DISTANCE_UNIT})`}
+                                        </dd>
+
+                                        <dt className="col-sm-3">Largo</dt>
+                                        <dd className="col-sm-9">
+                                            {propDefaultFields.length + ` (${defines.LVT_DISTANCE_UNIT})`}
                                         </dd>
 
                                         <dt className="col-sm-3">Peso</dt>
                                         <dd className="col-sm-9">
-                                            {personDefaultFields.weight + ` (${defines.LVT_WEIGHT_UNIT})`}
+                                            {propDefaultFields.weight + ` (${defines.LVT_WEIGHT_UNIT})`}
                                         </dd>
                                     </dl>
-                                    {(personCustomFields || []).map((customFieldData, indexCustomField) =>
+                                    {(propCustomFields || []).map((customFieldData, indexCustomField) =>
                                         <FormGroup row key={indexCustomField}>
                                             <Col md="3" className="text-truncate">
                                                 <strong>{customFieldData.name}</strong>
@@ -306,9 +283,9 @@ class View extends Component {
                                     <strong>Multimedia</strong> Imágenes
                                 </CardHeader>
                                 <CardBody>
-                                    {(personImagesGallery.length > 0) ?
+                                    {(propImagesGallery.length > 0) ?
                                         <ImageGallery
-                                            items={personImagesGallery}
+                                            items={propImagesGallery}
                                             lazyLoad={true}
                                             useBrowserFullscreen={true}
                                             showPlayButton={false}
@@ -326,7 +303,7 @@ class View extends Component {
                                     <strong>Multimedia</strong> Vídeo
                                 </CardHeader>
                                 <CardBody>
-                                    {(personVideos || []).map((itemVideo, index) =>
+                                    {(propVideos || []).map((itemVideo, index) =>
                                         <div className="border p-2 mb-3" key={index}>
                                             <Player>
                                                 <source src={itemVideo.url} />
@@ -345,45 +322,14 @@ class View extends Component {
                                     <strong>Contacto</strong> Datos de contacto
                                 </CardHeader>
                                 <CardBody>
-
                                     <dl className="row mb-1">
-                                        <dt className="col-sm-3">Email</dt>
-                                        <dd className="col-sm-9">
-                                            <a href={`mailto:${personDefaultFields.email}`}>{personDefaultFields.email}</a>
-                                        </dd>
-
-                                        <dt className="col-sm-3">Celular</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.phone1}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Teléfono</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.phone2}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Dirección</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.address}
-                                        </dd>
-
-                                        {/* <dt className="col-sm-3">Ciudad</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.city}
-                                        </dd>
-
-                                        <dt className="col-sm-3">País</dt>
-                                        <dd className="col-sm-9">
-                                            <i className={'flag-icon flag-icon-' + personDefaultFields.countrycode + ' h4 mb-0'} title={personDefaultFields.countrycode} id={personDefaultFields.countrycode}></i>
-                                        </dd> */}
-
                                         <dt className="col-sm-3">Observaciones</dt>
                                         <dd className="col-sm-9">
                                             {
-                                                (personDefaultFields.observations === null || personDefaultFields.observations === '' || personDefaultFields.observations === undefined)
+                                                (propDefaultFields.observations === null || propDefaultFields.observations === '' || propDefaultFields.observations === undefined)
                                                     ?
                                                     '-'
-                                                    : personDefaultFields.observations
+                                                    : propDefaultFields.observations
                                             }
                                         </dd>
                                     </dl>
@@ -400,7 +346,7 @@ class View extends Component {
                                     {/* <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} >
                                         <i className="fa fa-edit"></i> Editar
                                     </Button> */}
-                                    <Link to={'/person/edit/' + this.props.match.params.id} className="btn btn-dark btn-sm" color="primary" >
+                                    <Link to={'/prop/edit/' + this.props.match.params.id} className="btn btn-dark btn-sm" color="primary" >
                                         Editar
                                     </Link>{' '}
                                     <Button type="reset" size="sm" color="danger" onClick={this.handleDelete}>

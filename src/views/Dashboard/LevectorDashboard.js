@@ -156,7 +156,7 @@ class LevectorDashboard extends Component {
                             <td>
                               <div>{person.firstname + ' ' + person.lastname}</div>
                               <div className="small text-muted">
-                                <span>{person.age}</span> | <span>{person.height + ' ' + defines.LVT_HEIGHT_UNIT}</span> | <span>{person.weight + ' ' + defines.LVT_WEIGHT_UNIT}</span>
+                                <span>{person.age}</span> | <span>{person.height + ' ' + defines.LVT_DISTANCE_UNIT}</span> | <span>{person.weight + ' ' + defines.LVT_WEIGHT_UNIT}</span>
                               </div>
                             </td>
                             <td>

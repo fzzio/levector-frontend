@@ -21,8 +21,8 @@ exports.GL_HEAD = {
     'Content-Type': 'application/json'
   }
 };
-exports.PERSON_ID_DIGITS = 4;
-exports.PERSON_PAD_CHARACTER = 0;
+exports.LVT_NUM_DIGITS = 4;
+exports.LVT_PAD_CHARACTER = 0;
 exports.PERSON_PATH_IMG_THUMBNAIL = '/person/img/thumbnail/';
 exports.PERSON_PATH_IMG_OPTIMIZED = '/person/img/optimized/';
 exports.PERSON_PATH_IMG_ORIGINAL = '/person/img/original/';
@@ -35,9 +35,11 @@ exports.LVT_AGE_MIN = 0;
 exports.LVT_AGE_ADULT = 18;
 exports.LVT_AGE_ELDER = 65;
 exports.LVT_AGE_MAX = 100;
+exports.LVT_WIDTH_MIN = 0;
+exports.LVT_WIDTH_MAX = 240;
 exports.LVT_HEIGHT_MIN = 0;
 exports.LVT_HEIGHT_MAX = 240;
-exports.LVT_HEIGHT_UNIT = 'cm';
+exports.LVT_DISTANCE_UNIT = 'cm';
 exports.LVT_WEIGHT_MIN = 0;
 exports.LVT_WEIGHT_MAX = 150;
 exports.LVT_WEIGHT_UNIT = 'kg';

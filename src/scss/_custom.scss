@@ -25,18 +25,18 @@ $lvt-dark: #181b1e;
 .rug .rug-handle-button:hover{
     background-color: $lvt-orange !important;
 }
-.person-card .person-data-value{
+.lvt-card .lvt-data-value{
     margin-bottom: 0px;
 }
-.person-card .person-data-field{
+.lvt-card .lvt-data-field{
     margin-top: 0px;
     color: $lvt-orange;
 }
-.person-card .lvt-img{
+.lvt-card .lvt-img{
     max-width: 100%;
     height: auto;
 }
-.person-card .person-data-flag{
+.lvt-card .lvt-data-flag{
     font-size: 10px;
 }
 .sidebar .nav-link:hover{

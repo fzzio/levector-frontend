@@ -54,10 +54,10 @@ const propList = React.lazy(() => import('./views/Prop/List'));
 const propCreate = React.lazy(() => import('./views/Prop/Create'));
 const propView = React.lazy(() => import('./views/Prop/View'));
 
-// // Vestry
-// const vestryList = React.lazy(() => import('./views/Vestry/List'));
-// const vestryCreate = React.lazy(() => import('./views/Vestry/Create'));
-// const vestryView = React.lazy(() => import('./views/Vestry/View'));
+// Vestry
+const vestryList = React.lazy(() => import('./views/Vestry/List'));
+const vestryCreate = React.lazy(() => import('./views/Vestry/Create'));
+const vestryView = React.lazy(() => import('./views/Vestry/View'));
 
 // // Location
 // const locationList = React.lazy(() => import('./views/Location/List'));
@@ -126,13 +126,13 @@ const routes = [
   { path: '/prop/list', exact: true, name: 'Utilerías', component: propList },
   { path: '/prop/create', exact: true, name: 'Agregar Utilería', component: propCreate },
   { path: '/prop/edit/:id', exact: true, name: 'Editar Utilería', component: propCreate },
-  { path: '/prop/:id', exact: true, name: 'Utilería', component: propView }
+  { path: '/prop/:id', exact: true, name: 'Utilería', component: propView },
 
-  // // Vestry
-  // { path: '/vestry/list', exact: true, name: 'Vestuarios', component: vestryList},
-  // { path: '/vestry/create', exact: true, name: 'Agregar Vestuario', component: vestryCreate},
-  // { path: '/vestry/edit/:id', exact: true, name: 'Editar Vestuario', component: vestryCreate},
-  // { path: '/vestry/:id', exact: true, name: 'Vestuario', component: vestryView },
+  // Vestry
+  { path: '/vestry/list', exact: true, name: 'Vestuarios', component: vestryList} ,
+  { path: '/vestry/create', exact: true, name: 'Agregar Vestuario', component: vestryCreate},
+  { path: '/vestry/edit/:id', exact: true, name: 'Editar Vestuario', component: vestryCreate},
+  { path: '/vestry/:id', exact: true, name: 'Vestuario', component: vestryView },
 
   // // Locations
   // { path: '/location/list', exact: true, name: 'Locaciones', component: locationList},

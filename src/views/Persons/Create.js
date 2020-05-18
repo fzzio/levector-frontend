@@ -457,7 +457,7 @@ class Create extends Component {
               modalData: {
                 modalType: 'primary',
                 modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
-                modalBody: labels.LVT_LABEL_PERSONA_GUARDADA_EXITOSAMENTE + (this.state.formFields.lvtDNI == '' ? labels.LVT_LABEL_DNI_PROPORCIONADO+ resp.data.data.dni : '' ),
+                modalBody: labels.LVT_LABEL_PERSON + ' ' + labels.LVT_LABEL_SAVED_SUCCESSFUL + (this.state.formFields.lvtDNI == '' ? labels.LVT_LABEL_DNI_PROPORCIONADO+ resp.data.data.dni : '' ),
                 modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
                 okFunctionState: this.enableRedirect
               },

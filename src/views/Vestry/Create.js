@@ -38,9 +38,28 @@ const inputParsers = {
   },
 };
 
+function GenderRadioOption(props) {
+  const gender = props.gender;
+
+  return (
+    <FormGroup check inline>
+      <Input
+        className="form-check-input"
+        type="radio"
+        id={"lvtGender_" + gender.idgender}
+        name="lvtGender"
+        value={gender.idgender}
+        checked={gender.idgender === props.genderValue}
+        onChange={props.onGenderFieldChange}
+      />
+      <Label className="form-check-label" check htmlFor={`lvtGender_` + gender.idgender}>{gender.name}</Label>
+    </FormGroup>
+  );
+}
+
 const RUG_RULES = { limit: 10, size: 20000 };
 const RUG_ACCEPT = ['jpg', 'jpeg', 'png'];
-const RUG_ACTION = defines.API_DOMAIN + '/uploadpropimages';
+const RUG_ACTION = defines.API_DOMAIN + '/uploadvestryimages';
 
 class Create extends Component {
   constructor(props) {
@@ -48,19 +67,28 @@ class Create extends Component {
 
     this.state = {
       formFields: {
-        lvt_prop_id:'',
-        module: defines.LVT_PROPS,
+        lvt_vestry_id: '',
+        module: defines.LVT_VESTRY,
+        lvtDNI: '',
         lvtName: '',
-        lvtWidth: '',
+        lvtLastname: '',
+        lvtDateOfBirth: '',
+        lvtGender: '',
         lvtHeight: '',
-        lvtLength: '',
         lvtWeight: '',
+        lvtRUC: '',
+        lvtEmail: '',
+        lvtCellphone: '',
+        lvtPhone: '',
+        lvtAddress: '',
+        lvtVideo: '',
         lvtObservations: '',
       },
       loading: false,
       error: false,
       redirect: false,
       redirect_detail: false,
+      genders: [],
       customFields: [],
       customFieldsData: [],
       lvtImages: [],
@@ -87,10 +115,11 @@ class Create extends Component {
     this.inputChangeHandler = this.inputChangeHandler.bind(this);
     this.inputRadioHandler = this.inputRadioHandler.bind(this);
     this.customInputChangeHandler = this.customInputChangeHandler.bind(this);
-    this.parsePropData = this.parsePropData.bind(this);
-    this.parsePropField = this.parsePropField.bind(this);
+    this.parseVestryData = this.parseVestryData.bind(this);
+    this.parseVestryField = this.parseVestryField.bind(this);
     this.parseCustomFields = this.parseCustomFields.bind(this);
     this.enableRedirect = this.enableRedirect.bind(this);
+
   }
 
   handleInitUpload() {
@@ -119,7 +148,7 @@ class Create extends Component {
       customFieldsData[index].value = e.target.value;
       this.setState({ editCustomValues: { [customFieldsData[index].name]: e.target.value } });
     }
-    
+
     this.setState({ customFieldsData: customFieldsData });
   }
 
@@ -153,30 +182,15 @@ class Create extends Component {
   }
 
   checkFormFields() {
+    // if (this.state.formFields.lvtDNI === '') {
+    //   this.addFormError('lvtDNI');
+    // } else {
+    //   this.removeFormError('lvtDNI');
+    // }
     if (this.state.formFields.lvtName === '') {
       this.addFormError('lvtName');
     } else {
       this.removeFormError('lvtName');
-    }
-    if (this.state.formFields.lvtWidth === '') {
-      this.addFormError('lvtWidth');
-    } else {
-      this.removeFormError('lvtWidth');
-    }
-    if (this.state.formFields.lvtHeight === '') {
-      this.addFormError('lvtHeight');
-    } else {
-      this.removeFormError('lvtHeight');
-    }
-    if (this.state.formFields.lvtLength === '') {
-      this.addFormError('lvtLength');
-    } else {
-      this.removeFormError('lvtLength');
-    }
-    if (this.state.formFields.lvtWeight === '') {
-      this.addFormError('lvtWeight');
-    } else {
-      this.removeFormError('lvtWeight');
     }
   }
 
@@ -184,7 +198,7 @@ class Create extends Component {
     this.setState({ redirect: true })
   }
   cancelFunctionState = () => {
-      this.setState({ modalVisible: false })
+    this.setState({ modalVisible: false })
   }
 
   handleSubmit(event) {
@@ -208,11 +222,11 @@ class Create extends Component {
       } else {
         // We build the options array
         let options_selected = customFieldData.value;
-        if( typeof options_selected == 'object'){
+        if (typeof options_selected == 'object') {
           options_selected = options_selected.map(function (option) {
             return option.id;
           })
-        }else{
+        } else {
           options_selected = options_selected.split(',')
         }
 
@@ -228,98 +242,94 @@ class Create extends Component {
     }).flat();
 
     // Get images uploaded
-    let imagesProp = [];
+    let imagesVestry = [];
     let temp_images_deletes = this.state.lvtDeletedImages;
-    if(this.props.match.params && this.props.match.params.id){
-      
-      imagesProp = {}
-      imagesProp['updated'] = this.state.lvtImages.filter(function (imageProp) {
-        if(imageProp.idimage && temp_images_deletes.indexOf(imageProp.idimage) < 0)
+    if (this.props.match.params && this.props.match.params.id) {
+
+      imagesVestry = {}
+      imagesVestry['updated'] = this.state.lvtImages.filter(function (imageVestry) {
+        if (imageVestry.idimage && temp_images_deletes.indexOf(imageVestry.idimage) < 0)
           return {
-            idimage: imageProp.idimage,
-            thumbnail: imageProp.imgThumbnail,
-            optimized: imageProp.imgOptimized,
-            original: imageProp.imgOriginal
+            idimage: imageVestry.idimage,
+            thumbnail: imageVestry.imgThumbnail,
+            optimized: imageVestry.imgOptimized,
+            original: imageVestry.imgOriginal
           }
       });
-      imagesProp['new'] = this.state.lvtImages.filter(function (imageProp) {
-        if(imageProp.idimage === undefined){
-            return imageProp;
+      imagesVestry['new'] = this.state.lvtImages.filter(function (imageVestry) {
+        if (imageVestry.idimage == undefined) {
+          return imageVestry;
         }
       });
-      imagesProp['new'] = imagesProp['new'].map(function (imageProp) {
+      imagesVestry['new'] = imagesVestry['new'].map(function (imageVestry) {
         return {
-          thumbnail: imageProp.imgThumbnail,
-          optimized: imageProp.imgOptimized,
-          original: imageProp.imgOriginal
+          thumbnail: imageVestry.imgThumbnail,
+          optimized: imageVestry.imgOptimized,
+          original: imageVestry.imgOriginal
         }
       });
 
-      if(this.state.lvtDeletedImages.length>0){
-        imagesProp['deleted'] = this.state.lvtDeletedImages
-      }
-    }else{
-      imagesProp = this.state.lvtImages.map(function (imageProp) {
+
+      if (this.state.lvtDeletedImages.length > 0)
+        imagesVestry['deleted'] = this.state.lvtDeletedImages
+
+    } else {
+      imagesVestry = this.state.lvtImages.map(function (imageVestry) {
         return {
-          thumbnail: imageProp.imgThumbnail,
-          optimized: imageProp.imgOptimized,
-          original: imageProp.imgOriginal
+          thumbnail: imageVestry.imgThumbnail,
+          optimized: imageVestry.imgOptimized,
+          original: imageVestry.imgOriginal
         }
       });
     }
 
-    console.log('================== imagesProp ----:  ', imagesProp);
+    console.log('================== imagesVestry ----:  ', imagesVestry);
 
     // return false;
 
     // Get video uploaded
-    let videosProp = this.state.lvtVideos.map(function (videoProp) {
+    let videosVestry = this.state.lvtVideos.map(function (videoVestry) {
       return {
-        url: videoProp.filename,
+        url: videoVestry.filename,
       }
     });
 
     // Setting data to request
-    const propData = {
-      module: defines.LVT_PROPS,
+    const vestryData = {
+      module: defines.LVT_VESTRY,
       defaultfields: [{
         name: this.state.formFields.lvtName,
-        width: parseInt(this.state.formFields.lvtWidth),
-        height: parseInt(this.state.formFields.lvtHeight),
-        length: parseInt(this.state.formFields.lvtLength),
-        weight: parseInt(this.state.formFields.lvtWeight),
         observations: this.state.formFields.lvtObservations,
         createdby: 1,
       }],
       customfields: customfields,
-      images: imagesProp,
-      videos: videosProp,
+      images: imagesVestry,
+      videos: videosVestry,
     };
 
-    console.log("---- propData ----");
-    console.log(JSON.stringify(propData));
+    console.log("---- vestryData ----");
+    console.log(JSON.stringify(vestryData));
 
     if (this.state.errorFields.invalid.length === 0) {
-
       this.setState({ loading: true });
-      let save_prop;
-
+      let save_vestry;
       if (this.props.match.params && this.props.match.params.id) {
-        save_prop = axios.put(defines.API_DOMAIN + '/prop/update/?id=' + this.props.match.params.id, propData);
-        this.saveCall(save_prop);
-      }else{
+        save_vestry = axios.put(defines.API_DOMAIN + '/vestry/update/?id=' + this.props.match.params.id, vestryData);
+        this.saveCall(save_vestry);
+      } else {
         // if(this.state.formFields.lvtDNI !== ''){
         //   axios.post(
-        //       defines.API_DOMAIN + '/searchprop/',
-        //       { dni: this.state.formFields.lvtDNI, limit: 5,
-        //         offset: 0, }
+        //       defines.API_DOMAIN + '/searchvestry/',
+        //       { 
+        //         dni: this.state.formFields.lvtDNI, 
+        //         limit: 5,
+        //         offset: 0, 
+        //       }
         //   )
         //   .then((response) => {
-        //     console.log('SEARCH DE PROP: ', response)
+        //     console.log('SEARCH DE VESTUARIO: ', response)
         //     let resp = response[0];
-            
         //     this.setState({
-              
         //       modalData: {
         //         modalType: 'danger',
         //         modalBody: labels.LVT_LABEL_CEDULA_EXISTENTE,
@@ -330,15 +340,13 @@ class Create extends Component {
         //       modalVisible: true,
         //       loading: false,
         //       error: false
-
         //     });
-
         //   })
         //   .catch((error) => {
         //     if (error.response) {
         //       if (error.response.data.sucess) {
-        //         save_prop = axios.post(defines.API_DOMAIN + '/prop/', propData);
-        //         this.saveCall(save_prop);
+        //         save_vestry = axios.post(defines.API_DOMAIN + '/vestry/', vestryData);
+        //         this.saveCall(save_vestry);
         //       }
         //       console.log(error.response.data);
         //     } else if (error.request) {
@@ -349,9 +357,9 @@ class Create extends Component {
         //     this.setState({ loading: false, error: true });
         //   });
         // }else{
-          save_prop = axios.post(defines.API_DOMAIN + '/prop/', propData);
-          this.saveCall(save_prop);
-        //}
+          save_vestry = axios.post(defines.API_DOMAIN + '/vestry/', vestryData);
+          this.saveCall(save_vestry);
+        // }
       }
     } else {
       this.setState({
@@ -367,60 +375,61 @@ class Create extends Component {
     }
   }
 
-  saveCall = (save_prop) =>{
-    axios.all([save_prop])
-        .then((response) => {
-          let resp = response[0];
-          // console.log('===== PROP GUARDADA :',resp );
-          if (resp.status === 201 || resp.status === 200) {
-            this.setState({
-              
-              modalData: {
-                modalType: 'primary',
-                modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
-                modalBody: labels.LVT_LABEL_PROPS + ' ' + labels.LVT_LABEL_SAVED_SUCCESSFUL,
-                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
-                okFunctionState: this.enableRedirect
-              },
-              error: false,
-              loading: false,
-              modalVisible: true,
-            });
-          } else {
-            console.log('----- THROW ERROR create prop -------')
-            throw new Error(JSON.stringify({ status: resp.status, error: resp.data.data.msg }));
-          }
-        })
-        .catch((error) => {
-          if (error.response) {
-            this.setState({
-              modalVisible: true,
-              modalData: {
-                modalType: 'danger',
-                modalBody: error.response.data.data ? error.response.data.data.msg : labels.LVT_ERROR_UNPROCCESS_REQUEST,
-                modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
-                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK
-              }
-            });
-            console.log(error.response.data);
-          } else if (error.request) {
-            console.log(error.request);
-          } else {
-            console.log('Error', error.message);
-          }
-          this.setState({ loading: false, error: true });
-        });
+  saveCall = (save_vestry) => {
+    axios.all([save_vestry])
+      .then((response) => {
+        let resp = response[0];
+        // console.log('===== VESTRY GUARDADA :',resp );
+        if (resp.status === 201 || resp.status === 200) {
+          this.setState({
+
+            modalData: {
+              modalType: 'primary',
+              modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
+              modalBody: labels.LVT_LABEL_VESTRY + ' ' + labels.LVT_LABEL_SAVED_SUCCESSFUL + (this.state.formFields.lvtDNI == '' ? labels.LVT_LABEL_DNI_PROPORCIONADO + resp.data.data.dni : ''),
+              modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+              okFunctionState: this.enableRedirect
+            },
+            error: false,
+            loading: false,
+            modalVisible: true,
+
+          });
+        } else {
+          console.log('----- THROW ERROR create vestry -------')
+          throw new Error(JSON.stringify({ status: resp.status, error: resp.data.data.msg }));
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          this.setState({
+            modalVisible: true,
+            modalData: {
+              modalType: 'danger',
+              modalBody: error.response.data.data ? error.response.data.data.msg : "Su requerimiento no pudo procesarse. Intente nuevamente",
+              modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
+              modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK
+            }
+          });
+          console.log(error.response.data);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error', error.message);
+        }
+        this.setState({ loading: false, error: true });
+      });
   }
 
-  componentWillReceiveProps(np){
-    console.log('np.match.params.module: ---- ',np.match.params.id)
-    if(np.match.params.id && np.match.params.id !== this.state.lvt_prop_id){
-      this.fetchPropDetail(np.match.params.id);
+  componentWillReceiveProps(np) {
+    console.log('np.match.params.module: ---- ', np.match.params.id)
+    if (np.match.params.id && np.match.params.id !== this.state.lvt_vestry_id) {
+      this.fetchVestryDetail(np.match.params.id);
     }
   }
   componentDidMount() {
     // Fetch custom fields
-    axios.get(defines.API_DOMAIN + '/field?module=' + defines.LVT_PROPS)
+    axios.get(defines.API_DOMAIN + '/field?module=' + defines.LVT_VESTRY)
       .then((response) => {
         if (response.status === 200) {
           let customFieldElements = response.data.data.map((responseCustomField) => {
@@ -439,10 +448,10 @@ class Create extends Component {
 
 
           if (this.props.match.params && this.props.match.params.id) {
-            this.setState({lvt_prop_id:this.props.match.params.id})
-            this.fetchPropDetail(this.props.match.params.id);
+            this.setState({ lvt_vestry_id: this.props.match.params.id })
+            this.fetchVestryDetail(this.props.match.params.id);
           }
-          
+
         } else {
           throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
         }
@@ -463,49 +472,47 @@ class Create extends Component {
       });
   }
 
-  fetchPropDetail = (lvt_prop_id) => {
+  fetchVestryDetail = (lvt_vestry_id) => {
     this.setState({ loading: true })
+    axios.get(defines.API_DOMAIN + '/vestry?module=' + defines.LVT_VESTRY + '&id=' + lvt_vestry_id)
+      .then((response) => {
+        if (response.status === 200) {
+          const vestryData = response.data.data;
+          let f = '';
+          let v = '';
+          for (let field of Object.keys(vestryData.defaultfields)) {
 
-    axios.get(defines.API_DOMAIN + '/prop?module=' + defines.LVT_PROPS + '&id=' + lvt_prop_id)
-        .then((response) => {
-          if (response.status === 200) {
-            const propData = response.data.data;
-            let f = '';
-            let v = '';
-            for (let field of Object.keys(propData.defaultfields)) {
+            let formFields = { ...this.state.formFields };
+            f = this.parseVestryField(field);
+            v = this.parseVestryData(field, vestryData.defaultfields[field]);
 
-              let formFields = { ...this.state.formFields };
-              f = this.parsePropField(field);
-              v = this.parsePropData(field, propData.defaultfields[field]);
-              
-              formFields[f] = v;
-              this.setState({ formFields });
-              f = ''; v = '';
-            }
-          
-            this.parseCustomFields(propData.customfield);
-            this.setState({ ['lvtImages']: this.parsePhotos(propData.images) });
-            this.setState({ ['lvtVideos']: this.parseVideos(propData.videos) });
-            this.setState({ loading: false })
-          
-          } else {
-            throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
+            formFields[f] = v;
+            this.setState({ formFields });
+            f = ''; v = '';
           }
-        })
-        .catch((error) => {
-          console.log("Error fetching genders.");
-          if (error.response) {
-            if (error.response.status === 404) {
-              console.log(error.response.data.error);
-            } else {
-              console.log(error.response.data);
-            }
-          } else if (error.request) {
-            console.log(error.request);
+
+          this.parseCustomFields(vestryData.customfield);
+          this.setState({ ['lvtImages']: this.parsePhotos(vestryData.images) });
+          this.setState({ ['lvtVideos']: this.parseVideos(vestryData.videos) });
+          this.setState({ loading: false })
+        } else {
+          throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
+        }
+      })
+      .catch((error) => {
+        console.log("Error fetching genders.");
+        if (error.response) {
+          if (error.response.status === 404) {
+            console.log(error.response.data.error);
           } else {
-            console.log('Error', error.message);
+            console.log(error.response.data);
           }
-        });
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error', error.message);
+        }
+      });
   }
 
 
@@ -518,10 +525,10 @@ class Create extends Component {
     // console.log('-------this.state.modalData:  ', this.state.modalData)
 
     if (this.state.redirect) {
-      return <Redirect to='/prop/list' />;
+      return <Redirect to='/vestry/list' />;
     }
     if (this.state.redirect_detail) {
-      return <Redirect to={'/prop/'+this.props.match.params.id} />;
+      return <Redirect to={'/vestry/' + this.props.match.params.id} />;
     }
     if (this.state.loading) {
       return (
@@ -545,7 +552,7 @@ class Create extends Component {
             />
             : ''
         }
-        <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-prop" onSubmit={this.handleSubmit} >
+        <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-vestry" onSubmit={this.handleSubmit} >
           <Row>
             <Col xs="12" md="6">
               <Card>
@@ -553,7 +560,6 @@ class Create extends Component {
                   <strong>Información</strong> Básica
                 </CardHeader>
                 <CardBody>
-
                   <FormGroup row>
                     <Col md="3">
                       <Label htmlFor="lvtName">Nombre</Label>
@@ -563,118 +569,14 @@ class Create extends Component {
                         type="text"
                         id="lvtName"
                         name="lvtName"
-                        placeholder="Cosa"
+                        placeholder="Juan"
                         autoComplete="nope"
                         value={this.state.formFields.lvtName}
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                         valid={this.state.errorFields.valid.indexOf("lvtName") > -1}
                         invalid={this.state.errorFields.invalid.indexOf("lvtName") > -1}
                       />
-                      <FormText color="muted">Nombres de la ficha ingresada</FormText>
-                    </Col>
-                  </FormGroup>
-
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtWidth">Ancho</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <InputGroup>
-                        <Input
-                          type="number"
-                          id="lvtWidth"
-                          name="lvtWidth"
-                          placeholder="170"
-                          value={this.state.formFields.lvtWidth}
-                          onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid={this.state.errorFields.valid.indexOf("lvtWidth") > -1}
-                          invalid={this.state.errorFields.invalid.indexOf("lvtWidth") > -1}
-                        />
-                        <InputGroupAddon addonType="append">
-                          <InputGroupText>
-                            {defines.LVT_DISTANCE_UNIT}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <FormText color="muted">Escribe cuánto mide de ancho</FormText>
-                    </Col>
-                  </FormGroup>
-
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtHeight">Alto</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <InputGroup>
-                        <Input
-                          type="number"
-                          id="lvtHeight"
-                          name="lvtHeight"
-                          placeholder="170"
-                          value={this.state.formFields.lvtHeight}
-                          onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid={this.state.errorFields.valid.indexOf("lvtHeight") > -1}
-                          invalid={this.state.errorFields.invalid.indexOf("lvtHeight") > -1}
-                        />
-                        <InputGroupAddon addonType="append">
-                          <InputGroupText>
-                            {defines.LVT_DISTANCE_UNIT}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <FormText color="muted">Escribe cuánto mide de altura</FormText>
-                    </Col>
-                  </FormGroup>
-
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtLength">Largo</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <InputGroup>
-                        <Input
-                          type="number"
-                          id="lvtLength"
-                          name="lvtLength"
-                          placeholder="170"
-                          value={this.state.formFields.lvtLength}
-                          onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid={this.state.errorFields.valid.indexOf("lvtLength") > -1}
-                          invalid={this.state.errorFields.invalid.indexOf("lvtLength") > -1}
-                        />
-                        <InputGroupAddon addonType="append">
-                          <InputGroupText>
-                            {defines.LVT_DISTANCE_UNIT}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <FormText color="muted">Escribe el largo</FormText>
-                    </Col>
-                  </FormGroup>
-
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtWeight">Peso</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <InputGroup>
-                        <Input
-                          type="number"
-                          id="lvtWeight"
-                          name="lvtWeight"
-                          placeholder="63"
-                          value={this.state.formFields.lvtWeight}
-                          onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid={this.state.errorFields.valid.indexOf("lvtWeight") > -1}
-                          invalid={this.state.errorFields.invalid.indexOf("lvtWeight") > -1}
-                        />
-                        <InputGroupAddon addonType="append">
-                          <InputGroupText>
-                            {defines.LVT_WEIGHT_UNIT}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <FormText color="muted">Escribe cuánto pesa.</FormText>
+                      <FormText color="muted">Nombres del vestuario</FormText>
                     </Col>
                   </FormGroup>
                   
@@ -719,7 +621,7 @@ class Create extends Component {
                         name="lvtObservations"
                         id="lvtObservations"
                         rows="4"
-                        placeholder="Ingrese observaciones."
+                        placeholder="Ingrese observaciones de la vestuario"
                         onChange={(e) => this.inputChangeHandler.call(this, e)}
                         value={this.state.formFields.lvtObservations}
                         valid={this.state.errorFields.valid.indexOf("lvtObservations") > -1}
@@ -803,7 +705,7 @@ class Create extends Component {
                         allowMultiple={true}
                         allowDrop={false}
                         acceptedFileTypes={['video/*']}
-                        server={defines.API_DOMAIN + '/uploadpropsvideos'}
+                        server={defines.API_DOMAIN + '/uploadvestryvideos'}
                         oninit={() => this.handleInitUpload()}
                         onprocessfile={(error, file) => {
                           console.log('file processed: ', file)
@@ -813,7 +715,7 @@ class Create extends Component {
                             "filename": processedFile.video,
                             "source": processedFile.video,
                             "options": {
-                                type: 'limbo'
+                              type: 'limbo'
                             }
                           })
                           this.setState({ lvtVideos: arrVideos })
@@ -836,10 +738,10 @@ class Create extends Component {
 
           <Card>
             <CardFooter>
-                <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-dot-circle-o"></i> Guardar</Button>
+              <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-dot-circle-o"></i> Guardar</Button>
               {' '}
-              { this.props.match.params && this.props.match.params.id &&
-                  <Button color="dark" size="sm" onClick={this.handleVolverADetalle}> Volver al detalle </Button>
+              {this.props.match.params && this.props.match.params.id &&
+                <Button color="dark" size="sm" onClick={this.handleVolverADetalle}> Volver al detalle </Button>
               }
 
             </CardFooter>
@@ -851,25 +753,46 @@ class Create extends Component {
 
   handleVolverADetalle = () => {
 
-    this.setState({redirect_detail:true})
+    this.setState({ redirect_detail: true })
   }
 
-  parsePropField(field) {
+  parseVestryField(field) {
     switch (field) {
+      case 'dni':
+        return 'lvtDNI'
+        break;
       case 'name':
         return 'lvtName'
         break;
-      case 'width':
-        return 'lvtWidth'
+      case 'lastname':
+        return 'lvtLastname'
+        break;
+      case 'dob':
+        return 'lvtDateOfBirth'
+        break;
+      case 'gender':
+        return 'lvtGender'
         break;
       case 'height':
         return 'lvtHeight'
         break;
-      case 'length':
-        return 'lvtLength'
-        break;
       case 'weight':
         return 'lvtWeight'
+        break;
+      case 'ruc':
+        return 'lvtRUC'
+        break;
+      case 'email':
+        return 'lvtEmail'
+        break;
+      case 'phone1':
+        return 'lvtCellphone'
+        break;
+      case 'phone2':
+        return 'lvtPhone'
+        break;
+      case 'address':
+        return 'lvtAddress'
         break;
       case 'observations':
         return 'lvtObservations'
@@ -886,8 +809,27 @@ class Create extends Component {
     return field;
   }
 
-  parsePropData(field, value) {
+  parseVestryData(field, value) {
     switch (field) {
+      case 'dob':
+        console.log('value:', value);
+        let temp_date = new Date(value)
+        let y = temp_date.getFullYear();
+        let d = temp_date.getDate() + 1;
+        d = d < 10 ? ("0" + d).slice(-2) : d;
+        let m = temp_date.getMonth() + 1;
+        m = m < 10 ? ("0" + m).slice(-2) : m;
+        let date = y + '-' + m + '-' + d;
+        return date
+        break;
+      case 'gender':
+        if (value === 'Femenino')
+          return 2;
+        else if (value === 'Masculino')
+          return 1;
+        else if (value === 'Otros')
+          return 3;
+        break;
       default:
         return value
         break;
@@ -901,12 +843,12 @@ class Create extends Component {
     customData.map((f) => {
       formCustoms.map((obj) => {
         if (f.idfield === obj.idfield) {
-          if(f.options){
+          if (f.options)
             obj.value = f.options;
-          }else if( f.value){
+          else if (f.value)
             obj.value = f.value;
-          }
-          
+
+
           editCustomValues[defines.CUSTOM_FIELD_PREFIX + f.idfield] = obj.value;
           // console.log('--- PARSIND DATA: ', editCustomValues[defines.CUSTOM_FIELD_PREFIX + f.idfield]  );
         }

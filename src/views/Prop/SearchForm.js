@@ -64,7 +64,7 @@ class SearchForm extends Component {
 
     componentDidMount() {
         // fetch all API data
-        const requestCustomFields = axios.get(defines.API_DOMAIN + '/field?module=' + defines.LVT_);
+        const requestCustomFields = axios.get(defines.API_DOMAIN + '/field?module=' + defines.LVT_PROPS);
         axios.all([requestCustomFields]).then(axios.spread((...responses) => {
             const responseCustomFields = responses[0];
             if (responseCustomFields.status === 200) {

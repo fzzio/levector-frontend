@@ -134,6 +134,8 @@ class List extends Component {
 
   render() {
     const propList = this.state.propsObj;
+    console.log("--- propList ---");
+    console.log(JSON.stringify(propList));
     if (this.state.loading) {
       return (
         <div>
@@ -177,8 +179,8 @@ class List extends Component {
                 <Suspense fallback={this.loading()}>
                   <Row>
                     {(propList.length > 0) ?
-                      propList.map((propObj, index) =>
-                        <PropCard key={index} propObj={propObj} />
+                      (propList || []).map((propObj, index) =>
+                        <PropCard key={index} prop={propObj} />
                       )
                       :
                       <p className="form-control-static">No existen elementos</p>

@@ -296,8 +296,8 @@ class Create extends Component {
       videos: videosProp,
     };
 
-    // console.log("---- propData ----");
-    // console.log(JSON.stringify(propData));
+    console.log("---- propData ----");
+    console.log(JSON.stringify(propData));
 
     if (this.state.errorFields.invalid.length === 0) {
 
@@ -308,50 +308,50 @@ class Create extends Component {
         save_prop = axios.put(defines.API_DOMAIN + '/prop/update/?id=' + this.props.match.params.id, propData);
         this.saveCall(save_prop);
       }else{
-        if(this.state.formFields.lvtDNI !== '')
-          axios.post(
-              defines.API_DOMAIN + '/searchprop/',
-              { dni: this.state.formFields.lvtDNI, limit: 5,
-                offset: 0, }
-          )
-          .then((response) => {
-            console.log('SEARCH DE PROP: ', response)
-            let resp = response[0];
+        // if(this.state.formFields.lvtDNI !== ''){
+        //   axios.post(
+        //       defines.API_DOMAIN + '/searchprop/',
+        //       { dni: this.state.formFields.lvtDNI, limit: 5,
+        //         offset: 0, }
+        //   )
+        //   .then((response) => {
+        //     console.log('SEARCH DE PROP: ', response)
+        //     let resp = response[0];
             
-            this.setState({
+        //     this.setState({
               
-              modalData: {
-                modalType: 'danger',
-                modalBody: labels.LVT_LABEL_CEDULA_EXISTENTE,
-                modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
-                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
-                okFunctionState: this.cancelFunctionState
-              },
-              modalVisible: true,
-              loading: false,
-              error: false
+        //       modalData: {
+        //         modalType: 'danger',
+        //         modalBody: labels.LVT_LABEL_CEDULA_EXISTENTE,
+        //         modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
+        //         modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+        //         okFunctionState: this.cancelFunctionState
+        //       },
+        //       modalVisible: true,
+        //       loading: false,
+        //       error: false
 
-            });
+        //     });
 
-          })
-          .catch((error) => {
-            if (error.response) {
-              if (error.response.data.sucess) {
-                save_prop = axios.post(defines.API_DOMAIN + '/prop/', propData);
-                this.saveCall(save_prop);
-              }
-              console.log(error.response.data);
-            } else if (error.request) {
-              console.log(error.request);
-            } else {
-              console.log('Error', error.message);
-            }
-            this.setState({ loading: false, error: true });
-          });
-        else{
+        //   })
+        //   .catch((error) => {
+        //     if (error.response) {
+        //       if (error.response.data.sucess) {
+        //         save_prop = axios.post(defines.API_DOMAIN + '/prop/', propData);
+        //         this.saveCall(save_prop);
+        //       }
+        //       console.log(error.response.data);
+        //     } else if (error.request) {
+        //       console.log(error.request);
+        //     } else {
+        //       console.log('Error', error.message);
+        //     }
+        //     this.setState({ loading: false, error: true });
+        //   });
+        // }else{
           save_prop = axios.post(defines.API_DOMAIN + '/prop/', propData);
           this.saveCall(save_prop);
-        }
+        //}
       }
     } else {
       this.setState({

@@ -51,7 +51,7 @@ class CustomCheckbox extends Component {
         
         if(np.customFieldValue){
             let temp_custom_value = [];
-            console.log('----- checkbox np.customFieldValue: ', np.customFieldValue);
+            // console.log('----- checkbox np.customFieldValue: ', np.customFieldValue);
 
             if(typeof(np.customFieldValue) == 'string'){
                 temp_custom_value = np.customFieldValue.split(',');

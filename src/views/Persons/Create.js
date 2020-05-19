@@ -328,16 +328,42 @@ class Create extends Component {
       });
     }
 
-    console.log('================== imagesPerson ----:  ', imagesPerson);
+    // Get video uploaded
+    let videosPerson = []
+
+    if (this.props.match.params && this.props.match.params.id) {
+      videosPerson = {}
+      videosPerson['updated'] = this.state.lvtVideos.filter((video)=>{
+        if(video.idvideo)
+          return {
+            idvideo:video.idvideo,
+            url: video.url
+          }
+      })
+      videosPerson['new'] = this.state.lvtVideos.filter((video)=>{
+        if(!video.idvideo)
+          return video;
+      })
+      videosPerson['new'] = videosPerson['new'].map((video)=>{
+        return{
+          url: video.source
+        }
+      })
+
+      if(this.state.lvtDeletedVideos.length>0)
+        videosPerson['deleted'] = this.state.lvtDeletedVideos
+
+    } else {
+      videosPerson = this.state.lvtVideos.map(function (videoPerson) {
+        return {
+          url: videoPerson.filename,
+        }
+      });
+    }
+
+    console.log('================== videosPerson ----:  ', videosPerson);
 
     // return false;
-
-    // Get video uploaded
-    let videosPerson = this.state.lvtVideos.map(function (videoPerson) {
-      return {
-        url: videoPerson.filename,
-      }
-    });
 
     // Setting data to request
     const personData = {
@@ -625,7 +651,8 @@ class Create extends Component {
     let customFieldList = this.state.customFields;
     let lvtVideos = this.state.lvtVideos;
 
-    // console.log('-------this.state.modalData:  ', this.state.modalData)
+    console.log('------lvtVideos:  ', lvtVideos)
+    console.log('------lvtDeletedVideos:  ', this.state.lvtDeletedVideos)
 
     if (this.state.redirect) {
       return <Redirect to='/person/list' />;
@@ -1053,35 +1080,79 @@ class Create extends Component {
                     <Col xs="12" md="9">
                       <FilePond
                         ref={ref => (this.pond = ref)}
-                        // files={this.state.lvtVideos}
-                        // files={
-                        //   [{source:defines.API_DOMAIN + '/uploadvideo/1582595290262-video2020-02-2420-35-35.mp4'}]
-                        // }
+                        files={this.state.lvtVideos}
+
                         allowMultiple={true}
                         allowDrop={false}
                         acceptedFileTypes={['video/*']}
-                        server={defines.API_DOMAIN + '/uploadcastingvideos'}
+                        server={{
+                          process: defines.API_DOMAIN + '/uploadcastingvideos',
+                          fetch: defines.API_DOMAIN + '/casting/videos/',
+                          revert: null
+                        }}
                         oninit={() => this.handleInitUpload()}
                         onprocessfile={(error, file) => {
-                          console.log('file processed: ', file)
-                          let processedFile = JSON.parse(file.serverId);
-                          let arrVideos = this.state.lvtVideos;
-                          arrVideos.push({
-                            "filename": processedFile.video,
-                            "source": processedFile.video,
-                            "options": {
-                                type: 'limbo'
-                            }
-                          })
-                          this.setState({ lvtVideos: arrVideos })
-                        }}
+                          
+                          let processedFile = {video:''};
+                          try {
+                            processedFile = JSON.parse(file.serverId);
+                          } catch (error) {
+                            processedFile['video'] = file.serverId;
+                          }
 
-                      // onupdatefiles={(fileItems) => {
-                      //   this.setState({
-                      //     lvtVideos: fileItems.map(fileItem => fileItem.filename)
-                      //   });
-                      //   console.log(this.state.lvtVideos);
-                      // }}
+                          // console.log('file processed: ', processedFile)
+                          let video_name = processedFile.video.split('casting/videos/');
+                          video_name = video_name.length >= 2 ? video_name[1]: video_name[0];
+
+
+                          let arrVideos = this.state.lvtVideos;
+                          let video_found = false;
+
+                          for (let i = 0; i < arrVideos.length; i++) {
+                            const element = arrVideos[i];
+                            if(element.filename == video_name){
+                              video_found = true;
+                              return;
+                            }
+                          }
+
+                          if(!video_found){
+                          
+                            arrVideos.push({
+                              "filename": video_name,
+                              "source": processedFile.video,
+                              "options": {
+                                  type: 'limbo'
+                              }
+                            })
+                            this.setState({ lvtVideos: arrVideos })
+                          }
+                        }}
+                        onremovefile={(error, file) => {
+
+                          // console.log('removing file', file.filename);
+
+                          let arrVideos = this.state.lvtVideos;
+                          let deleted_videos_list = this.state.lvtDeletedVideos;
+                          let video_found_index = null;
+
+                          for (let i = 0; i < arrVideos.length; i++) {
+                            if(arrVideos[i].filename == file.filename)
+                              video_found_index = i;
+                          }
+
+                          if( (video_found_index!=null && video_found_index > -1) ){
+
+                            if(arrVideos[video_found_index].idvideo)
+                              deleted_videos_list.push(arrVideos[video_found_index].idvideo)
+                            
+                            arrVideos.splice(video_found_index,1);
+                            this.setState({
+                              lvtVideos: arrVideos,
+                              lvtDeletedVideos: deleted_videos_list
+                            })
+                          }
+                        }}
                       />
                       <FormText color="muted">Vídeo a mostrar</FormText>
                     </Col>
@@ -1096,7 +1167,7 @@ class Create extends Component {
                 <Button type="submit" size="sm" color="primary" onClick={this.handleSubmit} ><i className="fa fa-dot-circle-o"></i> Guardar</Button>
               {' '}
               { this.props.match.params && this.props.match.params.id &&
-                  <Button color="dark" size="sm" onClick={this.handleVolverADetalle}> Volver al detalle </Button>
+                <Button color="dark" size="sm" onClick={this.handleVolverADetalle}> Volver al detalle </Button>
               }
 
             </CardFooter>
@@ -1222,8 +1293,12 @@ class Create extends Component {
   }
 
   parseVideos = (videos) => {
+    
     videos.map((video) => {
-      video['filename'] = video.url
+      let video_name = video.url.split('casting/videos/')[1];
+      video['filename'] = video_name
+      video['source'] = video_name
+      video['options'] = {type:'limbo'}
     })
     return videos;
   }

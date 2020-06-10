@@ -42,7 +42,7 @@ function GenderRadioOption(props) {
   const gender = props.gender;
 
   return (
-    <FormGroup check inline>
+    <FormGroup check>
       <Input
         className="form-check-input"
         type="radio"
@@ -683,8 +683,150 @@ class Create extends Component {
             : ''
         }
         <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-person" onSubmit={this.handleSubmit} >
+          
           <Row>
-            <Col xs="12" md="6">
+            <Col xs="12" md="4">
+              <Card>
+                <CardHeader>
+                  <strong>Multimedia</strong> Imágenes
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col xs="12" md="12">
+                      {
+                        this.state.lvtImages.length > 0 ?
+                          <div>
+                            <RUG
+                              rules={RUG_RULES}
+                              accept={RUG_ACCEPT}
+                              action={RUG_ACTION}
+                              // This propperty seems to be loaded once. It is not reactive to a state.
+                              // so, the entire elemente must be loaded to make it work
+                              initialState={this.state.lvtImages}
+
+                              source={this.rugSource}
+                              onWarning={this.rugOnWarning}
+                              onSuccess={this.rugOnSuccess}
+                              onConfirmDelete={this.rugOnConfirmDelete}
+                              onDeleted={this.rugOnDeleted}
+                            />
+                          </div>
+                          :
+                          <RUG
+                            rules={RUG_RULES}
+                            accept={RUG_ACCEPT}
+                            action={RUG_ACTION}
+
+                            source={this.rugSource}
+                            onWarning={this.rugOnWarning}
+                            onSuccess={this.rugOnSuccess}
+                            onConfirmDelete={this.rugOnConfirmDelete}
+                            onDeleted={this.rugOnDeleted}
+                          />
+                      }
+
+                    </Col>
+                  </FormGroup>
+
+                </CardBody>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <strong>Multimedia</strong> Video
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtVideo">Vídeo</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <FilePond
+                        ref={ref => (this.pond = ref)}
+                        files={this.state.lvtVideos}
+
+                        allowMultiple={true}
+                        allowDrop={false}
+                        acceptedFileTypes={['video/*']}
+                        server={{
+                          process: defines.API_DOMAIN + '/uploadcastingvideos',
+                          fetch: defines.API_DOMAIN + '/casting/videos/',
+                          revert: null
+                        }}
+                        oninit={() => this.handleInitUpload()}
+                        onprocessfile={(error, file) => {
+                          
+                          let processedFile = {video:''};
+                          try {
+                            processedFile = JSON.parse(file.serverId);
+                          } catch (error) {
+                            processedFile['video'] = file.serverId;
+                          }
+
+                          // console.log('file processed: ', processedFile)
+                          let video_name = processedFile.video.split('casting/videos/');
+                          video_name = video_name.length >= 2 ? video_name[1]: video_name[0];
+
+
+                          let arrVideos = this.state.lvtVideos;
+                          let video_found = false;
+
+                          for (let i = 0; i < arrVideos.length; i++) {
+                            const element = arrVideos[i];
+                            if(element.filename == video_name){
+                              video_found = true;
+                              return;
+                            }
+                          }
+
+                          if(!video_found){
+                          
+                            arrVideos.push({
+                              "filename": video_name,
+                              "source": processedFile.video,
+                              "options": {
+                                  type: 'limbo'
+                              }
+                            })
+                            this.setState({ lvtVideos: arrVideos })
+                          }
+                        }}
+                        onremovefile={(error, file) => {
+
+                          // console.log('removing file', file.filename);
+
+                          let arrVideos = this.state.lvtVideos;
+                          let deleted_videos_list = this.state.lvtDeletedVideos;
+                          let video_found_index = null;
+
+                          for (let i = 0; i < arrVideos.length; i++) {
+                            if(arrVideos[i].filename == file.filename)
+                              video_found_index = i;
+                          }
+
+                          if( (video_found_index!=null && video_found_index > -1) ){
+
+                            if(arrVideos[video_found_index].idvideo)
+                              deleted_videos_list.push(arrVideos[video_found_index].idvideo)
+                            
+                            arrVideos.splice(video_found_index,1);
+                            this.setState({
+                              lvtVideos: arrVideos,
+                              lvtDeletedVideos: deleted_videos_list
+                            })
+                          }
+                        }}
+                      />
+                      <FormText color="muted">Vídeo a mostrar</FormText>
+                    </Col>
+                  </FormGroup>
+                </CardBody>
+              </Card>
+            </Col>
+
+            
+
+            <Col xs="12" md="4">
               <Card>
                 <CardHeader>
                   <strong>Información</strong> Datos personales
@@ -811,9 +953,78 @@ class Create extends Component {
                   </FormGroup>
                 </CardBody>
               </Card>
+
+              <Card>
+                <CardHeader>
+                  <strong>Otros</strong> Características adicionales
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtHeight">Estatura</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <InputGroup>
+                        <Input
+                          type="number"
+                          id="lvtHeight"
+                          name="lvtHeight"
+                          placeholder="170"
+                          value={this.state.formFields.lvtHeight}
+                          onChange={(e) => this.inputChangeHandler.call(this, e)}
+                          valid={this.state.errorFields.valid.indexOf("lvtHeight") > -1}
+                          invalid={this.state.errorFields.invalid.indexOf("lvtHeight") > -1}
+                        />
+                        <InputGroupAddon addonType="append">
+                          <InputGroupText>
+                            {defines.LVT_DISTANCE_UNIT}
+                          </InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
+                      <FormText color="muted">Escribe cuánto mide la persona</FormText>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtWeight">Peso</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <InputGroup>
+                        <Input
+                          type="number"
+                          id="lvtWeight"
+                          name="lvtWeight"
+                          placeholder="63"
+                          value={this.state.formFields.lvtWeight}
+                          onChange={(e) => this.inputChangeHandler.call(this, e)}
+                          valid={this.state.errorFields.valid.indexOf("lvtWeight") > -1}
+                          invalid={this.state.errorFields.invalid.indexOf("lvtWeight") > -1}
+                        />
+                        <InputGroupAddon addonType="append">
+                          <InputGroupText>
+                            {defines.LVT_WEIGHT_UNIT}
+                          </InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
+                      <FormText color="muted">Escribe cuánto pesa la persona</FormText>
+                    </Col>
+                  </FormGroup>
+                  {(customFieldList || []).map((customFieldObj, index) =>
+                    <CustomField
+                      key={index}
+                      customFieldObj={customFieldObj}
+                      defineas={defines.CUSTOM_FIELD_PREFIX}
+                      customFieldsData={this.state.customFieldsData}
+                      customFieldValue={this.state.editCustomValues[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield]}
+                      onCustomFieldChange={(e) => this.customInputChangeHandler.call(this, e)}
+                      errorFields={this.state.errorFields}
+                    />
+                  )}
+                </CardBody>
+              </Card>
             </Col>
 
-            <Col xs="12" md="6">
+            <Col xs="12" md="4">
               <Card>
                 <CardHeader>
                   <strong>Contacto</strong> Datos de contacto
@@ -914,80 +1125,7 @@ class Create extends Component {
                   </FormGroup>
                 </CardBody>
               </Card>
-            </Col>
 
-            <Col xs="12" md="6">
-              <Card>
-                <CardHeader>
-                  <strong>Otros</strong> Características adicionales
-                </CardHeader>
-                <CardBody>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtHeight">Estatura</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <InputGroup>
-                        <Input
-                          type="number"
-                          id="lvtHeight"
-                          name="lvtHeight"
-                          placeholder="170"
-                          value={this.state.formFields.lvtHeight}
-                          onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid={this.state.errorFields.valid.indexOf("lvtHeight") > -1}
-                          invalid={this.state.errorFields.invalid.indexOf("lvtHeight") > -1}
-                        />
-                        <InputGroupAddon addonType="append">
-                          <InputGroupText>
-                            {defines.LVT_DISTANCE_UNIT}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <FormText color="muted">Escribe cuánto mide la persona</FormText>
-                    </Col>
-                  </FormGroup>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtWeight">Peso</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <InputGroup>
-                        <Input
-                          type="number"
-                          id="lvtWeight"
-                          name="lvtWeight"
-                          placeholder="63"
-                          value={this.state.formFields.lvtWeight}
-                          onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid={this.state.errorFields.valid.indexOf("lvtWeight") > -1}
-                          invalid={this.state.errorFields.invalid.indexOf("lvtWeight") > -1}
-                        />
-                        <InputGroupAddon addonType="append">
-                          <InputGroupText>
-                            {defines.LVT_WEIGHT_UNIT}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <FormText color="muted">Escribe cuánto pesa la persona</FormText>
-                    </Col>
-                  </FormGroup>
-                  {(customFieldList || []).map((customFieldObj, index) =>
-                    <CustomField
-                      key={index}
-                      customFieldObj={customFieldObj}
-                      defineas={defines.CUSTOM_FIELD_PREFIX}
-                      customFieldsData={this.state.customFieldsData}
-                      customFieldValue={this.state.editCustomValues[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield]}
-                      onCustomFieldChange={(e) => this.customInputChangeHandler.call(this, e)}
-                      errorFields={this.state.errorFields}
-                    />
-                  )}
-                </CardBody>
-              </Card>
-            </Col>
-
-            <Col xs="12" md="6">
               <Card>
                 <CardHeader>
                   <strong>Complementarios</strong> Datos adicionales
@@ -1017,150 +1155,6 @@ class Create extends Component {
             </Col>
           </Row>
 
-          <Row>
-            <Col xs="12" md="12">
-              <Card>
-                <CardHeader>
-                  <strong>Multimedia</strong> Imágenes
-                </CardHeader>
-                <CardBody>
-                  <FormGroup row>
-                    <Col xs="12" md="12">
-                      {
-                        this.state.lvtImages.length > 0 ?
-                          <div>
-                            <RUG
-                              rules={RUG_RULES}
-                              accept={RUG_ACCEPT}
-                              action={RUG_ACTION}
-                              // This propperty seems to be loaded once. It is not reactive to a state.
-                              // so, the entire elemente must be loaded to make it work
-                              initialState={this.state.lvtImages}
-
-                              source={this.rugSource}
-                              onWarning={this.rugOnWarning}
-                              onSuccess={this.rugOnSuccess}
-                              onConfirmDelete={this.rugOnConfirmDelete}
-                              onDeleted={this.rugOnDeleted}
-                            />
-                          </div>
-                          :
-                          <RUG
-                            rules={RUG_RULES}
-                            accept={RUG_ACCEPT}
-                            action={RUG_ACTION}
-
-                            source={this.rugSource}
-                            onWarning={this.rugOnWarning}
-                            onSuccess={this.rugOnSuccess}
-                            onConfirmDelete={this.rugOnConfirmDelete}
-                            onDeleted={this.rugOnDeleted}
-                          />
-                      }
-
-                    </Col>
-                  </FormGroup>
-
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col xs="12" md="6">
-              <Card>
-                <CardHeader>
-                  <strong>Multimedia</strong> Video
-                </CardHeader>
-                <CardBody>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtVideo">Vídeo</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <FilePond
-                        ref={ref => (this.pond = ref)}
-                        files={this.state.lvtVideos}
-
-                        allowMultiple={true}
-                        allowDrop={false}
-                        acceptedFileTypes={['video/*']}
-                        server={{
-                          process: defines.API_DOMAIN + '/uploadcastingvideos',
-                          fetch: defines.API_DOMAIN + '/casting/videos/',
-                          revert: null
-                        }}
-                        oninit={() => this.handleInitUpload()}
-                        onprocessfile={(error, file) => {
-                          
-                          let processedFile = {video:''};
-                          try {
-                            processedFile = JSON.parse(file.serverId);
-                          } catch (error) {
-                            processedFile['video'] = file.serverId;
-                          }
-
-                          // console.log('file processed: ', processedFile)
-                          let video_name = processedFile.video.split('casting/videos/');
-                          video_name = video_name.length >= 2 ? video_name[1]: video_name[0];
-
-
-                          let arrVideos = this.state.lvtVideos;
-                          let video_found = false;
-
-                          for (let i = 0; i < arrVideos.length; i++) {
-                            const element = arrVideos[i];
-                            if(element.filename == video_name){
-                              video_found = true;
-                              return;
-                            }
-                          }
-
-                          if(!video_found){
-                          
-                            arrVideos.push({
-                              "filename": video_name,
-                              "source": processedFile.video,
-                              "options": {
-                                  type: 'limbo'
-                              }
-                            })
-                            this.setState({ lvtVideos: arrVideos })
-                          }
-                        }}
-                        onremovefile={(error, file) => {
-
-                          // console.log('removing file', file.filename);
-
-                          let arrVideos = this.state.lvtVideos;
-                          let deleted_videos_list = this.state.lvtDeletedVideos;
-                          let video_found_index = null;
-
-                          for (let i = 0; i < arrVideos.length; i++) {
-                            if(arrVideos[i].filename == file.filename)
-                              video_found_index = i;
-                          }
-
-                          if( (video_found_index!=null && video_found_index > -1) ){
-
-                            if(arrVideos[video_found_index].idvideo)
-                              deleted_videos_list.push(arrVideos[video_found_index].idvideo)
-                            
-                            arrVideos.splice(video_found_index,1);
-                            this.setState({
-                              lvtVideos: arrVideos,
-                              lvtDeletedVideos: deleted_videos_list
-                            })
-                          }
-                        }}
-                      />
-                      <FormText color="muted">Vídeo a mostrar</FormText>
-                    </Col>
-                  </FormGroup>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
 
           <Card>
             <CardFooter>

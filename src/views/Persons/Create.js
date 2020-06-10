@@ -217,11 +217,11 @@ class Create extends Component {
     } else {
       this.removeFormError('lvtWeight');
     }
-    if (this.state.formFields.lvtRUC === '') {
-      this.addFormError('lvtRUC');
-    } else {
-      this.removeFormError('lvtRUC');
-    }
+    // if (this.state.formFields.lvtRUC === '') {
+    //   this.addFormError('lvtRUC');
+    // } else {
+    //   this.removeFormError('lvtRUC');
+    // }
     if (this.state.formFields.lvtEmail === '') {
       this.addFormError('lvtEmail');
     } else {

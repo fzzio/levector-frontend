@@ -88,19 +88,23 @@ class PersonCard extends Component {
                         <Row>
                             <Col md="12" className="text-center">
                                 <div className="text-center lvt-img-container">
-                                    <img
-                                        src={ person.photo }
-                                        className="rounded img-responsive lvt-img"
-                                        alt={ person.fullname }
-                                    />
+                                    <Link to={ person.link } className=""  target="_blank" >
+                                        <img
+                                            src={ person.photo }
+                                            className="rounded img-responsive lvt-img"
+                                            alt={ person.fullname }
+                                        />
+                                    </Link>
                                 </div>
                             </Col>
                             <Col sm="12">
                                 <FormGroup row>
                                     <Col xs="12" md="12">
-                                        <p className="lvt-data-value">
-                                            { person.fullname }
-                                        </p>
+                                        <Link to={ person.link } className="lvt-link-1"  target="_blank" >
+                                            <p className="lvt-data-value">
+                                                { person.fullname }
+                                            </p>
+                                        </Link>
                                         <FormText className="lvt-data-field">Nombre</FormText>
                                     </Col>
                                 </FormGroup>

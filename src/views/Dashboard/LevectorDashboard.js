@@ -1,4 +1,5 @@
 import React, { Component, lazy, Suspense } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import {
   Card,
@@ -24,7 +25,7 @@ class LevectorDashboard extends Component {
     this.state = {
       persons: [],
       summaryCasting: [],
-      limit: 2,
+      limit: 3,
       offset: 0,
       dropdownOpen: false,
       radioSelected: 2,
@@ -139,6 +140,11 @@ class LevectorDashboard extends Component {
                     <Table hover responsive className="table-outline mb-0 d-none d-sm-table">
                       <thead className="thead-light">
                         <tr>
+                          <td colSpan="3" className="text-center">
+                            <h5>Últimos Ingresados</h5>
+                          </td>
+                        </tr>
+                        <tr>
                           <th className="text-center"><i className="icon-people"></i></th>
                           <th>Persona</th>
                           <th className="text-center">Género</th>
@@ -149,12 +155,18 @@ class LevectorDashboard extends Component {
                         {personList.map((person, index) =>
                           <tr key={index}>
                             <td className="text-center">
-                              <div className="avatar">
-                                <img src={(person.photo) ? person.photo : defaultimg} className="img-avatar" alt={person.firstname + ' ' + person.lastname} />
-                              </div>
+                              <Link to={ person.link } className=""  target="_blank" >
+                                <div className="avatar">
+                                  <img src={(person.photo) ? person.photo : defaultimg} className="img-avatar" alt={person.firstname + ' ' + person.lastname} />
+                                </div>
+                              </Link>
                             </td>
                             <td>
-                              <div>{person.firstname + ' ' + person.lastname}</div>
+                              <div>
+                                <Link to={ person.link } className="lvt-link-1"  target="_blank" >
+                                  {person.firstname + ' ' + person.lastname}
+                                </Link>
+                              </div>
                               <div className="small text-muted">
                                 <span>{person.age}</span> | <span>{person.height + ' ' + defines.LVT_DISTANCE_UNIT}</span> | <span>{person.weight + ' ' + defines.LVT_WEIGHT_UNIT}</span>
                               </div>

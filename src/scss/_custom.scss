@@ -54,3 +54,8 @@ $lvt-dark: #181b1e;
 .btn-dark:hover{
     background-color: $lvt-orange !important;
 }
+.lvt-link-1,
+.lvt-link-1:hover{
+    text-decoration: none;
+    color: inherit;
+}

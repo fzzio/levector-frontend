@@ -383,15 +383,15 @@ class Create extends Component {
         address: this.state.formFields.lvtAddress,
         observations: this.state.formFields.lvtObservations,
         createdby: 1,
-        idcity: 1,
+        idcity: 593, // 593 Guayaquil
       }],
       customfields: customfields,
       images: imagesPerson,
       videos: videosPerson,
     };
 
-    // console.log("---- personData ----");
-    // console.log(JSON.stringify(personData));
+    console.log("---- personData ----");
+    console.log(JSON.stringify(personData));
 
     if (this.state.errorFields.invalid.length === 0) {
 

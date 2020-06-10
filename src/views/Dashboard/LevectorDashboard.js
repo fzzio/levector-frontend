@@ -142,7 +142,7 @@ class LevectorDashboard extends Component {
                           <th className="text-center"><i className="icon-people"></i></th>
                           <th>Persona</th>
                           <th className="text-center">Género</th>
-                          <th className="text-center">País</th>
+                          {/* <th className="text-center">País</th> */}
                         </tr>
                       </thead>
                       <tbody>
@@ -162,9 +162,9 @@ class LevectorDashboard extends Component {
                             <td>
                               <div>{person.gender}</div>
                             </td>
-                            <td className="text-center">
+                            {/* <td className="text-center">
                               <i className={'flag-icon flag-icon-' + person.countrycode +' h4 mb-0'} title={person.countrycode} id={person.countrycode}></i>
-                            </td>
+                            </td> */}
                           </tr>
                         )}
                       </tbody>

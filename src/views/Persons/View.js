@@ -215,92 +215,7 @@ class View extends Component {
                     }
 
                     <Row>
-                        <Col xs="12" md="6">
-                            <Card>
-                                <CardHeader>
-                                    <strong>Información</strong> Datos personales
-                                </CardHeader>
-                                <CardBody>
-                                    <dl className="row mb-1">
-                                        <dt className="col-sm-3">Cédula</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.dni}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Nombres</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.firstname}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Apellidos</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.lastname}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Fecha de nacimiento</dt>
-                                        <dd className="col-sm-9">
-                                            {moment(personDefaultFields.dob).format('YYYY-MM-DD')}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Edad</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.age + ' ' + defines.LVT_AGE_UNIT + 's'}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Género</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.gender}
-                                        </dd>
-
-                                        <dt className="col-sm-3">RUC</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.ruc}
-                                        </dd>
-                                    </dl>
-                                </CardBody>
-                            </Card>
-                        </Col>
-
-                        <Col xs="12" md="6">
-                            <Card>
-                                <CardHeader>
-                                    <strong>Otros</strong> Características adicionales
-                                </CardHeader>
-                                <CardBody>
-                                    <dl className="row mb-1">
-                                        <dt className="col-sm-3">Estatura</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.height + ` (${defines.LVT_DISTANCE_UNIT})`}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Peso</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.weight + ` (${defines.LVT_WEIGHT_UNIT})`}
-                                        </dd>
-                                    </dl>
-                                    {(personCustomFields || []).map((customFieldData, indexCustomField) =>
-                                        <FormGroup row key={indexCustomField}>
-                                            <Col md="3" className="text-truncate">
-                                                <strong>{customFieldData.name}</strong>
-                                            </Col>
-                                            <Col xs="12" md="9">
-                                                <span>
-                                                    {
-                                                        Array.prototype.map.call((customFieldData.options || [{'value':customFieldData.value}]), function (item) { 
-                                                            return item.value; 
-                                                        }) .join(", ").split('||').join(",")
-                                                    }
-                                                </span>
-                                            </Col>
-                                        </FormGroup>
-                                    )}
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col xs="12" md="6">
+                        <Col xs="12" md="4">
                             <Card>
                                 <CardHeader>
                                     <strong>Multimedia</strong> Imágenes
@@ -319,8 +234,7 @@ class View extends Component {
                                     }
                                 </CardBody>
                             </Card>
-                        </Col>
-                        <Col xs="12" md="6">
+                            
                             <Card>
                                 <CardHeader>
                                     <strong>Multimedia</strong> Vídeo
@@ -336,62 +250,222 @@ class View extends Component {
                                 </CardBody>
                             </Card>
                         </Col>
-                    </Row>
 
-                    <Row>
-                        <Col xs="12" md="6">
+                        <Col xs="12" md="4">
+                            <Card>
+                                <CardHeader>
+                                    <strong>Información</strong> Datos personales
+                                </CardHeader>
+                                <CardBody>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Cédula</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.dni}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Nombres</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.firstname}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Apellidos</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.lastname}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Fecha de nacimiento</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {moment(personDefaultFields.dob).format('YYYY-MM-DD')}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Edad</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.age + ' ' + defines.LVT_AGE_UNIT + 's'}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Género</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.gender}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">RUC</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.ruc}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                </CardBody>
+                            </Card>
+                            
+                            <Card>
+                                <CardHeader>
+                                    <strong>Otros</strong> Características adicionales
+                                </CardHeader>
+                                <CardBody>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Estatura</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.height + ` (${defines.LVT_DISTANCE_UNIT})`}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Peso</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.weight + ` (${defines.LVT_WEIGHT_UNIT})`}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    {(personCustomFields || []).map((customFieldData, indexCustomField) =>
+                                        <FormGroup row key={indexCustomField} className="mb-0">
+                                            <Col md="3" className="text-truncate">
+                                                <strong>{customFieldData.name}</strong>
+                                            </Col>
+                                            <Col xs="12" md="9">
+                                                <span>
+                                                    {
+                                                        Array.prototype.map.call((customFieldData.options || [{'value':customFieldData.value}]), function (item) { 
+                                                            return item.value; 
+                                                        }) .join(", ").split('||').join(",")
+                                                    }
+                                                </span>
+                                            </Col>
+                                        </FormGroup>
+                                    )}
+                                </CardBody>
+                            </Card>
+                        </Col>
+
+                        <Col xs="12" md="4">
                             <Card>
                                 <CardHeader>
                                     <strong>Contacto</strong> Datos de contacto
                                 </CardHeader>
                                 <CardBody>
-
-                                    <dl className="row mb-1">
-                                        <dt className="col-sm-3">Email</dt>
-                                        <dd className="col-sm-9">
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Email</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
                                             <a href={`mailto:${personDefaultFields.email}`}>{personDefaultFields.email}</a>
-                                        </dd>
-
-                                        <dt className="col-sm-3">Celular</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.phone1}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Teléfono</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.phone2}
-                                        </dd>
-
-                                        <dt className="col-sm-3">Dirección</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.address}
-                                        </dd>
-
-                                        {/* <dt className="col-sm-3">Ciudad</dt>
-                                        <dd className="col-sm-9">
-                                            {personDefaultFields.city}
-                                        </dd>
-
-                                        <dt className="col-sm-3">País</dt>
-                                        <dd className="col-sm-9">
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Celular</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.phone1}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Teléfono</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.phone2}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Dirección</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <p>
+                                                {personDefaultFields.address}
+                                            </p>
+                                        </Col>
+                                    </FormGroup>
+                                    {/* <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Ciudad</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.city}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">País</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
                                             <i className={'flag-icon flag-icon-' + personDefaultFields.countrycode + ' h4 mb-0'} title={personDefaultFields.countrycode} id={personDefaultFields.countrycode}></i>
-                                        </dd> */}
-
-                                        <dt className="col-sm-3">Observaciones</dt>
-                                        <dd className="col-sm-9">
-                                            {
-                                                (personDefaultFields.observations === null || personDefaultFields.observations === '' || personDefaultFields.observations === undefined)
-                                                    ?
-                                                    '-'
-                                                    : personDefaultFields.observations
-                                            }
-                                        </dd>
-                                    </dl>
+                                            </span>
+                                        </Col>
+                                    </FormGroup> */}
+                                </CardBody>
+                            </Card>
+                            
+                            <Card>
+                                <CardHeader>
+                                    <strong>Complementarios</strong> Datos adicionales
+                                </CardHeader>
+                                <CardBody>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3" className="text-truncate">
+                                            <Label htmlFor="" className="font-weight-bold">Observaciones</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <p>
+                                                {
+                                                    (personDefaultFields.observations === null || personDefaultFields.observations === '' || personDefaultFields.observations === undefined)
+                                                        ?
+                                                        '-'
+                                                        : personDefaultFields.observations
+                                                }
+                                            </p>
+                                        </Col>
+                                    </FormGroup>
                                 </CardBody>
                             </Card>
                         </Col>
                     </Row>
-
 
                     <Row>
                         <Col xs="12" md="12">

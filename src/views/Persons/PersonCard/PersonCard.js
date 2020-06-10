@@ -101,7 +101,7 @@ class PersonCard extends Component {
                                 <FormGroup row>
                                     <Col xs="12" md="12">
                                         <Link to={ person.link } className="lvt-link-1"  target="_blank" >
-                                            <p className="lvt-data-value">
+                                            <p className="lvt-data-value text-truncate">
                                                 { person.fullname }
                                             </p>
                                         </Link>

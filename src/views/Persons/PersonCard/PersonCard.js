@@ -86,12 +86,14 @@ class PersonCard extends Component {
                 <Card id={person.ID} className="lvt-card">
                     <CardBody>
                         <Row>
-                            <Col md="12">
-                                <img 
-                                    src={ person.photo } 
-                                    className="rounded img-responsive lvt-img" 
-                                    alt={ person.fullname }
-                                />
+                            <Col md="12" className="text-center">
+                                <div className="text-center lvt-img-container">
+                                    <img
+                                        src={ person.photo }
+                                        className="rounded img-responsive lvt-img"
+                                        alt={ person.fullname }
+                                    />
+                                </div>
                             </Col>
                             <Col sm="12">
                                 <FormGroup row>

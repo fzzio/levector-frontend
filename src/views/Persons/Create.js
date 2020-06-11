@@ -956,77 +956,6 @@ class Create extends Component {
 
               <Card>
                 <CardHeader>
-                  <strong>Otros</strong> Características adicionales
-                </CardHeader>
-                <CardBody>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtHeight">Estatura</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <InputGroup>
-                        <Input
-                          type="number"
-                          id="lvtHeight"
-                          name="lvtHeight"
-                          placeholder="170"
-                          value={this.state.formFields.lvtHeight}
-                          onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid={this.state.errorFields.valid.indexOf("lvtHeight") > -1}
-                          invalid={this.state.errorFields.invalid.indexOf("lvtHeight") > -1}
-                        />
-                        <InputGroupAddon addonType="append">
-                          <InputGroupText>
-                            {defines.LVT_DISTANCE_UNIT}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <FormText color="muted">Escribe cuánto mide la persona</FormText>
-                    </Col>
-                  </FormGroup>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtWeight">Peso</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <InputGroup>
-                        <Input
-                          type="number"
-                          id="lvtWeight"
-                          name="lvtWeight"
-                          placeholder="63"
-                          value={this.state.formFields.lvtWeight}
-                          onChange={(e) => this.inputChangeHandler.call(this, e)}
-                          valid={this.state.errorFields.valid.indexOf("lvtWeight") > -1}
-                          invalid={this.state.errorFields.invalid.indexOf("lvtWeight") > -1}
-                        />
-                        <InputGroupAddon addonType="append">
-                          <InputGroupText>
-                            {defines.LVT_WEIGHT_UNIT}
-                          </InputGroupText>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <FormText color="muted">Escribe cuánto pesa la persona</FormText>
-                    </Col>
-                  </FormGroup>
-                  {(customFieldList || []).map((customFieldObj, index) =>
-                    <CustomField
-                      key={index}
-                      customFieldObj={customFieldObj}
-                      defineas={defines.CUSTOM_FIELD_PREFIX}
-                      customFieldsData={this.state.customFieldsData}
-                      customFieldValue={this.state.editCustomValues[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield]}
-                      onCustomFieldChange={(e) => this.customInputChangeHandler.call(this, e)}
-                      errorFields={this.state.errorFields}
-                    />
-                  )}
-                </CardBody>
-              </Card>
-            </Col>
-
-            <Col xs="12" md="4">
-              <Card>
-                <CardHeader>
                   <strong>Contacto</strong> Datos de contacto
                 </CardHeader>
                 <CardBody>
@@ -1150,6 +1079,77 @@ class Create extends Component {
                       <FormText color="muted">Comentarios y observaciones referentes a la ficha ingresada</FormText>
                     </Col>
                   </FormGroup>
+                </CardBody>
+              </Card>
+            </Col>
+
+            <Col xs="12" md="4">
+              <Card>
+                <CardHeader>
+                  <strong>Otros</strong> Características adicionales
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtHeight">Estatura</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <InputGroup>
+                        <Input
+                          type="number"
+                          id="lvtHeight"
+                          name="lvtHeight"
+                          placeholder="170"
+                          value={this.state.formFields.lvtHeight}
+                          onChange={(e) => this.inputChangeHandler.call(this, e)}
+                          valid={this.state.errorFields.valid.indexOf("lvtHeight") > -1}
+                          invalid={this.state.errorFields.invalid.indexOf("lvtHeight") > -1}
+                        />
+                        <InputGroupAddon addonType="append">
+                          <InputGroupText>
+                            {defines.LVT_DISTANCE_UNIT}
+                          </InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
+                      <FormText color="muted">Escribe cuánto mide la persona</FormText>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtWeight">Peso</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <InputGroup>
+                        <Input
+                          type="number"
+                          id="lvtWeight"
+                          name="lvtWeight"
+                          placeholder="63"
+                          value={this.state.formFields.lvtWeight}
+                          onChange={(e) => this.inputChangeHandler.call(this, e)}
+                          valid={this.state.errorFields.valid.indexOf("lvtWeight") > -1}
+                          invalid={this.state.errorFields.invalid.indexOf("lvtWeight") > -1}
+                        />
+                        <InputGroupAddon addonType="append">
+                          <InputGroupText>
+                            {defines.LVT_WEIGHT_UNIT}
+                          </InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
+                      <FormText color="muted">Escribe cuánto pesa la persona</FormText>
+                    </Col>
+                  </FormGroup>
+                  {(customFieldList || []).map((customFieldObj, index) =>
+                    <CustomField
+                      key={index}
+                      customFieldObj={customFieldObj}
+                      defineas={defines.CUSTOM_FIELD_PREFIX}
+                      customFieldsData={this.state.customFieldsData}
+                      customFieldValue={this.state.editCustomValues[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield]}
+                      onCustomFieldChange={(e) => this.customInputChangeHandler.call(this, e)}
+                      errorFields={this.state.errorFields}
+                    />
+                  )}
                 </CardBody>
               </Card>
             </Col>

@@ -332,52 +332,6 @@ class View extends Component {
                             
                             <Card>
                                 <CardHeader>
-                                    <strong>Otros</strong> Características adicionales
-                                </CardHeader>
-                                <CardBody>
-                                    <FormGroup row className="mb-0">
-                                        <Col md="3">
-                                            <Label htmlFor="" className="font-weight-bold">Estatura</Label>
-                                        </Col>
-                                        <Col xs="12" md="9">
-                                            <span>
-                                                {personDefaultFields.height + ` (${defines.LVT_DISTANCE_UNIT})`}
-                                            </span>
-                                        </Col>
-                                    </FormGroup>
-                                    <FormGroup row className="mb-0">
-                                        <Col md="3">
-                                            <Label htmlFor="" className="font-weight-bold">Peso</Label>
-                                        </Col>
-                                        <Col xs="12" md="9">
-                                            <span>
-                                                {personDefaultFields.weight + ` (${defines.LVT_WEIGHT_UNIT})`}
-                                            </span>
-                                        </Col>
-                                    </FormGroup>
-                                    {(personCustomFields || []).map((customFieldData, indexCustomField) =>
-                                        <FormGroup row key={indexCustomField} className="mb-0">
-                                            <Col md="3" className="text-truncate">
-                                                <strong>{customFieldData.name}</strong>
-                                            </Col>
-                                            <Col xs="12" md="9">
-                                                <span>
-                                                    {
-                                                        Array.prototype.map.call((customFieldData.options || [{'value':customFieldData.value}]), function (item) { 
-                                                            return item.value; 
-                                                        }) .join(", ").split('||').join(",")
-                                                    }
-                                                </span>
-                                            </Col>
-                                        </FormGroup>
-                                    )}
-                                </CardBody>
-                            </Card>
-                        </Col>
-
-                        <Col xs="12" md="4">
-                            <Card>
-                                <CardHeader>
                                     <strong>Contacto</strong> Datos de contacto
                                 </CardHeader>
                                 <CardBody>
@@ -462,6 +416,52 @@ class View extends Component {
                                             </p>
                                         </Col>
                                     </FormGroup>
+                                </CardBody>
+                            </Card>
+                        </Col>
+
+                        <Col xs="12" md="4">
+                            <Card>
+                                <CardHeader>
+                                    <strong>Otros</strong> Características adicionales
+                                </CardHeader>
+                                <CardBody>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Estatura</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.height + ` (${defines.LVT_DISTANCE_UNIT})`}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row className="mb-0">
+                                        <Col md="3">
+                                            <Label htmlFor="" className="font-weight-bold">Peso</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <span>
+                                                {personDefaultFields.weight + ` (${defines.LVT_WEIGHT_UNIT})`}
+                                            </span>
+                                        </Col>
+                                    </FormGroup>
+                                    {(personCustomFields || []).map((customFieldData, indexCustomField) =>
+                                        <FormGroup row key={indexCustomField} className="mb-0">
+                                            <Col md="3" className="text-truncate">
+                                                <strong>{customFieldData.name}</strong>
+                                            </Col>
+                                            <Col xs="12" md="9">
+                                                <span>
+                                                    {
+                                                        Array.prototype.map.call((customFieldData.options || [{'value':customFieldData.value}]), function (item) { 
+                                                            return item.value; 
+                                                        }) .join(", ").split('||').join(",")
+                                                    }
+                                                </span>
+                                            </Col>
+                                        </FormGroup>
+                                    )}
                                 </CardBody>
                             </Card>
                         </Col>

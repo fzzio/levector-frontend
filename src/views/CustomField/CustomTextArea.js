@@ -21,6 +21,7 @@ class CustomTextArea extends Component {
     render(){
         const customFieldObj = this.props.customFieldObj;
         const customFieldValue = this.props.customFieldValue;
+        const errorFields = this.props.errorFields;
         let helpText = null;
         if( customFieldObj.helptext !== "" || customFieldObj.helptext !== null ){
             helpText = <FormText color="muted">{customFieldObj.helptext}</FormText>;
@@ -29,20 +30,20 @@ class CustomTextArea extends Component {
         return(
             <FormGroup row>
                 <Col md="3">
-                    <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}>
-                        {customFieldObj.fieldoption}
+                    <Label htmlFor={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield}>
+                        {customFieldObj.field}
                     </Label>
                 </Col>
                 <Col xs="12" md="9">
                     <Input
                         type="textarea"
-                        name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
-                        id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfieldcastp}
+                        name={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield}
+                        id={defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield}
                         rows="3"
                         placeholder="..."
-                        idfieldcastp = {customFieldObj.idfieldcastp}
+                        idfield = {customFieldObj.idfield}
                         value = {customFieldValue}
-                        onChange = {this.handleChange}
+                        onChange = {(e) => this.handleChange.call(this, e)}
                         autoComplete="nope"
                     />
                     {helpText}

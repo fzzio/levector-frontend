@@ -16,8 +16,8 @@ import {
     Row,
 } from 'reactstrap';
 import moment from 'moment';
-import defines from '../../../defines'
-import CustomField from '../../CustomField/CustomField';
+import defines from '../../defines'
+import CustomField from '../CustomField/CustomField';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 
@@ -28,25 +28,6 @@ const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const Range = createSliderWithTooltip(Slider.Range);
 // const Handle = Slider.Handle;
 
-function GenderRadioOption(props) {
-    const gender = props.gender;
-
-    return (
-        <FormGroup check>
-            <Input
-                className="form-check-input"
-                type="radio"
-                id={"lvtGender_" + gender.idgender}
-                name="lvtGender"
-                value={gender.idgender}
-                checked={gender.idgender === props.genderValue}
-                onChange={props.onGenderFieldChange}
-            />
-            <Label className="form-check-label" check htmlFor={`lvtGender_` + gender.idgender}>{gender.name}</Label>
-        </FormGroup>
-    );
-}
-
 class SearchForm extends Component {
     constructor(props) {
         super(props);
@@ -54,16 +35,8 @@ class SearchForm extends Component {
         this.state = {
             formFields: {
                 lvtId: '',
-                lvtDni: '',
-                lvtFirstname: '',
-                lvtLastname: '',
-                lvtGender: '',
+                lvtName: '',
             },
-            lvtAge: { min: defines.LVT_AGE_MIN, max: defines.LVT_AGE_MAX },
-            // lvtAge: { min: 0, max: 100 },
-            lvtHeight: { min: defines.LVT_HEIGHT_MIN, max: defines.LVT_HEIGHT_MAX },
-            lvtWeight: { min: defines.LVT_WEIGHT_MIN, max: defines.LVT_WEIGHT_MAX },
-            genders: [],
             customFields: [],
             customFieldsData: [],
             loading: false,
@@ -87,17 +60,9 @@ class SearchForm extends Component {
 
     componentDidMount() {
         // fetch all API data
-        const requestGender = axios.get(defines.API_DOMAIN + '/gender');
-        const requestCustomFields = axios.get(defines.API_DOMAIN + '/field?module=' + defines.LVT_CASTING);
-        axios.all([requestGender, requestCustomFields]).then(axios.spread((...responses) => {
-            const responseGender = responses[0];
-            const responseCustomFields = responses[1];
-            if (responseGender.status === 200) {
-                this.setState({ genders: responseGender.data.data })
-            } else {
-                throw new Error(JSON.stringify({ status: responseGender.status, error: responseGender.data.data.msg }));
-            }
-
+        const requestCustomFields = axios.get(defines.API_DOMAIN + '/field?module=' + defines.LVT_LOCATIONS);
+        axios.all([requestCustomFields]).then(axios.spread((...responses) => {
+            const responseCustomFields = responses[0];
             if (responseCustomFields.status === 200) {
                 let customFieldElements = responseCustomFields.data.data.map((responseCustomField) => {
                     let customFieldElement = {
@@ -177,30 +142,21 @@ class SearchForm extends Component {
         })
 
         // Setting data to request
-        const personSearchData = {
-            idperson: this.state.formFields.lvtId,
-            dni: this.state.formFields.lvtDni,
-            firstname: this.state.formFields.lvtFirstname,
-            lastname: this.state.formFields.lvtLastname,
-            minAge: this.state.lvtAge.min > 0 ? this.state.lvtAge.min : 1,
-            maxAge: this.state.lvtAge.max,
-            minHeight: this.state.lvtHeight.min,
-            maxHeight: this.state.lvtHeight.max,
-            minWeight: this.state.lvtWeight.min,
-            maxWeight: this.state.lvtWeight.max,
-            idgender: this.state.formFields.lvtGender,
+        const locationSearchData = {
+            idlocation: this.state.formFields.lvtId,
+            name: this.state.formFields.lvtName,
             formcastp: formcastp,
             limit: this.props.limit,
             offset: 0,
         };
 
-        console.log("-- personSearchData --");
-        console.log(JSON.stringify(personSearchData));
+        console.log("-- locationSearchData --");
+        console.log(JSON.stringify(locationSearchData));
 
         this.setState({ loading: true });
         axios.post(
-            defines.API_DOMAIN + '/person/search/',
-            personSearchData
+            defines.API_DOMAIN + '/searchlocation/',
+            locationSearchData
         )
             .then((response) => {
                 if (response.status === 200) {
@@ -208,7 +164,7 @@ class SearchForm extends Component {
                         loading: false,
                     });
                     this.props.handleResults(response.data.data);
-                    this.props.updateActiveSearch(personSearchData);
+                    this.props.updateActiveSearch(locationSearchData);
                 } else {
                     throw new Error(JSON.stringify({ status: response.status, error: response.data.data.msg }));
                 }
@@ -271,127 +227,21 @@ class SearchForm extends Component {
                                                     />
                                                 </Col>
                                             </FormGroup>
-                                            <FormGroup row>
-                                                <Col md="3">
-                                                    <Label htmlFor="lvtDni">Cédula</Label>
-                                                </Col>
-                                                <Col xs="12" md="9">
-                                                    <Input
-                                                        type="text"
-                                                        id="lvtDni"
-                                                        name="lvtDni"
-                                                        placeholder="09999999999"
-                                                        autoComplete="nope"
-                                                        value={this.state.formFields.lvtDni}
-                                                        onChange={(e) => this.inputChangeHandler.call(this, e)}
-                                                    />
-                                                </Col>
-                                            </FormGroup>
                                         </Col>
 
                                         <Col md="4">
                                             <FormGroup row>
                                                 <Col md="3">
-                                                    <Label htmlFor="lvtFirstname">Nombres</Label>
+                                                    <Label htmlFor="lvtName">Nombre</Label>
                                                 </Col>
                                                 <Col xs="12" md="9">
                                                     <Input
                                                         type="text"
-                                                        id="lvtFirstname"
-                                                        name="lvtFirstname"
-                                                        placeholder="Juan"
-                                                        value={this.state.formFields.lvtFirstname}
+                                                        id="lvtName"
+                                                        name="lvtName"
+                                                        placeholder="Vestido"
+                                                        value={this.state.formFields.lvtName}
                                                         onChange={(e) => this.inputChangeHandler.call(this, e)}
-                                                    />
-                                                </Col>
-                                            </FormGroup>
-                                            <FormGroup row>
-                                                <Col md="3">
-                                                    <Label htmlFor="lvtLastname">Apellidos</Label>
-                                                </Col>
-                                                <Col xs="12" md="9">
-                                                    <Input
-                                                        type="text"
-                                                        id="lvtLastname"
-                                                        name="lvtLastname"
-                                                        placeholder="Pérez"
-                                                        value={this.state.formFields.lvtLastname}
-                                                        onChange={(e) => this.inputChangeHandler.call(this, e)}
-                                                    />
-                                                </Col>
-                                            </FormGroup>
-                                            <FormGroup row>
-                                                <Col md="3">
-                                                    <Label>Género</Label>
-                                                </Col>
-                                                <Col md="9">
-                                                    {gendersList.map((gender, index) =>
-                                                        <GenderRadioOption
-                                                            key={index}
-                                                            gender={gender}
-                                                            genderValue={this.state.formFields.lvtGender}
-                                                            onGenderFieldChange={(e) => this.customInputRadioHandler.call(this, e)}
-                                                        />
-                                                    )}
-                                                </Col>
-                                            </FormGroup>
-                                        </Col>
-
-                                        <Col md="4">
-                                            <FormGroup row>
-                                                <Col md="3">
-                                                    <Label>Edad</Label>
-                                                </Col>
-                                                <Col md="9">
-                                                    <Range
-                                                        min={defines.LVT_AGE_MIN}
-                                                        max={defines.LVT_AGE_MAX}
-                                                        defaultValue={[0, 100]}
-                                                        marks={{
-                                                            0: defines.LVT_AGE_MIN,
-                                                            100: defines.LVT_AGE_MAX,
-                                                        }}
-                                                        tipFormatter={value => `${value} ${defines.LVT_AGE_UNIT}s`}
-                                                        onChange={(e) => this.rangeAgeChangeHandler.call(this, e)}
-                                                        allowCross={false}
-                                                    />
-                                                </Col>
-                                            </FormGroup>
-                                            <FormGroup row>
-                                                <Col md="3">
-                                                    <Label>Estatura</Label>
-                                                </Col>
-                                                <Col md="9">
-                                                    <Range
-                                                        min={defines.LVT_HEIGHT_MIN}
-                                                        max={defines.LVT_HEIGHT_MAX}
-                                                        defaultValue={[0, 240]}
-                                                        marks={{
-                                                            0: defines.LVT_HEIGHT_MIN,
-                                                            240: defines.LVT_HEIGHT_MAX,
-                                                        }}
-                                                        tipFormatter={value => `${value} ${defines.LVT_DISTANCE_UNIT}`}
-                                                        onChange={(e) => this.rangeHeightChangeHandler.call(this, e)}
-                                                        allowCross={false}
-                                                    />
-                                                </Col>
-                                            </FormGroup>
-                                            <FormGroup row>
-                                                <Col md="3">
-                                                    <Label>Peso</Label>
-                                                </Col>
-                                                <Col md="9">
-                                                    <Range
-                                                        min={defines.LVT_WEIGHT_MIN}
-                                                        max={defines.LVT_WEIGHT_MAX}
-                                                        defaultValue={[0, 150]}
-                                                        marks={{
-                                                            0: defines.LVT_WEIGHT_MIN,
-                                                            150: defines.LVT_WEIGHT_MAX,
-                                                        }}
-                                                        tipFormatter={value => `${value} ${defines.LVT_WEIGHT_UNIT}`}
-                                                        onChange={(e) => this.rangeWeightChangeHandler.call(this, e)}
-                                                        allowCross={false}
                                                     />
                                                 </Col>
                                             </FormGroup>

@@ -11,15 +11,15 @@ import {
 } from 'reactstrap';
 import axios from 'axios';
 import defines from '../../defines'
-import PersonCard from './PersonCard/PersonCard';
-import SearchForm from './SearchForm/SearchForm';
+import VestryCard from './VestryCard';
+import SearchForm from './SearchForm';
 
 
 class List extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [],
+      vestrys: [],
       limit: 8,
       offset: 0,
       loading: true,
@@ -33,28 +33,28 @@ class List extends Component {
     this.handleResults = this.handleResults.bind(this);
   }
 
-  handleResults = (personResults) => {
-    this.setState({ persons: [] });
-    this.setState({ persons: personResults });
+  handleResults = (vestryResults) => {
+    this.setState({ vestrys: [] });
+    this.setState({ vestrys: vestryResults });
   }
 
-  updateActiveSearch = (personSearchData)=>{
-    this.setState({active_search:personSearchData})
+  updateActiveSearch = (vestrySearchData)=>{
+    this.setState({active_search:vestrySearchData})
   }
 
   handleLoadMore = () => {
 
     let server_action = ''
     if(JSON.stringify(this.state.active_search).length>2){
-      let personSearchData = this.state.active_search;
-      personSearchData['offset'] = this.state.offset;
+      let vestrySearchData = this.state.active_search;
+      vestrySearchData['offset'] = this.state.offset;
       server_action = axios.post(
-          defines.API_DOMAIN + '/searchperson/',
-          personSearchData
+          defines.API_DOMAIN + '/searchvestry/',
+          vestrySearchData
       )
     }else{
       server_action = axios.get(
-        defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + "&limit=" + this.state.limit + '&offset=' + this.state.offset
+        defines.API_DOMAIN + '/vestry?module=' + defines.LVT_CASTING + "&limit=" + this.state.limit + '&offset=' + this.state.offset
       )
     }
 
@@ -70,11 +70,11 @@ class List extends Component {
           }
           
 
-          let temp_persons = this.state.persons;
+          let temp_vestrys = this.state.vestrys;
           this.setState({
             loading_more: false,
             error: false,
-            persons: temp_persons.concat(data),
+            vestrys: temp_vestrys.concat(data),
             offset: this.state.offset + data.length,
             // limit: this.state.offset + data.length
           })
@@ -103,14 +103,14 @@ class List extends Component {
   componentDidMount() {
     this.setState({ loading: true });
     axios.get(
-      defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + "&limit=" + this.state.limit + '&offset=' + this.state.offset
+      defines.API_DOMAIN + '/vestry?module=' + defines.LVT_CASTING + "&limit=" + this.state.limit + '&offset=' + this.state.offset
     )
       .then((response) => {
         if (response.status === 200) {
           this.setState({
             loading: false,
             error: false,
-            persons: response.data.data,
+            vestrys: response.data.data,
             offset: this.state.offset + response.data.data.length
           })
         } else {
@@ -136,7 +136,7 @@ class List extends Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
-    const personList = this.state.persons;
+    const vestryList = this.state.vestrys;
     if (this.state.loading) {
       return (
         <div>
@@ -166,7 +166,7 @@ class List extends Component {
         <SearchForm
           limit={this.state.limit}
           offset={this.state.offset}
-          personList={this.state.persons}
+          vestryList={this.state.vestrys}
           handleResults={this.handleResults}
           updateActiveSearch = {this.updateActiveSearch}
         />
@@ -174,14 +174,14 @@ class List extends Component {
           <Col xl={12}>
             <Card>
               <CardHeader>
-                <i className="fa fa-align-justify"></i> Resultados <small className="text-muted"> Personas registradas en la plataforma</small>
+                <i className="fa fa-align-justify"></i> Resultados <small className="text-muted"> Vestuarios registradas en la plataforma</small>
               </CardHeader>
               <CardBody>
                 <Suspense fallback={this.loading()}>
                   <Row>
-                    {(personList.length > 0) ?
-                      personList.map((person, index) =>
-                        <PersonCard key={index} person={person} />
+                    {(vestryList.length > 0) ?
+                      vestryList.map((vestry, index) =>
+                        <VestryCard key={index} vestry={vestry} />
                       )
                       :
                       <p className="form-control-static">No existen elementos</p>

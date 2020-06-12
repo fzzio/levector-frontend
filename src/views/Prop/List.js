@@ -11,15 +11,15 @@ import {
 } from 'reactstrap';
 import axios from 'axios';
 import defines from '../../defines'
-import PersonCard from './PersonCard/PersonCard';
-import SearchForm from './SearchForm/SearchForm';
+import PropCard from './PropCard';
+import SearchForm from './SearchForm';
 
 
 class List extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [],
+      propsObj: [],
       limit: 8,
       offset: 0,
       loading: true,
@@ -33,28 +33,28 @@ class List extends Component {
     this.handleResults = this.handleResults.bind(this);
   }
 
-  handleResults = (personResults) => {
-    this.setState({ persons: [] });
-    this.setState({ persons: personResults });
+  handleResults = (propResults) => {
+    this.setState({ propsObj: [] });
+    this.setState({ propsObj: propResults });
   }
 
-  updateActiveSearch = (personSearchData)=>{
-    this.setState({active_search:personSearchData})
+  updateActiveSearch = (propSearchData)=>{
+    this.setState({active_search:propSearchData})
   }
 
   handleLoadMore = () => {
 
     let server_action = ''
     if(JSON.stringify(this.state.active_search).length>2){
-      let personSearchData = this.state.active_search;
-      personSearchData['offset'] = this.state.offset;
+      let propSearchData = this.state.active_search;
+      propSearchData['offset'] = this.state.offset;
       server_action = axios.post(
-          defines.API_DOMAIN + '/searchperson/',
-          personSearchData
+          defines.API_DOMAIN + '/searchprop/',
+          propSearchData
       )
     }else{
       server_action = axios.get(
-        defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + "&limit=" + this.state.limit + '&offset=' + this.state.offset
+        defines.API_DOMAIN + '/prop?module=' + defines.LVT_PROPS + "&limit=" + this.state.limit + '&offset=' + this.state.offset
       )
     }
 
@@ -68,13 +68,12 @@ class List extends Component {
           }else{
             data=response[0].data.data; 
           }
-          
 
-          let temp_persons = this.state.persons;
+          let temp_props = this.state.propsObj;
           this.setState({
             loading_more: false,
             error: false,
-            persons: temp_persons.concat(data),
+            propsObj: temp_props.concat(data),
             offset: this.state.offset + data.length,
             // limit: this.state.offset + data.length
           })
@@ -98,19 +97,17 @@ class List extends Component {
       });
   }
 
-  
-
   componentDidMount() {
     this.setState({ loading: true });
     axios.get(
-      defines.API_DOMAIN + '/person?module=' + defines.LVT_CASTING + "&limit=" + this.state.limit + '&offset=' + this.state.offset
+      defines.API_DOMAIN + '/prop?module=' + defines.LVT_PROPS + "&limit=" + this.state.limit + '&offset=' + this.state.offset
     )
       .then((response) => {
         if (response.status === 200) {
           this.setState({
             loading: false,
             error: false,
-            persons: response.data.data,
+            propsObj: response.data.data,
             offset: this.state.offset + response.data.data.length
           })
         } else {
@@ -136,7 +133,9 @@ class List extends Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
-    const personList = this.state.persons;
+    const propList = this.state.propsObj;
+    console.log("--- propList ---");
+    console.log(JSON.stringify(propList));
     if (this.state.loading) {
       return (
         <div>
@@ -166,7 +165,7 @@ class List extends Component {
         <SearchForm
           limit={this.state.limit}
           offset={this.state.offset}
-          personList={this.state.persons}
+          propList={this.state.propsObj}
           handleResults={this.handleResults}
           updateActiveSearch = {this.updateActiveSearch}
         />
@@ -174,14 +173,14 @@ class List extends Component {
           <Col xl={12}>
             <Card>
               <CardHeader>
-                <i className="fa fa-align-justify"></i> Resultados <small className="text-muted"> Personas registradas en la plataforma</small>
+                <i className="fa fa-align-justify"></i> Resultados <small className="text-muted"> Utilerías registradas en la plataforma</small>
               </CardHeader>
               <CardBody>
                 <Suspense fallback={this.loading()}>
                   <Row>
-                    {(personList.length > 0) ?
-                      personList.map((person, index) =>
-                        <PersonCard key={index} person={person} />
+                    {(propList.length > 0) ?
+                      (propList || []).map((propObj, index) =>
+                        <PropCard key={index} prop={propObj} />
                       )
                       :
                       <p className="form-control-static">No existen elementos</p>

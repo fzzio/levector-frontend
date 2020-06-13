@@ -167,7 +167,7 @@ class SearchForm extends Component {
 
         this.setState({ loading: true });
         axios.post(
-            defines.API_DOMAIN + '/searchprop/',
+            defines.API_DOMAIN + '/prop/search/',
             propSearchData
         )
             .then((response) => {

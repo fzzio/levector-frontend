@@ -28,8 +28,8 @@ import {
   } from 'reactstrap';
 import { isNull } from 'util';
 import moment from 'moment';
-import defines from '../../../defines'
-import defaultimg from '../../../assets/img/levector.jpg'
+import defines from '../../defines';
+import defaultimg from '../../assets/img/levector.jpg';
 
 class PersonCard extends Component {
     constructor(props) {

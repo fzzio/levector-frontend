@@ -11,8 +11,8 @@ import {
 } from 'reactstrap';
 import axios from 'axios';
 import defines from '../../defines'
-import PersonCard from './PersonCard/PersonCard';
-import SearchForm from './SearchForm/SearchForm';
+import PersonCard from './PersonCard';
+import SearchForm from './SearchForm';
 
 
 class List extends Component {

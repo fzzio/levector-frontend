@@ -16,8 +16,8 @@ import {
     Row,
 } from 'reactstrap';
 import moment from 'moment';
-import defines from '../../../defines'
-import CustomField from '../../CustomField/CustomField';
+import defines from '../../defines'
+import CustomField from '../CustomField/CustomField';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 

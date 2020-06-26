@@ -113,7 +113,7 @@ class PersonCard extends Component {
                                         <p className="lvt-data-value">
                                             { person.ID }
                                         </p>
-                                        <FormText className="lvt-data-field">ID</FormText>
+                                        <FormText className="lvt-data-field">Código</FormText>
                                     </Col>
                                     <Col sm="6" md="6" lg="3">
                                         <p className="lvt-data-value">

@@ -409,28 +409,33 @@ class Create extends Component {
 
         if(this.state.formFields.lvtDNI != '')
           axios.post(
-              defines.API_DOMAIN + '/searchperson/',
+              defines.API_DOMAIN + '/person/search',
               { dni: this.state.formFields.lvtDNI, limit: 5,
                 offset: 0, }
           )
           .then((response) => {
             console.log('SEARCH DE PERSONA: ', response)
-            let resp = response[0];
-            
-            this.setState({
-              
-              modalData: {
-                modalType: 'danger',
-                modalBody: labels.LVT_LABEL_CEDULA_EXISTENTE,
-                modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
-                modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
-                okFunctionState: this.cancelFunctionState
-              },
-              modalVisible: true,
-              loading: false,
-              error: false
 
-            });
+            if( response.data.length){ // there is a person with tha DNI
+              
+              this.setState({   
+                modalData: {
+                  modalType: 'danger',
+                  modalBody: labels.LVT_LABEL_CEDULA_EXISTENTE,
+                  modalTitle: labels.LVT_MODAL_DEFAULT_TITLE,
+                  modalOkButton: labels.LVT_MODAL_DEFAULT_BUTTON_OK,
+                  okFunctionState: this.cancelFunctionState
+                },
+                modalVisible: true,
+                loading: false,
+                error: false
+              });
+              
+            }else{
+
+              save_person = axios.post(defines.API_DOMAIN + '/person/', personData);
+              this.saveCall(save_person);
+            }
 
           })
           .catch((error) => {
@@ -1289,7 +1294,12 @@ class Create extends Component {
   parseVideos = (videos) => {
     
     videos.map((video) => {
-      let video_name = video.url.split('casting/videos/')[1];
+      let video_name = video.url.split('casting/videos/');
+      if(video_name.length > 1){
+        video_name = video_name[1]
+      }else{
+        video_name = video_name[0]
+      }
       video['filename'] = video_name
       video['source'] = video_name
       video['options'] = {type:'limbo'}

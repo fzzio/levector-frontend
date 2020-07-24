@@ -554,89 +554,7 @@ class Create extends Component {
         }
         <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-location" onSubmit={this.handleSubmit} >
           <Row>
-            <Col xs="12" md="6">
-              <Card>
-                <CardHeader>
-                  <strong>Información</strong> Básica
-                </CardHeader>
-                <CardBody>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtName">Nombre</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <Input
-                        type="text"
-                        id="lvtName"
-                        name="lvtName"
-                        placeholder="Locacion"
-                        autoComplete="nope"
-                        value={this.state.formFields.lvtName}
-                        onChange={(e) => this.inputChangeHandler.call(this, e)}
-                        valid={this.state.errorFields.valid.indexOf("lvtName") > -1}
-                        invalid={this.state.errorFields.invalid.indexOf("lvtName") > -1}
-                      />
-                      <FormText color="muted">Nombres del vestuario</FormText>
-                    </Col>
-                  </FormGroup>
-                  
-                </CardBody>
-              </Card>
-            </Col>
-
-            <Col xs="12" md="6">
-              <Card>
-                <CardHeader>
-                  <strong>Otros</strong> Características adicionales
-                </CardHeader>
-                <CardBody>
-                  {(customFieldList || []).map((customFieldObj, index) =>
-                    <CustomField
-                      key={index}
-                      customFieldObj={customFieldObj}
-                      defineas={defines.CUSTOM_FIELD_PREFIX}
-                      customFieldsData={this.state.customFieldsData}
-                      customFieldValue={this.state.editCustomValues[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield]}
-                      onCustomFieldChange={(e) => this.customInputChangeHandler.call(this, e)}
-                      errorFields={this.state.errorFields}
-                    />
-                  )}
-                </CardBody>
-              </Card>
-            </Col>
-
-            <Col xs="12" md="6">
-              <Card>
-                <CardHeader>
-                  <strong>Complementarios</strong> Datos adicionales
-                </CardHeader>
-                <CardBody>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtObservations">Observaciones</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <Input
-                        type="textarea"
-                        name="lvtObservations"
-                        id="lvtObservations"
-                        rows="4"
-                        placeholder="Ingrese observaciones de la vestuario"
-                        onChange={(e) => this.inputChangeHandler.call(this, e)}
-                        value={this.state.formFields.lvtObservations}
-                        valid={this.state.errorFields.valid.indexOf("lvtObservations") > -1}
-                        invalid={this.state.errorFields.invalid.indexOf("lvtObservations") > -1}
-                      />
-                      <FormText color="muted">Comentarios y observaciones referentes a la ficha ingresada</FormText>
-                    </Col>
-                  </FormGroup>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col xs="12" md="12">
+            <Col xs="12" md="4">
               <Card>
                 <CardHeader>
                   <strong>Multimedia</strong> Imágenes
@@ -681,11 +599,7 @@ class Create extends Component {
 
                 </CardBody>
               </Card>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col xs="12" md="6">
+            
               <Card>
                 <CardHeader>
                   <strong>Multimedia</strong> Video
@@ -734,7 +648,88 @@ class Create extends Component {
                 </CardBody>
               </Card>
             </Col>
+
+            <Col xs="12" md="4">
+              <Card>
+                <CardHeader>
+                  <strong>Información</strong> Básica
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtName">Nombre</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <Input
+                        type="text"
+                        id="lvtName"
+                        name="lvtName"
+                        placeholder="Locacion"
+                        autoComplete="nope"
+                        value={this.state.formFields.lvtName}
+                        onChange={(e) => this.inputChangeHandler.call(this, e)}
+                        valid={this.state.errorFields.valid.indexOf("lvtName") > -1}
+                        invalid={this.state.errorFields.invalid.indexOf("lvtName") > -1}
+                      />
+                      <FormText color="muted">Nombres del vestuario</FormText>
+                    </Col>
+                  </FormGroup>
+                  
+                </CardBody>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <strong>Complementarios</strong> Datos adicionales
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtObservations">Observaciones</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <Input
+                        type="textarea"
+                        name="lvtObservations"
+                        id="lvtObservations"
+                        rows="4"
+                        placeholder="Ingrese observaciones de la vestuario"
+                        onChange={(e) => this.inputChangeHandler.call(this, e)}
+                        value={this.state.formFields.lvtObservations}
+                        valid={this.state.errorFields.valid.indexOf("lvtObservations") > -1}
+                        invalid={this.state.errorFields.invalid.indexOf("lvtObservations") > -1}
+                      />
+                      <FormText color="muted">Comentarios y observaciones referentes a la ficha ingresada</FormText>
+                    </Col>
+                  </FormGroup>
+                </CardBody>
+              </Card>
+            </Col>
+
+            <Col xs="12" md="4">
+              <Card>
+                <CardHeader>
+                  <strong>Otros</strong> Características adicionales
+                </CardHeader>
+                <CardBody>
+                  {(customFieldList || []).map((customFieldObj, index) =>
+                    <CustomField
+                      key={index}
+                      customFieldObj={customFieldObj}
+                      defineas={defines.CUSTOM_FIELD_PREFIX}
+                      customFieldsData={this.state.customFieldsData}
+                      customFieldValue={this.state.editCustomValues[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield]}
+                      onCustomFieldChange={(e) => this.customInputChangeHandler.call(this, e)}
+                      errorFields={this.state.errorFields}
+                    />
+                  )}
+                </CardBody>
+              </Card>
+            </Col>
+
+            
           </Row>
+
+          
 
           <Card>
             <CardFooter>

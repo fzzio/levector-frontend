@@ -49,7 +49,7 @@ class List extends Component {
       let personSearchData = this.state.active_search;
       personSearchData['offset'] = this.state.offset;
       server_action = axios.post(
-          defines.API_DOMAIN + '/searchperson/',
+          defines.API_DOMAIN + '/person/search/',
           personSearchData
       )
     }else{

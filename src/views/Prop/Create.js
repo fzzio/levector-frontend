@@ -547,7 +547,101 @@ class Create extends Component {
         }
         <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" id="lvt-form-prop" onSubmit={this.handleSubmit} >
           <Row>
-            <Col xs="12" md="6">
+          <Col xs="12" md="4">
+              <Card>
+                <CardHeader>
+                  <strong>Multimedia</strong> Imágenes
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col xs="12" md="12">
+                      {
+                        this.state.lvtImages.length > 0 ?
+                          <div>
+                            <RUG
+                              rules={RUG_RULES}
+                              accept={RUG_ACCEPT}
+                              action={RUG_ACTION}
+                              // This propperty seems to be loaded once. It is not reactive to a state.
+                              // so, the entire elemente must be loaded to make it work
+                              initialState={this.state.lvtImages}
+
+                              source={this.rugSource}
+                              onWarning={this.rugOnWarning}
+                              onSuccess={this.rugOnSuccess}
+                              onConfirmDelete={this.rugOnConfirmDelete}
+                              onDeleted={this.rugOnDeleted}
+                            />
+                          </div>
+                          :
+                          <RUG
+                            rules={RUG_RULES}
+                            accept={RUG_ACCEPT}
+                            action={RUG_ACTION}
+
+                            source={this.rugSource}
+                            onWarning={this.rugOnWarning}
+                            onSuccess={this.rugOnSuccess}
+                            onConfirmDelete={this.rugOnConfirmDelete}
+                            onDeleted={this.rugOnDeleted}
+                          />
+                      }
+
+                    </Col>
+                  </FormGroup>
+
+                </CardBody>
+              </Card>
+            
+              <Card>
+                <CardHeader>
+                  <strong>Multimedia</strong> Video
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col md="3">
+                      <Label htmlFor="lvtVideo">Vídeo</Label>
+                    </Col>
+                    <Col xs="12" md="9">
+                      <FilePond
+                        ref={ref => (this.pond = ref)}
+                        // files={this.state.lvtVideos}
+                        // files={
+                        //   [{source:defines.API_DOMAIN + '/uploadvideo/1582595290262-video2020-02-2420-35-35.mp4'}]
+                        // }
+                        allowMultiple={true}
+                        allowDrop={false}
+                        acceptedFileTypes={['video/*']}
+                        server={defines.API_DOMAIN + '/uploadpropsvideos'}
+                        oninit={() => this.handleInitUpload()}
+                        onprocessfile={(error, file) => {
+                          console.log('file processed: ', file)
+                          let processedFile = JSON.parse(file.serverId);
+                          let arrVideos = this.state.lvtVideos;
+                          arrVideos.push({
+                            "filename": processedFile.video,
+                            "source": processedFile.video,
+                            "options": {
+                                type: 'limbo'
+                            }
+                          })
+                          this.setState({ lvtVideos: arrVideos })
+                        }}
+
+                      // onupdatefiles={(fileItems) => {
+                      //   this.setState({
+                      //     lvtVideos: fileItems.map(fileItem => fileItem.filename)
+                      //   });
+                      //   console.log(this.state.lvtVideos);
+                      // }}
+                      />
+                      <FormText color="muted">Vídeo a mostrar</FormText>
+                    </Col>
+                  </FormGroup>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col xs="12" md="4">
               <Card>
                 <CardHeader>
                   <strong>Información</strong> Básica
@@ -680,30 +774,6 @@ class Create extends Component {
                   
                 </CardBody>
               </Card>
-            </Col>
-
-            <Col xs="12" md="6">
-              <Card>
-                <CardHeader>
-                  <strong>Otros</strong> Características adicionales
-                </CardHeader>
-                <CardBody>
-                  {(customFieldList || []).map((customFieldObj, index) =>
-                    <CustomField
-                      key={index}
-                      customFieldObj={customFieldObj}
-                      defineas={defines.CUSTOM_FIELD_PREFIX}
-                      customFieldsData={this.state.customFieldsData}
-                      customFieldValue={this.state.editCustomValues[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield]}
-                      onCustomFieldChange={(e) => this.customInputChangeHandler.call(this, e)}
-                      errorFields={this.state.errorFields}
-                    />
-                  )}
-                </CardBody>
-              </Card>
-            </Col>
-
-            <Col xs="12" md="6">
               <Card>
                 <CardHeader>
                   <strong>Complementarios</strong> Datos adicionales
@@ -731,107 +801,31 @@ class Create extends Component {
                 </CardBody>
               </Card>
             </Col>
-          </Row>
 
-          <Row>
-            <Col xs="12" md="12">
+            <Col xs="12" md="4">
               <Card>
                 <CardHeader>
-                  <strong>Multimedia</strong> Imágenes
+                  <strong>Otros</strong> Características adicionales
                 </CardHeader>
                 <CardBody>
-                  <FormGroup row>
-                    <Col xs="12" md="12">
-                      {
-                        this.state.lvtImages.length > 0 ?
-                          <div>
-                            <RUG
-                              rules={RUG_RULES}
-                              accept={RUG_ACCEPT}
-                              action={RUG_ACTION}
-                              // This propperty seems to be loaded once. It is not reactive to a state.
-                              // so, the entire elemente must be loaded to make it work
-                              initialState={this.state.lvtImages}
-
-                              source={this.rugSource}
-                              onWarning={this.rugOnWarning}
-                              onSuccess={this.rugOnSuccess}
-                              onConfirmDelete={this.rugOnConfirmDelete}
-                              onDeleted={this.rugOnDeleted}
-                            />
-                          </div>
-                          :
-                          <RUG
-                            rules={RUG_RULES}
-                            accept={RUG_ACCEPT}
-                            action={RUG_ACTION}
-
-                            source={this.rugSource}
-                            onWarning={this.rugOnWarning}
-                            onSuccess={this.rugOnSuccess}
-                            onConfirmDelete={this.rugOnConfirmDelete}
-                            onDeleted={this.rugOnDeleted}
-                          />
-                      }
-
-                    </Col>
-                  </FormGroup>
-
+                  {(customFieldList || []).map((customFieldObj, index) =>
+                    <CustomField
+                      key={index}
+                      customFieldObj={customFieldObj}
+                      defineas={defines.CUSTOM_FIELD_PREFIX}
+                      customFieldsData={this.state.customFieldsData}
+                      customFieldValue={this.state.editCustomValues[defines.CUSTOM_FIELD_PREFIX + customFieldObj.idfield]}
+                      onCustomFieldChange={(e) => this.customInputChangeHandler.call(this, e)}
+                      errorFields={this.state.errorFields}
+                    />
+                  )}
                 </CardBody>
               </Card>
             </Col>
-          </Row>
 
-          <Row>
-            <Col xs="12" md="6">
-              <Card>
-                <CardHeader>
-                  <strong>Multimedia</strong> Video
-                </CardHeader>
-                <CardBody>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="lvtVideo">Vídeo</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <FilePond
-                        ref={ref => (this.pond = ref)}
-                        // files={this.state.lvtVideos}
-                        // files={
-                        //   [{source:defines.API_DOMAIN + '/uploadvideo/1582595290262-video2020-02-2420-35-35.mp4'}]
-                        // }
-                        allowMultiple={true}
-                        allowDrop={false}
-                        acceptedFileTypes={['video/*']}
-                        server={defines.API_DOMAIN + '/uploadpropsvideos'}
-                        oninit={() => this.handleInitUpload()}
-                        onprocessfile={(error, file) => {
-                          console.log('file processed: ', file)
-                          let processedFile = JSON.parse(file.serverId);
-                          let arrVideos = this.state.lvtVideos;
-                          arrVideos.push({
-                            "filename": processedFile.video,
-                            "source": processedFile.video,
-                            "options": {
-                                type: 'limbo'
-                            }
-                          })
-                          this.setState({ lvtVideos: arrVideos })
-                        }}
-
-                      // onupdatefiles={(fileItems) => {
-                      //   this.setState({
-                      //     lvtVideos: fileItems.map(fileItem => fileItem.filename)
-                      //   });
-                      //   console.log(this.state.lvtVideos);
-                      // }}
-                      />
-                      <FormText color="muted">Vídeo a mostrar</FormText>
-                    </Col>
-                  </FormGroup>
-                </CardBody>
-              </Card>
-            </Col>
+            
+          
+            
           </Row>
 
           <Card>

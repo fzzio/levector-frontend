@@ -11,8 +11,8 @@ import {
 } from 'reactstrap';
 import axios from 'axios';
 import defines from '../../defines'
-import PersonCard from './PersonCard/PersonCard';
-import SearchForm from './SearchForm/SearchForm';
+import PersonCard from './PersonCard';
+import SearchForm from './SearchForm';
 
 
 class List extends Component {
@@ -20,8 +20,9 @@ class List extends Component {
     super(props)
     this.state = {
       persons: [],
-      limit: 8,
+      limit: defines.SEARCH_RECORDS_DEFAULT,
       offset: 0,
+      range: defines.SEARCH_RECORDS_RANGE,
       loading: true,
       loading_more: false,
       error: false,
@@ -75,7 +76,7 @@ class List extends Component {
             loading_more: false,
             error: false,
             persons: temp_persons.concat(data),
-            offset: this.state.offset + data.length,
+            offset: this.state.offset + defines.SEARCH_RECORDS_RANGE,
             // limit: this.state.offset + data.length
           })
         } else {

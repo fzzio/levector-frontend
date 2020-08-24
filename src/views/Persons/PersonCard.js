@@ -28,8 +28,8 @@ import {
   } from 'reactstrap';
 import { isNull } from 'util';
 import moment from 'moment';
-import defines from '../../../defines'
-import defaultimg from '../../../assets/img/levector.jpg'
+import defines from '../../defines';
+import defaultimg from '../../assets/img/levector.jpg';
 
 class PersonCard extends Component {
     constructor(props) {
@@ -113,7 +113,7 @@ class PersonCard extends Component {
                                         <p className="lvt-data-value">
                                             { person.ID }
                                         </p>
-                                        <FormText className="lvt-data-field">ID</FormText>
+                                        <FormText className="lvt-data-field">Código</FormText>
                                     </Col>
                                     <Col sm="6" md="6" lg="3">
                                         <p className="lvt-data-value">

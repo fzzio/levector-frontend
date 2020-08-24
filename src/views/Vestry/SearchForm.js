@@ -155,7 +155,7 @@ class SearchForm extends Component {
 
         this.setState({ loading: true });
         axios.post(
-            defines.API_DOMAIN + '/searchvestry/',
+            defines.API_DOMAIN + '/vestry/search/',
             vestrySearchData
         )
             .then((response) => {

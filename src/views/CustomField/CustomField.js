@@ -75,27 +75,15 @@ class CustomField extends Component {
                 break;
             
             case defines.CUSTOM_FIELD_COMBOBOX:
-                if(!isSearch){
-                    return(
-                        <CustomSelect
-                            customFieldObj = { customFieldObj }
-                            customFieldValue = { customFieldValue }
-                            onCustomFieldChange = {this.handleChange}
-                            errorFields = { errorFields }
-                            isSearch = { isSearch }
-                        />
-                    );
-                }else{
-                    return(
-                        <CustomCheckbox
-                            customFieldObj = { customFieldObj }
-                            onCustomFieldChange = {this.handleChange}
-                            customFieldValue = { customFieldValue }
-                            errorFields = { errorFields }
-                            isSearch = { isSearch }
-                        />
-                    );
-                }
+                return(
+                    <CustomSelect
+                        customFieldObj = { customFieldObj }
+                        customFieldValue = { customFieldValue }
+                        onCustomFieldChange = {this.handleChange}
+                        errorFields = { errorFields }
+                        isSearch = { isSearch }
+                    />
+                );
                 break;
             
             case defines.CUSTOM_FIELD_RADIO:
@@ -111,10 +99,10 @@ class CustomField extends Component {
                     );
                 }else{
                     return(
-                        <CustomCheckbox
+                        <CustomSelect
                             customFieldObj = { customFieldObj }
-                            onCustomFieldChange = {this.handleChange}
                             customFieldValue = { customFieldValue }
+                            onCustomFieldChange = {this.handleChange}
                             errorFields = { errorFields }
                             isSearch = { isSearch }
                         />
@@ -123,15 +111,27 @@ class CustomField extends Component {
                 break;
 
             case defines.CUSTOM_FIELD_CHECKBOX:
-                return(
-                    <CustomCheckbox
-                        customFieldObj = { customFieldObj }
-                        onCustomFieldChange = {this.handleChange}
-                        customFieldValue = { customFieldValue }
-                        errorFields = { errorFields }
-                        isSearch = { isSearch }
-                    />
-                );
+                if(!isSearch){
+                    return(
+                        <CustomCheckbox
+                            customFieldObj = { customFieldObj }
+                            onCustomFieldChange = {this.handleChange}
+                            customFieldValue = { customFieldValue }
+                            errorFields = { errorFields }
+                            isSearch = { isSearch }
+                        />
+                    );
+                }else{
+                    return(
+                        <CustomSelect
+                            customFieldObj = { customFieldObj }
+                            customFieldValue = { customFieldValue }
+                            onCustomFieldChange = {this.handleChange}
+                            errorFields = { errorFields }
+                            isSearch = { isSearch }
+                        />
+                    );
+                }
                 break;
             
             default:

@@ -55,7 +55,9 @@ class DefaultHeader extends Component {
           */}
           <UncontrolledDropdown nav direction="down">
             <DropdownToggle nav>
-              <img src={'../../assets/img/avatars/6.jpg'} className="img-avatar" alt="admin@levector.com" />
+              <div className="btn lvt-btn-account">
+                <i className="fa fa-user"></i>
+              </div>
             </DropdownToggle>
             <DropdownMenu right>
               {/* 

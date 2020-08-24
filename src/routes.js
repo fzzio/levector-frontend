@@ -109,7 +109,7 @@ const routes = [
   { path: '/users/:id', exact: true, name: 'User Details', component: User },
 
   // Levector
-  { path: '/dashboard', name: 'Dashboard', component: LevectorDashboard },
+  { path: '/dashboard/:module', name: 'Dashboard', component: LevectorDashboard },
 
   // CustomField
   { path: '/customfield/:module/list', exact: true, name: 'Campo dinámico', component: customFieldList },

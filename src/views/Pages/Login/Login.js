@@ -73,8 +73,8 @@ class Login extends Component {
       )
         .then((response) => {
           if(response.status === 200 ) {
-            response.data.data[0].created = (new Date()).getTime();
-            localStorage.setItem('lvt', JSON.stringify(response.data.data[0]));
+            response.data.data.created = (new Date()).getTime();
+            localStorage.setItem('lvt', JSON.stringify(response.data.data));
             this.setState({loading: false,redirect: true})
           }else{
             // throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );

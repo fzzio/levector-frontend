@@ -55,7 +55,7 @@ class DefaultLayout extends Component {
 
       let temp_navigation = navigation;
       navigation.items.forEach((_n,i) => {
-        if(_n.module_id && lvt_session.moduleId.indexOf(_n.module_id)<0){
+        if(_n.module_id && lvt_session.moduleIds.indexOf(_n.module_id)<0){
           delete temp_navigation.items[i];
         }
       });

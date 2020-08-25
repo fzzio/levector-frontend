@@ -95,7 +95,7 @@ class Login extends Component {
           this.setState({ loading: false, redirect: false });
         });
     }else{
-      this.setState({ loading: false, redirect: true });
+      return null;
     }
   }
 

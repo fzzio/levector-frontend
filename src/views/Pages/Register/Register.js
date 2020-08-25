@@ -13,7 +13,9 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Row
+  Row,
+  FormGroup,
+  Label
 } from 'reactstrap';
 
 import defines from '../../../defines'
@@ -30,7 +32,8 @@ class Register extends Component {
         lvtName: '',
         lvtUsername: '',
         lvtEmail: '',
-        lvtPassword: ''
+        lvtPassword: '',
+        lvtAccess:[]
       },
       loading: false,
       error: false,
@@ -41,12 +44,29 @@ class Register extends Component {
     this.inputChangeHandler = this.inputChangeHandler.bind(this);
   }
 
+  componentDidMount(){
+    localStorage.removeItem('lvt');
+  }
+
   inputChangeHandler(e) {
     let formFields = { ...this.state.formFields };
-    formFields[e.target.name] = e.target.value;
+    
+    if(e.target.name == "lvtAccess" ){
+        if(e.target.checked){
+          formFields[e.target.name].push(e.target.value)
+        }else{
+          formFields[e.target.name] = formFields[e.target.name].filter((v,i)=>{
+            return v!=e.target.value;
+          })
+        }
+    } else {
+      formFields[e.target.name] = e.target.value;
+    }
+
     this.setState({
       formFields: formFields
     });
+
   }
 
   handleSubmit(event) {
@@ -56,16 +76,20 @@ class Register extends Component {
       username: this.state.formFields.lvtUsername,
       email: this.state.formFields.lvtEmail,
       password: this.state.formFields.lvtPassword,
+      module_id: this.state.formFields.lvtAccess
     }
-    this.setState({ loading: true });
+    console.log('submit : ', registerData)
+    
     if (registerData.name !== '' && registerData.username !== '' && registerData.email !== '' && registerData.password !== ''){
+      this.setState({ loading: true });
       axios.post(
-        defines.API_DOMAIN + '/register',
+        defines.API_DOMAIN + '/user',
         registerData
       )
         .then((response) => {
           if(response.status === 200 ) {
             this.setState({
+              loading:false,
               redirect: true
             })
           }else{
@@ -87,7 +111,7 @@ class Register extends Component {
           this.setState({ loading: false, redirect: false });
         });
     }else{
-      this.setState({ loading: false, redirect: true });
+      return null;
     }
   }
 
@@ -124,6 +148,7 @@ class Register extends Component {
                           autoComplete="name"
                           id="lvtName"
                           name="lvtName"
+                          value={this.state.formFields.lvtName}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
                         />
                     </InputGroup>
@@ -139,6 +164,7 @@ class Register extends Component {
                           autoComplete="username"
                           id="lvtUsername"
                           name="lvtUsername"
+                          value={this.state.formFields.lvtUsername}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
                         />
                     </InputGroup>
@@ -146,7 +172,12 @@ class Register extends Component {
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>@</InputGroupText>
                       </InputGroupAddon>
-                      <Input type="text" placeholder="Email" autoComplete="email" />
+                      <Input 
+                        type="text" placeholder="Email" 
+                        autoComplete="email" 
+                        name="lvtEmail"
+                        value={this.state.formFields.lvtEmail}
+                          onChange={(e) => this.inputChangeHandler.call(this, e)}/>
                     </InputGroup>
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -154,17 +185,28 @@ class Register extends Component {
                           <i className="cil-apps"></i>
                         </InputGroupText>
                       </InputGroupAddon>
-                      <Input
-                        type="select"
-                        name="lvtAccess"
-                        id="lvtAccess" multiple>
-                        <option value="1">Casting</option>
-                        <option value="2">Utilería</option>
-                        <option value="3">Vestuario</option>
-                        <option value="4">Locación</option>
-                      </Input>
+                      <FormGroup check>
+                      <Col sm={{ size: 10 }}>
+                        <Label check>
+                          <Input type="checkbox" value="1" name="lvtAccess" onChange={(e) => this.inputChangeHandler.call(this, e)}/>{' '}
+                          Casting
+                        </Label> <br/>
+                        <Label check>
+                          <Input type="checkbox" value="2" name="lvtAccess" onChange={(e) => this.inputChangeHandler.call(this, e)}/>{' '}
+                          Utilería
+                        </Label> <br/>
+                        <Label check>
+                          <Input type="checkbox" value="3" name="lvtAccess" onChange={(e) => this.inputChangeHandler.call(this, e)}/>{' '}
+                          Vestuario
+                        </Label> <br/>
+                        <Label check>
+                          <Input type="checkbox" value="4" name="lvtAccess" onChange={(e) => this.inputChangeHandler.call(this, e)}/>{' '}
+                          Locación
+                        </Label> <br/>
+                        </Col>
+                      </FormGroup>
                     </InputGroup>
-                    <InputGroup className="mb-3">
+                    {/* <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
                           <i className="cil-contact"></i>
@@ -178,7 +220,7 @@ class Register extends Component {
                         <option value="1">Administrador</option>
                         <option value="2">Operativo</option>
                       </Input>
-                    </InputGroup>
+                    </InputGroup> */}
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
@@ -191,6 +233,7 @@ class Register extends Component {
                           autoComplete="new-password"
                           id="lvtPassword"
                           name="lvtPassword"
+                          value={this.state.formFields.lvtPassword}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
                         />
                     </InputGroup>
@@ -214,7 +257,7 @@ class Register extends Component {
                 <CardFooter className="p-4">
                   <Row>
                     <Col xs="12" sm="6">
-                      <Button color="success" block>Crear cuenta</Button>
+                      <Button color="success" block onClick={this.handleSubmit}>Crear cuenta</Button>
                     </Col>
                     <Col xs="12" sm="6">
                       <Link to="/login" className="px-4 btn btn-dark btn-block">Iniciar sesión</Link>

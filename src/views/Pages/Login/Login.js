@@ -36,6 +36,20 @@ class Login extends Component {
     this.inputChangeHandler = this.inputChangeHandler.bind(this);
   }
 
+  componentDidMount(){
+    let now = (new Date()).getTime()
+    let lvt_session = localStorage.getItem('lvt');
+    if(lvt_session){
+      lvt_session = JSON.parse(lvt_session);
+        let time_diff = now-lvt_session.created;
+        if( time_diff < 3600000){
+          this.setState({ redirect: true })
+        }else{
+          localStorage.removeItem('lvt');
+        }
+    }
+  }
+
   inputChangeHandler(e) {
     let formFields = { ...this.state.formFields };
     formFields[e.target.name] = e.target.value;
@@ -51,16 +65,17 @@ class Login extends Component {
       password: this.state.formFields.lvtPassword,
     }
     this.setState({ loading: true });
+
     if (loginData.email !== '' && loginData.password !== ''){
       axios.post(
-        defines.API_DOMAIN + '/login',
+        defines.API_DOMAIN + '/user/login',
         loginData
       )
         .then((response) => {
           if(response.status === 200 ) {
-            this.setState({
-              redirect: true
-            })
+            response.data.data[0].created = (new Date()).getTime();
+            localStorage.setItem('lvt', JSON.stringify(response.data.data[0]));
+            this.setState({loading: false,redirect: true})
           }else{
             // throw new Error( JSON.stringify( {status: response.status, error: response.data.data.msg} ) );
           }
@@ -118,6 +133,7 @@ class Login extends Component {
                           autoComplete="email"
                           id="lvtEmail"
                           name="lvtEmail"
+                          value={this.state.formFields.lvtEmail}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
                         />
                       </InputGroup>
@@ -133,6 +149,7 @@ class Login extends Component {
                           autoComplete="current-password"
                           id="lvtPassword"
                           name="lvtPassword"
+                          value={this.state.formFields.lvtPassword}
                           onChange={(e) => this.inputChangeHandler.call(this, e)}
                         />
                       </InputGroup>

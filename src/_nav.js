@@ -17,7 +17,8 @@ export default {
     {
       name: 'Casting',
       url: '',
-      icon: 'icon-people',
+      icon: 'icon-people', 
+      module_id:1,
       children: [
         {
           name: 'Ver todos',
@@ -45,6 +46,7 @@ export default {
     {
       name: 'Utilería',
       icon: 'icon-umbrella',
+      module_id:2,
       children: [
         {
           name: 'Ver todos',
@@ -72,6 +74,7 @@ export default {
     {
       name: 'Vestuario',
       icon: 'icon-mustache',
+      module_id:3,
       children: [
         {
           name: 'Ver todos',
@@ -99,6 +102,7 @@ export default {
     {
       name: 'Locaciones',
       icon: 'icon-location-pin',
+      module_id:4,
       children: [
         {
           name: 'Ver todos',

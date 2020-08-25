@@ -117,28 +117,28 @@ const routes = [
   { path: '/customfield/:module/:customfieldId/edit', exact: true, name: 'Campo dinámico', component: customFieldEdit },
 
   // Person
-  { path: '/person/list', exact: true, name: 'Personas', component: personList },
-  { path: '/person/create', exact: true, name: 'Agregar Persona', component: personCreate },
-  { path: '/person/edit/:id', exact: true, name: 'Editar Persona', component: personCreate },
-  { path: '/person/:id', exact: true, name: 'Persona', component: personView },
+  { path: '/person/list', exact: true, name: 'Personas', component: personList, module_id:1},
+  { path: '/person/create', exact: true, name: 'Agregar Persona', component: personCreate , module_id:1},
+  { path: '/person/edit/:id', exact: true, name: 'Editar Persona', component: personCreate, module_id:1 },
+  { path: '/person/:id', exact: true, name: 'Persona', component: personView, module_id:1 },
 
   // Prop
-  { path: '/prop/list', exact: true, name: 'Utilerías', component: propList },
-  { path: '/prop/create', exact: true, name: 'Agregar Utilería', component: propCreate },
-  { path: '/prop/edit/:id', exact: true, name: 'Editar Utilería', component: propCreate },
-  { path: '/prop/:id', exact: true, name: 'Utilería', component: propView },
+  { path: '/prop/list', exact: true, name: 'Utilerías', component: propList, module_id:2 },
+  { path: '/prop/create', exact: true, name: 'Agregar Utilería', component: propCreate, module_id:2 },
+  { path: '/prop/edit/:id', exact: true, name: 'Editar Utilería', component: propCreate, module_id:2 },
+  { path: '/prop/:id', exact: true, name: 'Utilería', component: propView, module_id:2 },
 
   // Vestry
-  { path: '/vestry/list', exact: true, name: 'Vestuarios', component: vestryList} ,
-  { path: '/vestry/create', exact: true, name: 'Agregar Vestuario', component: vestryCreate},
-  { path: '/vestry/edit/:id', exact: true, name: 'Editar Vestuario', component: vestryCreate},
-  { path: '/vestry/:id', exact: true, name: 'Vestuario', component: vestryView },
+  { path: '/vestry/list', exact: true, name: 'Vestuarios', component: vestryList, module_id:3} ,
+  { path: '/vestry/create', exact: true, name: 'Agregar Vestuario', component: vestryCreate, module_id:3},
+  { path: '/vestry/edit/:id', exact: true, name: 'Editar Vestuario', component: vestryCreate, module_id:3},
+  { path: '/vestry/:id', exact: true, name: 'Vestuario', component: vestryView, module_id:3 },
 
   // Locations
-  { path: '/location/list', exact: true, name: 'Locaciones', component: locationList},
-  { path: '/location/create', exact: true, name: 'Agregar Locación', component: locationCreate},
-  { path: '/location/edit/:id', exact: true, name: 'Editar Locación', component: locationCreate},
-  { path: '/location/:id', exact: true, name: 'Locación', component: locationView },
+  { path: '/location/list', exact: true, name: 'Locaciones', component: locationList, module_id:4},
+  { path: '/location/create', exact: true, name: 'Agregar Locación', component: locationCreate, module_id:4},
+  { path: '/location/edit/:id', exact: true, name: 'Editar Locación', component: locationCreate, module_id:4},
+  { path: '/location/:id', exact: true, name: 'Locación', component: locationView, module_id:4 },
 
 ];
 

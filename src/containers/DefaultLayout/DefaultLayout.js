@@ -26,11 +26,43 @@ const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
 
 class DefaultLayout extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      navigation: navigation
+    }
+  }
+
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   signOut(e) {
     e.preventDefault()
+    localStorage.removeItem('lvt');
     this.props.history.push('/login')
+  }
+
+  componentDidMount(){
+    
+    let lvt_session = localStorage.getItem('lvt');
+    if(lvt_session){
+      let now = (new Date()).getTime();
+      lvt_session = JSON.parse(lvt_session);
+
+      if( (now-lvt_session.created) > 3600000){
+        localStorage.removeItem('lvt');
+        this.props.history.push('/login')
+      }
+
+      let temp_navigation = navigation;
+      navigation.items.forEach((_n,i) => {
+        if(_n.module_id && lvt_session.moduleId.indexOf(_n.module_id)<0){
+          delete temp_navigation.items[i];
+        }
+      });
+      this.setState({navigation:temp_navigation})
+    }else{
+      this.props.history.push('/login')
+    }
   }
 
   render() {
@@ -46,7 +78,7 @@ class DefaultLayout extends Component {
             <AppSidebarHeader />
             <AppSidebarForm />
             <Suspense>
-            <AppSidebarNav navConfig={navigation} {...this.props} router={router}/>
+            <AppSidebarNav navConfig={this.state.navigation} {...this.props} router={router}/>
             </Suspense>
             <AppSidebarFooter />
             <AppSidebarMinimizer />

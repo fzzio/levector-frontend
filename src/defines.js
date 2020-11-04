@@ -1,7 +1,7 @@
 /*
     On this file are the config defines
 */
-exports.API_DOMAIN = 'http://ec2-52-202-112-113.compute-1.amazonaws.com:3000';
+exports.API_DOMAIN = 'http://ec2-3-15-140-212.us-east-2.compute.amazonaws.com:3009';
 // exports.API_DOMAIN = 'http://localhost:3009';
 
 // MODULE IDENTIFIERS
